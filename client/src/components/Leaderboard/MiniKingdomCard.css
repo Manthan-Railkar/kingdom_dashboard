@@ -1,0 +1,94 @@
+.mcard {
+  position: relative;
+  flex: 1;
+  min-width: 90px;
+  max-width: 130px;
+  background: linear-gradient(180deg, rgba(20,14,5,0.95), rgba(10,7,3,0.97));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top: 2px solid var(--mc, #c9a227);
+  border-radius: 6px;
+  padding: 10px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: default;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+  animation: cardEntrance 0.4s ease forwards;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+  overflow: hidden;
+}
+
+.mcard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 12px rgba(201,162,39,0.15);
+  border-color: var(--mc, #c9a227);
+}
+
+.mcard-top-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+  pointer-events: none;
+}
+
+.mcard-rank {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--mc, #c9a227);
+  text-shadow: 0 0 8px currentColor;
+  line-height: 1;
+}
+
+.mcard-emblem {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 6px var(--mc, rgba(201,162,39,0.4)));
+  line-height: 1;
+}
+
+.mcard-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  text-align: center;
+  width: 100%;
+}
+
+.mcard-name {
+  font-family: var(--font-heading);
+  font-size: 0.56rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.mcard-pts {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.mcard-pts-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.4rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+.mcard-delta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+.mcard-delta.pos { color: var(--positive); }
+.mcard-delta.neg { color: var(--negative); }

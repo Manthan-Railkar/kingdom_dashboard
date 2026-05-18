@@ -1,0 +1,69 @@
+/* ============================================
+   QUANTUM 26 — Design Tokens (Reference Match)
+   ============================================ */
+:root {
+  /* === Core Dark Palette === */
+  --bg-deepest: #06050c;
+  --bg-dark: #0a0810;
+  --bg-sidebar: #0e0c0a;
+  --bg-sidebar-hover: rgba(201,162,39,0.07);
+  --bg-panel: rgba(12, 9, 6, 0.88);
+  --bg-panel-border: rgba(201,162,39,0.18);
+  --bg-card-1: linear-gradient(180deg, #1a1000 0%, #0d0900 50%, #070600 100%);
+  --bg-card-2: linear-gradient(180deg, #001020 0%, #000d1a 50%, #000610 100%);
+  --bg-card-3: linear-gradient(180deg, #1a0000 0%, #100008 50%, #060007 100%);
+
+  /* === Gold System === */
+  --gold-primary: #c9a227;
+  --gold-bright:  #f0c040;
+  --gold-dim:     #7a5f10;
+  --gold-glow:    rgba(201,162,39,0.45);
+  --gold-text:    #f0c875;
+  --gold-border:  rgba(201,162,39,0.35);
+
+  /* === Status === */
+  --live-green:   #00e676;
+  --live-red:     #ff4444;
+  --positive:     #44dd88;
+  --positive-dim: rgba(68,221,136,0.25);
+  --negative:     #ff4444;
+  --negative-dim: rgba(255,68,68,0.25);
+
+  /* === Text === */
+  --text-primary:   #e8d5a3;
+  --text-secondary: #a08040;
+  --text-muted:     #5a4a2a;
+  --text-white:     #ffffff;
+
+  /* === Kingdom Colors === */
+  --k1-color: #c9a227;
+  --k1-border: rgba(201,162,39,0.7);
+  --k1-glow:   rgba(201,162,39,0.4);
+  --k2-color: #4a82c9;
+  --k2-border: rgba(74,130,201,0.7);
+  --k2-glow:   rgba(74,130,201,0.35);
+  --k3-color: #c93030;
+  --k3-border: rgba(201,48,48,0.7);
+  --k3-glow:   rgba(201,48,48,0.35);
+
+  /* === Sidebar Active === */
+  --sidebar-active-bg: rgba(100,15,15,0.85);
+  --sidebar-active-border: #8b2a2a;
+
+  /* === Fonts === */
+  --font-title:   'Cinzel Decorative', serif;
+  --font-heading: 'Cinzel', serif;
+  --font-body:    'Rajdhani', sans-serif;
+  --font-mono:    'Orbitron', monospace;
+
+  /* === Layout === */
+  --sidebar-w:      175px;
+  --header-h:       190px;
+  --right-panel-w:  305px;
+  --panel-radius:   8px;
+  --gap:            12px;
+
+  /* === Transitions === */
+  --t-fast: 0.15s ease;
+  --t-mid:  0.3s ease;
+}
