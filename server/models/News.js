@@ -10,7 +10,7 @@ const newsSchema = new mongoose.Schema(
     },
     kingdomRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Kingdom', default: null },
     kingdomName: { type: String, default: '' },
-    kingdomEmblem: { type: String, default: '⚡' },
+    kingdomEmblem: { type: String, default: '' },
     isVisible: { type: Boolean, default: true },
     isPinned: { type: Boolean, default: false },
   },
