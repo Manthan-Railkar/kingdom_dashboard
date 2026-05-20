@@ -23,25 +23,34 @@ export function AdminProvider({ children }) {
     }
   }, [token]);
 
-  // Ctrl+A hotkey for Super Admin
+  // Hidden hotkey to open Admin Login modal (Ctrl+Q+2+6)
   useEffect(() => {
     const keys = new Set();
     const handleKeyDown = (e) => {
       keys.add(e.key.toLowerCase());
+      
       if (
         (keys.has('control') || keys.has('meta')) &&
-        keys.has('a')
+        keys.has('q') &&
+        keys.has('2') &&
+        keys.has('6')
       ) {
         e.preventDefault();
         setShowLoginModal(true);
       }
     };
+    
     const handleKeyUp = (e) => keys.delete(e.key.toLowerCase());
+    const handleBlur = () => keys.clear();
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur);
+    
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
     };
   }, []);
 
