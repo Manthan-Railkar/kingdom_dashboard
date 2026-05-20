@@ -3,6 +3,7 @@ import { useAdmin } from '../../context/AdminContext';
 import { useApp } from '../../context/AppContext';
 import { postNews } from '../../api';
 import { useToast } from '../../context/ToastContext';
+import { Activity } from 'lucide-react';
 import './Panels.css';
 
 function timeAgo(dateStr) {
@@ -23,7 +24,7 @@ export default function LiveUpdates() {
   const handlePost = async () => {
     if (!newsText.trim()) return;
     try {
-      await postNews({ text: newsText.trim(), type: mode, kingdomEmblem: mode === 'announcement' ? '📣' : '⚡' });
+      await postNews({ text: newsText.trim(), type: mode, kingdomEmblem: mode === 'announcement' ? '' : '' });
       setNewsText('');
       setShowForm(false);
       addToast('Posted successfully!', 'success');
@@ -36,7 +37,7 @@ export default function LiveUpdates() {
     <section className="panel live-updates-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">📡</span>
+          <Activity size={14} className="panel-icon" color="#c9a227" />
           <h2 className="panel-title">LIVE UPDATES</h2>
           {isAdmin && <span className="admin-control-badge">(ADMIN CONTROL)</span>}
         </div>
@@ -45,10 +46,10 @@ export default function LiveUpdates() {
       {isAdmin && (
         <div className="lu-actions">
           <button className="btn-purple lu-btn" onClick={() => { setMode('news'); setShowForm(true); }}>
-            📰 ADD NEWS
+             ADD NEWS
           </button>
           <button className="btn-primary lu-btn" onClick={() => { setMode('announcement'); setShowForm(true); }}>
-            📣 ANNOUNCEMENT
+             ANNOUNCEMENT
           </button>
         </div>
       )}
@@ -72,7 +73,7 @@ export default function LiveUpdates() {
       <div className="lu-feed">
         {news.slice(0, 5).map((item, i) => (
           <div key={item._id} className="lu-item animate-entrance" style={{ '--delay': `${i * 0.06}s` }}>
-            <div className="lu-emblem">{item.kingdomEmblem || '⚡'}</div>
+            <div className="lu-emblem">{item.kingdomEmblem || ''}</div>
             <div className="lu-text-block">
               <p className="lu-text">{item.text}</p>
               <span className="lu-time">{timeAgo(item.createdAt)}</span>

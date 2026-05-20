@@ -7,9 +7,9 @@ const { protect } = require('../middleware/auth');
 // POST login with access key
 router.post('/login', async (req, res) => {
   try {
-    const { accessKey } = req.body;
-    const admin = await Admin.findOne({});
-    if (!admin) return res.status(404).json({ message: 'No admin configured' });
+    const { username, accessKey } = req.body;
+    const admin = await Admin.findOne({ username });
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
 
     const isMatch = await admin.compareKey(String(accessKey));
     if (!isMatch) return res.status(401).json({ message: 'Invalid access key' });

@@ -18,7 +18,7 @@ export default function NewsPanel() {
     <section className="panel news-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">📜</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">RECENT ACTIVITY LOGS</h2>
         </div>
         <button className="view-all-btn">VIEW ALL</button>
@@ -26,7 +26,7 @@ export default function NewsPanel() {
       <div className="news-list" ref={listRef}>
         {news.slice(0, 6).map((item, i) => (
           <div key={item._id} className={`news-item animate-entrance ${item.type === 'announcement' ? 'news-announce' : ''}`} style={{ '--delay': `${i * 0.07}s` }}>
-            <div className="news-emblem">{item.kingdomEmblem || '⚡'}</div>
+            <div className="news-emblem">{item.kingdomEmblem || ''}</div>
             <div className="news-content">
               <p className="news-text">{item.text}</p>
               <span className="news-time">{timeAgo(item.createdAt)}</span>

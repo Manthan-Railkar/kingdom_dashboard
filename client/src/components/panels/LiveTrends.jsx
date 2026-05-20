@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { TrendingUp } from 'lucide-react';
 import SparklineCanvas from '../common/SparklineCanvas';
 import './RightPanels.css';
 
@@ -10,7 +11,7 @@ export default function LiveTrends() {
   return (
     <section className="panel rp-panel trends-panel">
       <div className="panel-header">
-        <span className="panel-crown">♛</span>
+        <TrendingUp size={16} className="panel-crown" />
         <h2 className="panel-title">LIVE TRENDS</h2>
         <button className="view-all-btn">VIEW ALL</button>
       </div>

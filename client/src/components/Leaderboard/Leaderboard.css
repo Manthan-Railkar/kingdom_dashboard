@@ -1,35 +1,15 @@
-.lb-panel { padding: 0; }
+/* ===================== LEADERBOARD PANEL ===================== */
+.lb-panel {
+  padding: 0;
+  flex: 1;            /* grow to fill leaderboard-col */
+  overflow: visible;  /* let shield badges poke out */
+}
 
+/* Header */
 .lb-header {
   flex-wrap: wrap;
   gap: 8px;
   padding: 10px 14px;
-}
-
-.lb-toggle {
-  display: flex;
-  gap: 2px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(201,162,39,0.15);
-  border-radius: 6px;
-  padding: 2px;
-}
-
-.lb-tog-btn {
-  font-family: var(--font-heading);
-  font-size: 0.58rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 5px 12px;
-  border-radius: 4px;
-  color: var(--text-muted);
-  transition: all var(--t-fast);
-}
-
-.lb-tog-active {
-  background: linear-gradient(135deg, #8b6200, #c9a227);
-  color: #0a0600;
-  box-shadow: 0 0 8px rgba(201,162,39,0.3);
 }
 
 .lb-scroll-hint-txt {
@@ -39,57 +19,32 @@
   margin-left: auto;
 }
 
-.lb-nav-btns { display: flex; gap: 4px; }
-.lb-nav-arrow {
-  width: 26px; height: 26px;
-  border: 1px solid rgba(201,162,39,0.25);
-  border-radius: 4px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  display: flex; align-items: center; justify-content: center;
-  transition: all var(--t-fast);
+/* ---- Unified Grid — all 10 kingdoms, same card size ---- */
+.lb-unified-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 1fr;       /* all rows equal height */
+  gap: 12px;
+  padding: 28px 16px 16px;
+  overflow: visible;
+  flex: 1;                   /* fill remaining panel height */
+  align-content: stretch;    /* rows stretch to fill space */
 }
-.lb-nav-arrow:hover { border-color: var(--gold-primary); color: var(--gold-text); }
 
-/* Top 3 cards */
-.lb-top3 {
-  display: flex;
-  gap: 20px;
-  padding: 24px 20px 20px;
-  justify-content: center;
-  align-items: flex-start;
-  transition: all var(--t-mid);
-  min-height: 330px;
-}
-.lb-top3.contracted { padding: 12px 20px 10px; min-height: 200px; }
-.lb-top3.contracted .kcard { transform: scale(0.82); margin-top: -20px; }
+/* Top 3 — gold / silver / bronze accents */
+.lb-unified-grid .mcard:nth-child(1) { --mc: #f5c842; }
+.lb-unified-grid .mcard:nth-child(2) { --mc: #b8c4d0; }
+.lb-unified-grid .mcard:nth-child(3) { --mc: #d4845a; }
 
-/* Scroll hint bar */
-.lb-scroll-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 7px 0;
-  font-family: var(--font-body);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  color: var(--text-muted);
-  border-top: 1px solid rgba(255,255,255,0.04);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  background: rgba(0,0,0,0.15);
+/* All mcards fill their cell — width AND height */
+.lb-unified-grid .mcard {
+  min-width: 0;
+  max-width: none;
+  flex: unset;
+  width: 100%;
+  height: 100%;    /* stretch to equal row height */
+  min-height: 0;
 }
-.lb-scroll-arr { opacity: 0.6; }
-
-/* Mini cards */
-.lb-mini-row {
-  display: flex;
-  gap: 8px;
-  padding: 12px 14px 14px;
-  overflow-x: auto;
-  flex-wrap: nowrap;
-}
-.lb-mini-row::-webkit-scrollbar { height: 2px; }
 
 /* Pagination */
 .lb-dots {

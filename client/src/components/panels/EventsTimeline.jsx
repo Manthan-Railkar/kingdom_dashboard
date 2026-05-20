@@ -3,10 +3,10 @@ import { useApp } from '../../context/AppContext';
 import './Panels.css';
 
 const STATUS_CONFIG = {
-  ended:    { label: 'COMPLETED', color: 'var(--positive)',      icon: '✓' },
-  live:     { label: 'LIVE NOW',  color: 'var(--green-live)',    icon: '⚡', pulse: true },
+  ended:    { label: 'COMPLETED', color: 'var(--positive)',      icon: '' },
+  live:     { label: 'LIVE NOW',  color: 'var(--green-live)',    icon: '', pulse: true },
   paused:   { label: 'PAUSED',    color: 'var(--yellow-warn)',   icon: '⏸' },
-  upcoming: { label: 'UP NEXT',   color: 'var(--text-secondary)', icon: '⚔' },
+  upcoming: { label: 'UP NEXT',   color: 'var(--text-secondary)', icon: '' },
 };
 
 export default function EventsTimeline() {
@@ -16,7 +16,7 @@ export default function EventsTimeline() {
     <section className="panel events-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">⚔</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">UPCOMING EVENTS</h2>
         </div>
       </div>

@@ -86,3 +86,70 @@
 .alp-submit { width: 100%; padding: 10px; font-size: 0.72rem; }
 .alp-hint { font-size: 0.56rem; color: var(--text-muted); text-align: center; margin-top: 6px; }
 .alp-error { font-size: 0.62rem; color: var(--red-danger); text-align: center; margin-top: 4px; }
+
+/* Admin Management Views */
+.admin-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.admin-content {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-table th, .admin-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+}
+
+.admin-table th {
+  font-family: var(--font-heading);
+  color: var(--gold-text);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gold-text {
+  color: var(--gold-bright);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.admin-input {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 4px;
+  outline: none;
+  font-family: var(--font-mono);
+  width: 150px;
+  transition: all var(--t-fast);
+}
+
+.admin-input:focus {
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 5px var(--gold-glow);
+}

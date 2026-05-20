@@ -1,0 +1,412 @@
+/* ============================================================
+   QUANTUM 26 — Master Responsive Stylesheet
+   Breakpoints:
+     Mobile  : ≤ 767px
+     Tablet  : 768px – 1024px
+     Desktop : ≥ 1025px (default, no override needed)
+   ============================================================ */
+
+/* ============================================================
+   TABLET  (768px – 1024px)
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 1024px) {
+
+  /* ---- Layout ---- */
+  .main-area {
+    margin-left: 60px; /* icon-only sidebar width */
+  }
+
+  .content-area {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: none;
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .leaderboard-col {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .right-col {
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .right-col > * {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 240px;
+  }
+
+  /* ---- Sidebar — Icon-Only Strip ---- */
+  .sidebar {
+    width: 60px;
+    overflow: visible;
+  }
+
+  .sb-logo { display: none; }
+
+  .sb-nav-item {
+    flex-direction: column;
+    padding: 10px 6px;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .sb-nav-label { display: none; }
+  .sb-active-bar { width: 3px; height: 100%; top: 0; bottom: 0; left: 0; }
+
+  /* Tooltip on hover */
+  .sb-nav-item::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 64px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1a1408;
+    border: 1px solid rgba(201,162,39,0.35);
+    color: #f0c875;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 200;
+  }
+
+  .sb-nav-item:hover::after { opacity: 1; }
+
+  .sb-admin-status-box { display: none; }
+  .sb-copyright { display: none; }
+
+  /* ---- Header ---- */
+  .site-header {
+    height: clamp(120px, 14vw, 200px);
+  }
+
+  /* ---- Kingdom Cards (unified grid) ---- */
+  .lb-unified-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    align-content: start;
+    flex: unset;
+    gap: 10px;
+    padding: 24px 12px 10px;
+  }
+
+  .lb-unified-grid .mcard {
+    height: auto;
+    justify-content: flex-start;
+    padding: 32px 8px 12px;
+    gap: 4px;
+  }
+
+  /* Scale card text for tablet 3-column grid */
+  .mcard-roman      { font-size: 0.76rem; }
+  .mcard-emblem     { font-size: 1.8rem; }
+  .mcard-emblem-wrap { width: 52px; height: 52px; }
+  .mcard-name       { font-size: 0.62rem; }
+  .mcard-glory-val  { font-size: 1.2rem; }
+  .mcard-glory-lbl  { font-size: 0.4rem; }
+  .mcard-honour     { font-size: 0.42rem; }
+  .mcard::after     { font-size: 5rem; }
+
+  /* ---- Leaderboard Full Page ---- */
+  .lb-page-header { height: 160px; }
+  .lb-page-title { font-size: 2rem; }
+
+  .lb-table-header,
+  .lb-row {
+    grid-template-columns: 80px 1fr 120px 100px;
+  }
+
+  /* ---- Admin Panel ---- */
+  .admin-panel { padding: 14px; }
+
+  .admin-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- Modal ---- */
+  .modal-box {
+    width: min(92vw, 380px);
+    padding: 24px;
+  }
+}
+
+/* ============================================================
+   MOBILE  (≤ 767px)
+   ============================================================ */
+@media (max-width: 767px) {
+
+  /* ---- Root Layout ---- */
+  .app-root {
+    flex-direction: column;
+  }
+
+  /* ---- Sidebar → Bottom Nav Bar ---- */
+  .sidebar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    border-right: none;
+    border-top: 1px solid rgba(201,162,39,0.2);
+    z-index: 200;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0e0c08 0%, #12100a 100%);
+    padding: 0 6px;
+  }
+
+  /* Hide decorative right glow line on bottom nav */
+  .sidebar::after { display: none; }
+
+  /* Logo hidden in bottom nav */
+  .sb-logo { display: none; }
+
+  /* Nav items become scrollable horizontal strip */
+  .sb-nav {
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    padding: 0 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 2px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+    justify-content: flex-start;
+  }
+
+  /* Hide webkit scrollbar on the nav */
+  .sb-nav::-webkit-scrollbar { display: none; }
+
+  .sb-nav-item {
+    flex-direction: column;
+    padding: 6px 8px 4px;
+    gap: 2px;
+    border-radius: 8px;
+    flex: 0 0 auto; /* Never shrink — all items stay full size */
+    min-width: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sb-nav-item.active {
+    background: linear-gradient(180deg, rgba(120,20,20,0.75) 0%, rgba(80,10,10,0.4) 100%);
+    border-radius: 8px;
+  }
+
+  .sb-nav-label {
+    display: block;
+    font-size: 0.36rem;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    color: inherit;
+    white-space: nowrap;
+  }
+
+  .sb-active-bar {
+    display: none; /* replaced by bg colour */
+  }
+
+  /* Admin status + copyright hidden on mobile nav */
+  .sb-admin-status-box { display: none; }
+  .sb-copyright { display: none; }
+
+  /* ---- Main Area Offset for bottom nav ---- */
+  .main-area {
+    margin-left: 0;
+    padding-bottom: 60px; /* space for bottom nav */
+  }
+
+  /* ---- Content Area — Single Column ---- */
+  .content-area {
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+    overflow-y: auto;
+    max-height: none;
+  }
+
+  .content-area--full {
+    padding: 0 !important;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  .leaderboard-col {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .right-col {
+    width: 100%;
+    max-height: none;
+    overflow-y: visible;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ---- Header ---- */
+  .site-header {
+    height: clamp(80px, 28vw, 140px);
+  }
+
+  .hdr-title { font-size: 1.6rem; }
+  .hdr-subtitle { font-size: 0.5rem; letter-spacing: 0.2em; }
+
+  .header-right {
+    display: none; /* hide timer boxes on mobile, too cluttered */
+  }
+
+  /* ---- Leaderboard Panel (overview) ---- */
+  .lb-header { flex-wrap: wrap; gap: 6px; }
+  .lb-scroll-hint-txt { display: none; }
+
+  /* Unified grid — 3 columns on mobile, natural card heights */
+  .lb-unified-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;      /* natural height on mobile */
+    align-content: start;      /* no stretching */
+    flex: unset;               /* don't fill screen height */
+    gap: 8px;
+    padding: 24px 8px 8px;
+  }
+
+  /* Cards natural height on mobile */
+  .lb-unified-grid .mcard {
+    height: auto;
+    justify-content: flex-start;
+    padding: 32px 6px 12px;
+    gap: 4px;
+  }
+
+  /* Scale down card text for tight 3-column mobile grid */
+  .mcard-roman      { font-size: 0.68rem; }
+  .mcard-emblem     { font-size: 1.5rem; }
+  .mcard-emblem-wrap { width: 44px; height: 44px; }
+  .mcard-name       { font-size: 0.52rem; letter-spacing: 0.04em; }
+  .mcard-glory-val  { font-size: 1rem; }
+  .mcard-glory-lbl  { font-size: 0.36rem; letter-spacing: 0.14em; }
+  .mcard-honour     { font-size: 0.36rem; letter-spacing: 0.03em; }
+  .mcard-divider-gem { font-size: 0.38rem; }
+  .mcard-corner     { font-size: 0.45rem; }
+  /* Shrink the fleur-de-lis watermark too */
+  .mcard::after     { font-size: 4rem; }
+
+  .lb-dots { padding-bottom: 10px; }
+
+  /* ---- Full-Page Leaderboard Table ---- */
+  .lb-page-header { height: 130px; }
+  .lb-page-title { font-size: 1.6rem; letter-spacing: 0.08em; }
+  .lb-page-subtitle { font-size: 0.5rem; letter-spacing: 0.25em; }
+  .lb-page-crest { width: 42px; height: 42px; }
+
+  .lb-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 4px;
+  }
+
+  .lb-table-header,
+  .lb-row {
+    grid-template-columns: 64px 1fr 100px;
+    padding: 10px 10px;
+  }
+
+  /* Hide "CHANGE" column on mobile */
+  .lb-th-delta,
+  .lb-cell-delta {
+    display: none;
+  }
+
+  .lb-rank-shield { width: 36px; height: 36px; }
+  .lb-rank-num { font-size: 1rem; }
+  .lb-kingdom-name { font-size: 0.85rem; }
+  .lb-kingdom-icon { width: 32px; height: 32px; }
+  .lb-points-val { font-size: 1.1rem; }
+  .lb-cell-kingdom { gap: 8px; }
+
+  /* ---- Admin Tables ---- */
+  .admin-panel { padding: 10px 8px; }
+
+  .admin-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 4px;
+  }
+
+  .admin-table { min-width: 540px; }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px;
+    font-size: 0.75rem;
+  }
+
+  .admin-input { width: 100px; }
+
+  /* ---- Modal ---- */
+  .modal-box {
+    width: 92vw;
+    padding: 20px 16px;
+    border-radius: 8px;
+  }
+
+  .modal-box .al-title { font-size: 1rem; }
+
+  /* ---- Panel Headers ---- */
+  .panel-title { font-size: 0.62rem; }
+
+  /* ---- Right Panel Items ---- */
+  .trend-row { padding: 8px 8px; }
+  .kn-item { padding: 8px 10px; gap: 8px; }
+  .ue-timeline { padding: 10px 12px 12px; }
+
+  /* ---- Gallery ---- */
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ---- Round Management Panel ---- */
+  .rm-timer-val { font-size: 1.4rem; min-width: 34px; }
+  .rm-timer-sep { font-size: 1.1rem; }
+
+  /* ---- Admin Quick Actions Grid ---- */
+  .aqa-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+}
+
+/* ============================================================
+   EXTRA SMALL  (≤ 374px — phones like SE 1st gen)
+   ============================================================ */
+@media (max-width: 374px) {
+  /* 2-column grid on very small phones */
+  .lb-unified-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lb-page-title { font-size: 1.3rem; }
+  .hdr-title { font-size: 1.2rem; }
+}

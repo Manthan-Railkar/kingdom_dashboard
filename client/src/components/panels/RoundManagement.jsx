@@ -27,7 +27,7 @@ export default function RoundManagement() {
     <section className="panel round-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">⚙</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">ROUND MANAGEMENT</h2>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default function RoundManagement() {
     <section className="panel round-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">⚙</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">ROUND MANAGEMENT</h2>
         </div>
       </div>
@@ -50,7 +50,7 @@ export default function RoundManagement() {
         </div>
         <div className="rm-round-name">
           {currentRound.name}
-          {isAdmin && <button className="rm-edit-btn" title="Edit round">✎</button>}
+          {isAdmin && <button className="rm-edit-btn" title="Edit round"></button>}
         </div>
 
         <div className="rm-divider" />
@@ -69,12 +69,20 @@ export default function RoundManagement() {
 
         {isAdmin && (
           <div className="rm-actions">
-            <button className="btn-primary rm-btn" onClick={() => handleStatus(currentRound.status === 'paused' ? 'live' : 'paused')}>
-              {currentRound.status === 'paused' ? '▶ RESUME' : '⏸ PAUSE ROUND'}
-            </button>
-            <button className="btn-danger rm-btn" onClick={() => handleStatus('ended')}>
-              ⏹ END ROUND
-            </button>
+            {currentRound.status === 'upcoming' ? (
+              <button className="btn-primary rm-btn" onClick={() => handleStatus('live')}>
+                ▶ START ROUND
+              </button>
+            ) : (
+              <>
+                <button className="btn-primary rm-btn" onClick={() => handleStatus(currentRound.status === 'paused' ? 'live' : 'paused')}>
+                  {currentRound.status === 'paused' ? '▶ RESUME' : '⏸ PAUSE ROUND'}
+                </button>
+                <button className="btn-danger rm-btn" onClick={() => handleStatus('ended')}>
+                  ⏹ END ROUND
+                </button>
+              </>
+            )}
           </div>
         )}
 

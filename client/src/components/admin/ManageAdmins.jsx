@@ -1,0 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import { useAdmin } from '../../context/AdminContext';
+import { useToast } from '../../context/ToastContext';
+import api from '../../api'; // direct api access for admins
+import './Admin.css';
+
+export default function ManageAdmins() {
+  const { token, admin: currentAdmin } = useAdmin();
+  const { addToast } = useToast();
+  const [admins, setAdmins] = useState([]);
+  const [formData, setFormData] = useState({ username: '', displayName: '', accessKey: '', role: 'admin' });
+
+  const fetchAdmins = async () => {
+    try {
+      const res = await api.get('/admins', { headers: { Authorization: `Bearer ${token}` } });
+      setAdmins(res.data);
+    } catch (err) {
+      addToast('Failed to load admins', 'error');
+    }
+  };
+
+  useEffect(() => {
+    if (token) fetchAdmins();
+  }, [token]);
+
+  const handleCreate = async () => {
+    if (!formData.username || !formData.accessKey) return addToast('Username and Key are required', 'error');
+    try {
+      await api.post('/admins', formData, { headers: { Authorization: `Bearer ${token}` } });
+      addToast('Admin created successfully', 'success');
+      setFormData({ username: '', displayName: '', accessKey: '', role: 'admin' });
+      fetchAdmins();
+    } catch (err) {
+      addToast(err.response?.data?.message || 'Failed to create admin', 'error');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this admin?')) return;
+    try {
+      await api.delete(`/admins/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      addToast('Admin deleted', 'success');
+      fetchAdmins();
+    } catch (err) {
+      addToast(err.response?.data?.message || 'Failed to delete admin', 'error');
+    }
+  };
+
+  return (
+    <section className="panel admin-panel">
+      <div className="panel-header">
+        <h2 className="panel-title">ADMIN USERS</h2>
+      </div>
+      <div className="admin-content" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        
+        {/* Create Admin Form */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(201,162,39,0.2)' }}>
+          <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', fontSize: '0.8rem', marginBottom: '10px' }}>CREATE NEW ADMIN</h3>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <input className="admin-input" placeholder="Username" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} />
+            <input className="admin-input" placeholder="Display Name" value={formData.displayName} onChange={e => setFormData({ ...formData, displayName: e.target.value })} />
+            <input type="password" className="admin-input" placeholder="4-Digit Key" value={formData.accessKey} onChange={e => setFormData({ ...formData, accessKey: e.target.value })} maxLength={10} />
+            <select className="admin-input" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })} style={{ width: '100px' }}>
+              <option value="admin">Admin</option>
+              <option value="superadmin">Super Admin</option>
+            </select>
+            <button className="btn-gold" onClick={handleCreate}>Create</button>
+          </div>
+        </div>
+
+        {/* Existing Admins */}
+        <div className="admin-table-wrapper">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Display Name</th>
+              <th>Role</th>
+              <th>Last Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {admins.map(a => (
+              <tr key={a._id}>
+                <td>
+                  {a.username}
+                  {currentAdmin.id === a._id && (
+                    <span style={{ marginLeft: '8px', fontSize: '0.65rem', color: 'var(--gold-primary)', border: '1px solid var(--gold-primary)', padding: '2px 4px', borderRadius: '4px' }}>LOGGED IN</span>
+                  )}
+                </td>
+                <td>{a.displayName}</td>
+                <td style={{ color: a.role === 'superadmin' ? 'var(--gold-bright)' : 'var(--text-muted)' }}>
+                  {a.role.toUpperCase()}
+                </td>
+                <td style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  {a.lastLogin ? new Date(a.lastLogin).toLocaleString() : 'Never'}
+                </td>
+                <td>
+                  {currentAdmin.id !== a._id ? (
+                    <button className="btn-danger" onClick={() => handleDelete(a._id)}>Delete</button>
+                  ) : (
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>--</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        </div>
+
+      </div>
+    </section>
+  );
+}

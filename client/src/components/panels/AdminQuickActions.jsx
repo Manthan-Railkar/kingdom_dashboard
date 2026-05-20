@@ -1,12 +1,13 @@
 import React from 'react';
 import { useAdmin } from '../../context/AdminContext';
+import { ClipboardList, Users, UploadCloud, MonitorCheck, Home } from 'lucide-react';
 import './Panels.css';
 
 const ACTIONS = [
-  { icon: '💎', label: 'MANAGE POINTS' },
-  { icon: '⚔', label: 'MANAGE TEAMS' },
-  { icon: '🖼', label: 'UPLOAD MEDIA' },
-  { icon: '📋', label: 'VIEW LOGS' },
+  { icon: ClipboardList, label: 'MANAGE POINTS' },
+  { icon: Users, label: 'MANAGE TEAMS' },
+  { icon: UploadCloud, label: 'UPLOAD MEDIA' },
+  { icon: MonitorCheck, label: 'VIEW LOGS' },
 ];
 
 export default function AdminQuickActions() {
@@ -17,17 +18,20 @@ export default function AdminQuickActions() {
     <section className="panel admin-actions-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">⚡</span>
+          <Home size={14} className="panel-icon" color="#c9a227" />
           <h2 className="panel-title">ADMIN QUICK ACTIONS</h2>
         </div>
       </div>
       <div className="aqa-grid">
-        {ACTIONS.map((a) => (
-          <button key={a.label} className="aqa-btn">
-            <span className="aqa-icon">{a.icon}</span>
-            <span className="aqa-label">{a.label}</span>
-          </button>
-        ))}
+        {ACTIONS.map((a) => {
+          const Icon = a.icon;
+          return (
+            <button key={a.label} className="aqa-btn">
+              <span className="aqa-icon"><Icon size={20} color="#c9a227" /></span>
+              <span className="aqa-label">{a.label}</span>
+            </button>
+          );
+        })}
       </div>
     </section>
   );

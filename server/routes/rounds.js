@@ -27,7 +27,12 @@ router.get('/', async (req, res) => {
 // POST create round (admin)
 router.post('/', protect, async (req, res) => {
   try {
-    const round = new Round(req.body);
+    const data = { ...req.body };
+    if (data.roundNumber === undefined) {
+      const lastRound = await Round.findOne().sort({ roundNumber: -1 });
+      data.roundNumber = lastRound ? lastRound.roundNumber + 1 : 1;
+    }
+    const round = new Round(data);
     await round.save();
     req.io.emit('round:update', round);
     res.status(201).json(round);
@@ -57,9 +62,31 @@ router.patch('/:id/status', protect, async (req, res) => {
 // PATCH update round details (admin)
 router.patch('/:id', protect, async (req, res) => {
   try {
-    const round = await Round.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updateData = { ...req.body };
+    const oldRound = await Round.findById(req.params.id);
+    
+    if (!oldRound) return res.status(404).json({ message: 'Round not found' });
+
+    if (updateData.status && updateData.status !== oldRound.status) {
+      if (updateData.status === 'live' && !oldRound.startTime) updateData.startTime = new Date();
+      if (updateData.status === 'ended') updateData.endTime = new Date();
+    }
+
+    const round = await Round.findByIdAndUpdate(req.params.id, updateData, { new: true });
     req.io.emit('round:update', round);
     res.json(round);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE round (admin)
+router.delete('/:id', protect, async (req, res) => {
+  try {
+    const round = await Round.findByIdAndDelete(req.params.id);
+    if (!round) return res.status(404).json({ message: 'Round not found' });
+    req.io.emit('round:deleted', req.params.id);
+    res.json({ message: 'Round deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

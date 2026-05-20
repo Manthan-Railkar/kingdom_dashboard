@@ -11,7 +11,7 @@ export default function TrendsPanel() {
     <section className="panel trends-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">📊</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">LIVE TRENDS</h2>
         </div>
         <button className="view-all-btn">VIEW ANALYTICS</button>

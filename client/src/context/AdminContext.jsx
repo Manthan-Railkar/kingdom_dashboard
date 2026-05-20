@@ -21,14 +21,14 @@ export function AdminProvider({ children }) {
     }
   }, [token]);
 
-  // Ctrl+Q+2+6 hotkey
+  // Ctrl+M hotkey
   useEffect(() => {
     const keys = new Set();
     const handleKeyDown = (e) => {
       keys.add(e.key.toLowerCase());
       if (
         (keys.has('control') || keys.has('meta')) &&
-        keys.has('q') && keys.has('2') && keys.has('6')
+        keys.has('m')
       ) {
         e.preventDefault();
         setShowLoginModal(true);
@@ -43,18 +43,18 @@ export function AdminProvider({ children }) {
     };
   }, []);
 
-  const login = async (accessKey) => {
+  const login = async (username, accessKey) => {
     setIsLoading(true);
     setLoginError('');
     try {
-      const data = await loginAdmin(accessKey);
+      const data = await loginAdmin(username, accessKey);
       localStorage.setItem('q26_token', data.token);
       setToken(data.token);
       setAdmin(data.admin);
       setShowLoginModal(false);
       return true;
     } catch (err) {
-      setLoginError(err.response?.data?.message || 'Invalid access key');
+      setLoginError(err.response?.data?.message || 'Invalid credentials');
       return false;
     } finally {
       setIsLoading(false);

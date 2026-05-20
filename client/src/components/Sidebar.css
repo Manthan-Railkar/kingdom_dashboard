@@ -139,74 +139,59 @@
   letter-spacing: 0.08em;
 }
 
-/* ---- Footer / Admin ---- */
-.sb-footer {
-  border-top: 1px solid rgba(201,162,39,0.1);
-  position: relative;
-  padding: 14px 0 16px;
+/* ---- Footer / Admin Status ---- */
+.sb-admin-status-box {
+  margin: 10px 14px;
+  border: 1px solid rgba(201, 162, 39, 0.3);
+  border-radius: 6px;
+  background: rgba(10, 8, 6, 0.8);
+  padding: 12px;
 }
 
-.sb-torches {
-  position: absolute;
-  top: -20px;
-  left: 0; right: 0;
+.sb-admin-status-header {
   display: flex;
-  justify-content: space-between;
-  padding: 0 8px;
-  pointer-events: none;
-}
-.sb-torch { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.torch-flame {
-  width: 8px; height: 16px;
-  background: radial-gradient(ellipse at bottom, #ffcc00 0%, #ff6600 50%, transparent 100%);
-  border-radius: 50% 50% 30% 30%;
-  animation: torchFlicker 0.7s ease-in-out infinite;
-  box-shadow: 0 0 10px #ff8800, 0 0 20px rgba(255,140,0,0.4);
-}
-.torch-base {
-  width: 5px; height: 10px;
-  background: linear-gradient(180deg, #6b4c10, #3a2800);
-  border-radius: 1px;
-}
-
-.sb-admin-area {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 3px;
-  width: 100%;
-  padding: 10px 12px 0;
-  cursor: pointer;
-  transition: all var(--t-fast);
-}
-.sb-admin-area:hover { background: rgba(201,162,39,0.04); }
-
-.sb-admin-title {
+  gap: 8px;
   font-family: var(--font-heading);
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--gold-text);
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  padding-bottom: 6px;
 }
-.sb-admin-sub {
-  font-family: var(--font-body);
-  font-size: 0.58rem;
-  color: var(--text-muted);
-}
-.sb-admin-keys {
+
+.sb-admin-status-content {
   display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.56rem;
-  color: var(--text-muted);
-  margin: 2px 0;
+  flex-direction: column;
+  gap: 4px;
 }
-.sb-admin-keys kbd {
-  font-family: var(--font-mono);
+
+.sb-logged-in-text {
+  font-family: var(--font-body);
   font-size: 0.55rem;
-  color: var(--gold-text);
-  background: rgba(201,162,39,0.1);
-  border: 1px solid rgba(201,162,39,0.3);
-  border-radius: 3px;
-  padding: 1px 5px;
+  color: var(--text-muted);
+}
+
+.sb-admin-role {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold-bright);
+}
+
+.sb-last-login {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: rgba(160, 130, 70, 0.5);
+  margin-top: 4px;
+}
+
+.sb-copyright {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  color: rgba(160, 130, 70, 0.4);
+  text-align: center;
+  padding: 10px 0 16px;
 }

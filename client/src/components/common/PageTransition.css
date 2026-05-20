@@ -1,0 +1,95 @@
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: #060400;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ptFadeIn 0.15s ease-out forwards, ptFadeOut 0.3s ease-in 0.4s forwards;
+  pointer-events: none;
+}
+
+.pt-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: ptScaleUp 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+.pt-emblem {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.4));
+}
+
+.pt-crown {
+  width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 16px solid var(--gold-bright);
+  margin-bottom: -4px;
+  z-index: 2;
+}
+
+.pt-shield {
+  width: 60px; height: 70px;
+  background: linear-gradient(145deg, #1e1400, #0f0a00);
+  border: 2px solid var(--gold-primary);
+  clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pt-shield::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(201,162,39,0.3) 0%, transparent 60%);
+  animation: orbPulse 1.5s ease-in-out infinite;
+}
+
+.pt-q {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--gold-primary);
+  text-shadow: 0 0 15px var(--gold-glow);
+  z-index: 1;
+}
+
+.pt-text {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: var(--gold-text);
+  animation: pulseOpacity 1s infinite alternate;
+}
+
+@keyframes ptFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ptFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes ptScaleUp {
+  from { transform: scale(0.8); }
+  to { transform: scale(1); }
+}
+
+@keyframes pulseOpacity {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}

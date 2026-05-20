@@ -11,19 +11,19 @@ export default function AdminLoginPanel() {
   const handleLogin = async () => {
     if (!key.trim()) return;
     const success = await login(key.trim());
-    if (success) { setKey(''); addToast('Welcome, Admin! 👑', 'success'); }
+    if (success) { setKey(''); addToast('Welcome, Admin! ', 'success'); }
   };
 
   return (
     <section className="panel admin-login-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">🔐</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">ADMIN LOGIN</h2>
         </div>
       </div>
       <div className="alp-body">
-        <span className="alp-lock">🔒</span>
+        <span className="alp-lock"></span>
         <p className="alp-title">Secure Admin Login</p>
         <p className="alp-subtitle">Enter Admin Key</p>
         <input

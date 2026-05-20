@@ -15,13 +15,13 @@ export default function SystemAnnouncement() {
     <section className="panel announcement-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <span className="panel-icon">📣</span>
+          <span className="panel-icon"></span>
           <h2 className="panel-title">SYSTEM ANNOUNCEMENT</h2>
         </div>
-        {isAdmin && <button className="view-all-btn">✎</button>}
+        {isAdmin && <button className="view-all-btn"></button>}
       </div>
       <div className="announcement-body">
-        <span className="announcement-icon">♛</span>
+        <span className="announcement-icon"></span>
         {pinned ? (
           <>
             <h3 className="announcement-title">Welcome to QUANTUM 26!</h3>

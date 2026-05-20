@@ -6,46 +6,58 @@ import './Admin.css';
 export default function AdminLogin() {
   const { showLoginModal, setShowLoginModal, login, isLoading, loginError, setLoginError } = useAdmin();
   const { addToast } = useToast();
+  const [username, setUsername] = useState('');
   const [key, setKey] = useState('');
 
   if (!showLoginModal) return null;
 
   const handleLogin = async () => {
-    if (!key.trim()) return;
-    const success = await login(key.trim());
+    if (!username.trim() || !key.trim()) return;
+    const success = await login(username.trim(), key.trim());
     if (success) {
       setKey('');
-      addToast('Welcome, Admin! 👑', 'success');
+      setUsername('');
+      addToast('Welcome, Admin! ', 'success');
     }
   };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') handleLogin();
-    if (e.key === 'Escape') { setShowLoginModal(false); setKey(''); setLoginError(''); }
+    if (e.key === 'Escape') { setShowLoginModal(false); setKey(''); setUsername(''); setLoginError(''); }
   };
 
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowLoginModal(false)}>
       <div className="modal-box admin-login-modal">
-        <button className="modal-close" onClick={() => { setShowLoginModal(false); setKey(''); setLoginError(''); }}>✕</button>
+        <button className="modal-close" onClick={() => { setShowLoginModal(false); setKey(''); setLoginError(''); }}></button>
 
         <div className="al-header">
-          <div className="al-lock-icon">🔐</div>
+          <div className="al-lock-icon"></div>
           <h2 className="al-title">ADMIN LOGIN</h2>
           <p className="al-subtitle">Secure Admin Access</p>
         </div>
 
         <div className="al-body">
+          <label className="al-label">Username</label>
+          <input
+            type="text"
+            className={`input-field al-input ${loginError ? 'input-error' : ''}`}
+            placeholder="Admin ID"
+            value={username}
+            onChange={(e) => { setUsername(e.target.value); setLoginError(''); }}
+            onKeyDown={handleKeyPress}
+            style={{ fontSize: '1rem', letterSpacing: '0.1em', marginBottom: '10px' }}
+            autoFocus
+          />
           <label className="al-label">Enter Admin Key</label>
           <input
             type="password"
             className={`input-field al-input ${loginError ? 'input-error' : ''}`}
-            placeholder="Enter 4-digit Key"
+            placeholder="****"
             value={key}
             onChange={(e) => { setKey(e.target.value); setLoginError(''); }}
             onKeyDown={handleKeyPress}
             maxLength={10}
-            autoFocus
           />
           {loginError && <span className="al-error">{loginError}</span>}
 

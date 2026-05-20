@@ -1,12 +1,13 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { Swords } from 'lucide-react';
 import './RightPanels.css';
 
 const STATUS_META = {
-  ended:    { icon: '✓', label: 'COMPLETED', color: '#44dd88', lineColor: '#44dd88' },
-  live:     { icon: '⚔', label: 'LIVE NOW',  color: '#c9a227', lineColor: '#c9a227', pulse: true },
+  ended:    { icon: '', label: 'COMPLETED', color: '#44dd88', lineColor: '#44dd88' },
+  live:     { icon: '', label: 'LIVE NOW',  color: '#c9a227', lineColor: '#c9a227', pulse: true },
   paused:   { icon: '⏸', label: 'PAUSED',    color: '#ffc107', lineColor: '#ffc107' },
-  upcoming: { icon: '⚔', label: 'UP NEXT',   color: '#5a4a2a', lineColor: 'rgba(255,255,255,0.1)' },
+  upcoming: { icon: '', label: 'UP NEXT',   color: '#5a4a2a', lineColor: 'rgba(255,255,255,0.1)' },
 };
 
 export default function UpcomingEvents() {
@@ -16,7 +17,7 @@ export default function UpcomingEvents() {
   return (
     <section className="panel rp-panel events-panel">
       <div className="panel-header">
-        <span className="panel-crown">♛</span>
+        <Swords size={16} className="panel-crown" />
         <h2 className="panel-title">UPCOMING EVENTS</h2>
       </div>
       <div className="ue-timeline">

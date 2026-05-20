@@ -12,6 +12,8 @@ const kingdomRoutes = require('./routes/kingdoms');
 const roundRoutes = require('./routes/rounds');
 const newsRoutes = require('./routes/news');
 const authRoutes = require('./routes/auth');
+const adminRoutes = require('./routes/admins');
+const galleryRoutes = require('./routes/gallery');
 const { initializeSocketHandlers } = require('./socket/handlers');
 const { autoSeed } = require('./seed/seed');
 
@@ -29,6 +31,7 @@ const io = new Server(httpServer, {
 // Middleware
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Attach io to every request
 app.use((req, res, next) => {
@@ -40,6 +43,8 @@ app.use((req, res, next) => {
 app.use('/api/kingdoms', kingdomRoutes);
 app.use('/api/rounds', roundRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/admins', adminRoutes);
+app.use('/api/gallery', galleryRoutes);
 app.use('/api/auth', authRoutes);
 
 app.get('/api/health', (req, res) =>

@@ -47,11 +47,30 @@ export function AppProvider({ children }) {
       setKingdoms(updatedKingdoms);
     });
 
-    socket.on('round:update', (updatedRound) => {
-      setCurrentRound((prev) => (prev?._id === updatedRound._id ? updatedRound : prev));
-      setAllRounds((prev) =>
-        prev.map((r) => (r._id === updatedRound._id ? updatedRound : r))
-      );
+    socket.on('round:update', async (updatedRound) => {
+      try {
+        const r = await getCurrentRound();
+        setCurrentRound(r);
+      } catch (err) {
+        console.error('Failed to sync current round', err);
+      }
+      setAllRounds((prev) => {
+        const exists = prev.some((r) => r._id === updatedRound._id);
+        if (exists) {
+          return prev.map((r) => (r._id === updatedRound._id ? updatedRound : r));
+        }
+        return [...prev, updatedRound];
+      });
+    });
+
+    socket.on('round:deleted', async (deletedId) => {
+      try {
+        const r = await getCurrentRound();
+        setCurrentRound(r);
+      } catch (err) {
+        console.error('Failed to sync current round', err);
+      }
+      setAllRounds((prev) => prev.filter((r) => r._id !== deletedId));
     });
 
     socket.on('news:new', (item) => {
@@ -78,6 +97,7 @@ export function AppProvider({ children }) {
     return () => {
       socket.off('leaderboard:update');
       socket.off('round:update');
+      socket.off('round:deleted');
       socket.off('news:new');
       socket.off('news:delete');
       socket.off('clients:count');

@@ -1,0 +1,449 @@
+/* =================== LEADERBOARD PAGE (MEDIEVAL TABLE) =================== */
+
+/* ---- Page Container ---- */
+.lb-page {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.lb-page--entered {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Header Banner ---- */
+.lb-page-header {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.lb-page-header-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/header-banner.png');
+  background-size: cover;
+  background-position: center 30%;
+  filter: brightness(0.2) saturate(0.4);
+}
+
+.lb-page-header-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 5, 10, 0.6) 0%, rgba(6, 5, 10, 0.4) 40%, rgba(6, 5, 10, 0.95) 100%),
+    linear-gradient(90deg, rgba(6, 5, 10, 0.8) 0%, rgba(6, 5, 10, 0.5) 20%, rgba(6, 5, 10, 0.5) 80%, rgba(6, 5, 10, 0.8) 100%);
+}
+
+.lb-page-header-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- Crest Icon ---- */
+.lb-page-crest {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(201, 162, 39, 0.5);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: linear-gradient(180deg, rgba(20, 15, 8, 0.95) 0%, rgba(10, 8, 4, 0.95) 100%);
+  color: #e5d39a;
+  margin-bottom: 4px;
+  animation: crestFloat 3s ease-in-out infinite;
+}
+
+@keyframes crestFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ---- Title ---- */
+.lb-page-title {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  background: linear-gradient(180deg, #f5e070 0%, #c9a227 50%, #8b6200 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.4));
+  line-height: 1;
+  margin: 0;
+}
+
+.lb-page-subtitle {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  color: rgba(201, 162, 39, 0.6);
+  margin: 0;
+}
+
+/* ---- Divider ---- */
+.lb-page-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.lb-page-divider-line {
+  display: block;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.5), transparent);
+}
+
+.lb-page-divider-diamond {
+  color: rgba(201, 162, 39, 0.5);
+  font-size: 0.6rem;
+}
+
+/* ============================================
+   TABLE
+   ============================================ */
+
+.lb-table-wrap {
+  background: rgba(10, 8, 5, 0.85);
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(201, 162, 39, 0.1);
+}
+
+/* ---- Table Header ---- */
+.lb-table-header {
+  display: grid;
+  grid-template-columns: 100px 1fr 160px 120px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  background: rgba(15, 12, 8, 0.9);
+}
+
+.lb-th {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(201, 162, 39, 0.55);
+  text-transform: uppercase;
+}
+
+.lb-th-rank { text-align: center; }
+.lb-th-points { text-align: center; }
+.lb-th-delta { text-align: center; }
+
+/* ---- Table Body ---- */
+.lb-table-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Row ---- */
+.lb-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 160px 120px;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.06);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.lb-row--visible {
+  animation: rowSlideIn 0.5s ease forwards;
+  animation-delay: var(--row-delay);
+}
+
+.lb-row:hover {
+  background: rgba(201, 162, 39, 0.05);
+  transform: scale(1.005);
+}
+
+/* Top 3 rows get a subtle left accent */
+.lb-row--top {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.1);
+  background: rgba(201, 162, 39, 0.02);
+}
+
+.lb-row--top::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--row-color);
+  box-shadow: 0 0 10px var(--row-glow);
+}
+
+.lb-row:last-child {
+  border-bottom: none;
+}
+
+/* ---- Row hover glow line ---- */
+.lb-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: border-color 0.3s ease;
+  pointer-events: none;
+}
+
+.lb-row:hover::after {
+  border-color: rgba(201, 162, 39, 0.12);
+}
+
+/* ---- Cells ---- */
+.lb-cell {
+  display: flex;
+  align-items: center;
+}
+
+.lb-cell-rank {
+  justify-content: center;
+}
+
+/* ---- Rank Shield ---- */
+.lb-rank-shield {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: linear-gradient(180deg, #1a1408 0%, #0c0804 100%);
+  border: none;
+  position: relative;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.lb-row:hover .lb-rank-shield {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 8px var(--row-glow));
+}
+
+/* Gold shield for #1 */
+.lb-rank-shield--1 {
+  background: linear-gradient(180deg, #3d2f10 0%, #1a1408 100%);
+  box-shadow: 0 0 15px rgba(201, 162, 39, 0.3);
+}
+.lb-rank-shield--1::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: 1.5px solid rgba(201, 162, 39, 0.6);
+}
+
+/* Silver shield for #2 */
+.lb-rank-shield--2 {
+  background: linear-gradient(180deg, #2a2a30 0%, #141418 100%);
+  box-shadow: 0 0 12px rgba(160, 160, 180, 0.2);
+}
+.lb-rank-shield--2::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: 1.5px solid rgba(160, 160, 180, 0.45);
+}
+
+/* Bronze shield for #3 */
+.lb-rank-shield--3 {
+  background: linear-gradient(180deg, #2d1e10 0%, #141008 100%);
+  box-shadow: 0 0 12px rgba(180, 120, 60, 0.2);
+}
+.lb-rank-shield--3::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: 1.5px solid rgba(180, 120, 60, 0.45);
+}
+
+.lb-rank-num {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e5d39a;
+  text-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
+  line-height: 1;
+}
+
+.lb-rank-shield--2 .lb-rank-num { color: #b0b0c0; text-shadow: 0 0 8px rgba(160, 160, 180, 0.3); }
+.lb-rank-shield--3 .lb-rank-num { color: #c8986a; text-shadow: 0 0 8px rgba(180, 120, 60, 0.3); }
+
+/* ---- Kingdom Cell ---- */
+.lb-cell-kingdom {
+  gap: 14px;
+}
+
+.lb-kingdom-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(15, 12, 8, 0.9);
+  border: 1px solid rgba(201, 162, 39, 0.15);
+  flex-shrink: 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lb-row:hover .lb-kingdom-icon {
+  border-color: var(--row-color);
+  box-shadow: 0 0 12px var(--row-glow);
+}
+
+.lb-kingdom-name {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f0e6d0;
+  letter-spacing: 0.04em;
+  transition: color 0.3s ease;
+}
+
+.lb-row:hover .lb-kingdom-name {
+  color: #fff;
+}
+
+/* ---- Points Cell ---- */
+.lb-cell-points {
+  justify-content: center;
+}
+
+.lb-points-val {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 15px rgba(201, 162, 39, 0.2);
+}
+
+/* ---- Delta Cell ---- */
+.lb-cell-delta {
+  justify-content: center;
+}
+
+.lb-delta-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.lb-delta--pos {
+  color: #88ffaa;
+  background: rgba(68, 255, 136, 0.06);
+  border: 1px solid rgba(68, 255, 136, 0.15);
+}
+
+.lb-delta--neg {
+  color: #ff6666;
+  background: rgba(255, 68, 68, 0.06);
+  border: 1px solid rgba(255, 68, 68, 0.15);
+}
+
+.lb-delta--neutral {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ---- Row Decorative Crest (Right Side) ---- */
+.lb-row-crest {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.lb-row:hover .lb-row-crest {
+  opacity: 0.5 !important;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes rowSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  60% {
+    transform: translateX(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .lb-table-header,
+  .lb-row {
+    grid-template-columns: 60px 1fr 100px 80px;
+    padding: 10px 12px;
+  }
+
+  .lb-page-title {
+    font-size: 2rem;
+  }
+
+  .lb-rank-shield {
+    width: 36px;
+    height: 36px;
+  }
+
+  .lb-rank-num {
+    font-size: 1rem;
+  }
+
+  .lb-kingdom-name {
+    font-size: 0.9rem;
+  }
+
+  .lb-points-val {
+    font-size: 1.1rem;
+  }
+
+  .lb-row-crest {
+    display: none;
+  }
+}

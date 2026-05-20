@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { ScrollText } from 'lucide-react';
 import './RightPanels.css';
 
 function timeAgo(d) {
@@ -17,14 +18,14 @@ export default function KingdomNews() {
   return (
     <section className="panel rp-panel news-panel">
       <div className="panel-header">
-        <span className="panel-crown">♛</span>
+        <ScrollText size={16} className="panel-crown" />
         <h2 className="panel-title">KINGDOM NEWS</h2>
         <button className="view-all-btn">VIEW ALL</button>
       </div>
       <div className="kn-list">
         {items.map((item, i) => (
           <div key={item._id} className="kn-item animate-entrance" style={{ '--delay': `${i * 0.07}s` }}>
-            <div className="kn-emblem">{item.kingdomEmblem || '⚡'}</div>
+            <div className="kn-emblem">{item.kingdomEmblem || ''}</div>
             <div className="kn-content">
               <p className="kn-text">{item.text}</p>
               <span className="kn-time">{timeAgo(item.createdAt)}</span>

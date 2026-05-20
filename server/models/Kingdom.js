@@ -18,6 +18,7 @@ const kingdomSchema = new mongoose.Schema(
     deltaHistory: { type: [pointSnapshotSchema], default: [] },
     isActive: { type: Boolean, default: true },
     members: { type: Number, default: 0 },
+    teamMembers: { type: [{ name: String, role: String }], default: [] },
     description: { type: String, default: '' },
   },
   { timestamps: true }
