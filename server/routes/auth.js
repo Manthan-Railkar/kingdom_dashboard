@@ -8,7 +8,7 @@ const { requireAdmin } = require('../middleware/auth');
 router.post('/login', async (req, res) => {
   try {
     const { username, accessKey } = req.body;
-    const admin = await Admin.findOne({ username });
+    const admin = await Admin.findOne({ username }).populate('kingdomId', 'name color emblem');
     if (!admin) return res.status(404).json({ message: 'Admin not found' });
 
     const isMatch = await admin.compareKey(String(accessKey));
@@ -40,14 +40,21 @@ router.post('/login', async (req, res) => {
 });
 
 // GET current admin
-router.get('/me', requireAdmin, (req, res) => res.json({
-  id: req.admin._id,
-  username: req.admin.username,
-  displayName: req.admin.displayName,
-  role: req.admin.role,
-  lastLogin: req.admin.lastLogin,
-  kingdomId: req.admin.kingdomId,
-}));
+router.get('/me', requireAdmin, async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.admin._id).populate('kingdomId', 'name color emblem');
+    res.json({
+      id: admin._id,
+      username: admin.username,
+      displayName: admin.displayName,
+      role: admin.role,
+      lastLogin: admin.lastLogin,
+      kingdomId: admin.kingdomId,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // POST logout (client-side, but for audit)
 router.post('/logout', requireAdmin, (req, res) => res.json({ message: 'Logged out' }));

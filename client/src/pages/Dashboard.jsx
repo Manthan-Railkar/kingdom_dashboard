@@ -5,6 +5,7 @@ import Leaderboard from '../components/Leaderboard/Leaderboard';
 import LeaderboardPage from '../components/Leaderboard/LeaderboardPage';
 import TrendsPage from '../components/Trends/TrendsPage';
 import TeamsPage from '../components/Teams/TeamsPage';
+import CaptainTeams from '../components/captain/CaptainTeams';
 import NewsPage from '../components/News/NewsPage';
 import ManageNews from '../components/admin/ManageNews';
 import LiveTrends from '../components/panels/LiveTrends';
@@ -59,17 +60,24 @@ export default function Dashboard() {
     }
 
     if (active === 'teams') {
-      if (isAdmin) {
+      if (isSuperAdmin) {
         return (
           <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <ManageTeams />
           </div>
         );
       }
+      if (isKingdomAdmin) {
+        return (
+          <div className="leaderboard-col" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <CaptainTeams />
+          </div>
+        );
+      }
       return <TeamsPage />;
     }
 
-    if (isAdmin && active === 'events') {
+    if (isSuperAdmin && active === 'events') {
       return (
         <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <ManageEvents />
@@ -118,7 +126,7 @@ export default function Dashboard() {
     }
 
     if (active === 'news') {
-      if (isAdmin) {
+      if (isSuperAdmin) {
         return (
           <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
             <ManageNews />

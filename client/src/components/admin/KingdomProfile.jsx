@@ -1,40 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { useToast } from '../../context/ToastContext';
-import api from '../../api';
+import { getKingdom, updateKingdom, uploadKingdomAsset } from '../../api';
 import './Admin.css';
-import { Upload, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Upload, Image as ImageIcon, Trash2, Edit3, Shield } from 'lucide-react';
 
 export default function KingdomProfile() {
-  const { token, admin } = useAdmin();
+  const { admin } = useAdmin();
   const { addToast } = useToast();
   const [kingdom, setKingdom] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Form states
-  const [flagUrl, setFlagUrl] = useState('');
-  const [emblemUrl, setEmblemUrl] = useState('');
-  const [mapUrl, setMapUrl] = useState('');
-  const [designsUrl, setDesignsUrl] = useState('');
-  const [teamMembers, setTeamMembers] = useState([]);
-  
-  const [newRole, setNewRole] = useState('');
-  const [newMemberName, setNewMemberName] = useState('');
-  const [newMemberImage, setNewMemberImage] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef(null);
+  // Text inputs
+  const [description, setDescription] = useState('');
+  const [color, setColor] = useState('#B87333');
+  const [accentColor, setAccentColor] = useState('#D4956A');
+
+  // Loading states for individual uploads
+  const [uploadingField, setUploadingField] = useState(null);
 
   const fetchKingdom = async () => {
     try {
       if (!admin?.kingdomId?._id) return;
-      const res = await api.get(`/kingdoms/${admin.kingdomId._id}`);
-      const k = res.data;
+      const k = await getKingdom(admin.kingdomId._id);
       setKingdom(k);
-      setFlagUrl(k.flag || '');
-      setEmblemUrl(k.emblem || '');
-      setMapUrl(k.map || '');
-      setDesignsUrl(k.designs || '');
-      setTeamMembers(k.teamMembers || []);
+      setDescription(k.description || '');
+      setColor(k.color || '#B87333');
+      setAccentColor(k.accentColor || '#D4956A');
     } catch (err) {
       addToast('Failed to load kingdom profile', 'error');
     } finally {
@@ -46,57 +38,47 @@ export default function KingdomProfile() {
     fetchKingdom();
   }, [admin]);
 
-  const handleUpdate = async (updateData) => {
+  const handleUpdateText = async () => {
     try {
-      await api.patch(`/kingdoms/${admin.kingdomId._id}`, updateData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      addToast('Profile updated', 'success');
+      await updateKingdom(kingdom._id, { description, color, accentColor });
+      addToast('Kingdom details updated', 'success');
       fetchKingdom();
     } catch (err) {
-      addToast('Failed to update profile', 'error');
+      addToast('Failed to update details', 'error');
     }
   };
 
-  const handleAddMember = async () => {
-    if (!newRole || !newMemberName) {
-      return addToast('Role and Name are required', 'error');
-    }
-    
-    setIsUploading(true);
-    let imageUrl = '';
-    
-    if (newMemberImage) {
-      const formData = new FormData();
-      formData.append('image', newMemberImage);
-      try {
-        const res = await api.post('/gallery', formData, {
-          headers: { 
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        imageUrl = `/uploads/${res.data.filename}`;
-      } catch (err) {
-        addToast('Failed to upload image', 'error');
-        setIsUploading(false);
-        return;
-      }
-    }
+  const handleFileUpload = async (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    const newMember = { name: newMemberName, role: newRole, image: imageUrl };
-    const updatedMembers = [...teamMembers, newMember];
-    await handleUpdate({ teamMembers: updatedMembers });
-    setNewRole('');
-    setNewMemberName('');
-    setNewMemberImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    setIsUploading(false);
+    setUploadingField(field);
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('field', field);
+
+    try {
+      await uploadKingdomAsset(kingdom._id, formData);
+      addToast(`${field} uploaded successfully`, 'success');
+      fetchKingdom();
+    } catch (err) {
+      addToast(`Failed to upload ${field}`, 'error');
+    } finally {
+      setUploadingField(null);
+      e.target.value = ''; // Reset input
+    }
   };
 
-  const handleRemoveMember = async (index) => {
-    const updatedMembers = teamMembers.filter((_, i) => i !== index);
-    await handleUpdate({ teamMembers: updatedMembers });
+  const handleRemoveDesign = async (indexToRemove) => {
+    if (!window.confirm('Remove this design?')) return;
+    const updatedDesigns = kingdom.designs.filter((_, i) => i !== indexToRemove);
+    try {
+      await updateKingdom(kingdom._id, { designs: updatedDesigns });
+      addToast('Design removed', 'success');
+      fetchKingdom();
+    } catch (err) {
+      addToast('Failed to remove design', 'error');
+    }
   };
 
   if (loading) return <div style={{ color: 'var(--text-muted)' }}>Loading...</div>;
@@ -106,90 +88,159 @@ export default function KingdomProfile() {
     <section className="admin-panel" style={{ padding: '20px' }}>
       <div className="al-header" style={{ marginBottom: '30px' }}>
         <h2 className="al-title">MY KINGDOM PROFILE</h2>
-        <div className="al-subtitle">MANAGE YOUR KINGDOM DETAILS & TEAM ROLES</div>
+        <div className="al-subtitle">MANAGE YOUR KINGDOM DETAILS & ASSETS</div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         
-        {/* Left Col: Media Uploads */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
-          <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', marginBottom: '20px', fontSize: '0.9rem' }}>ASSETS & MEDIA</h3>
+        {/* Left Col: Details & Assets */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>EMBLEM URL</label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input className="admin-input" style={{ flex: 1 }} value={emblemUrl} onChange={e => setEmblemUrl(e.target.value)} placeholder="https://..." />
-                <button className="btn-gold" onClick={() => handleUpdate({ emblem: emblemUrl })}>Save</button>
+          {/* Details Box */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', marginBottom: '20px', fontSize: '0.9rem' }}>IDENTITY & LORE</h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>DESCRIPTION / LORE</label>
+                <textarea 
+                  className="admin-input" 
+                  style={{ width: '100%', minHeight: '80px', resize: 'vertical' }} 
+                  value={description} 
+                  onChange={e => setDescription(e.target.value)} 
+                  placeholder="Enter kingdom lore..." 
+                />
               </div>
-            </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>FLAG URL</label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input className="admin-input" style={{ flex: 1 }} value={flagUrl} onChange={e => setFlagUrl(e.target.value)} placeholder="https://..." />
-                <button className="btn-gold" onClick={() => handleUpdate({ flag: flagUrl })}>Save</button>
+              <div style={{ display: 'flex', gap: '20px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>PRIMARY COLOR</label>
+                  <input type="color" value={color} onChange={e => setColor(e.target.value)} style={{ width: '100%', height: '40px', background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', cursor: 'pointer' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>ACCENT COLOR</label>
+                  <input type="color" value={accentColor} onChange={e => setAccentColor(e.target.value)} style={{ width: '100%', height: '40px', background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', cursor: 'pointer' }} />
+                </div>
               </div>
+              
+              <button className="btn-gold" style={{ alignSelf: 'flex-start' }} onClick={handleUpdateText}>Save Details</button>
             </div>
+          </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>MAP URL</label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input className="admin-input" style={{ flex: 1 }} value={mapUrl} onChange={e => setMapUrl(e.target.value)} placeholder="https://..." />
-                <button className="btn-gold" onClick={() => handleUpdate({ map: mapUrl })}>Save</button>
+          {/* Core Assets Box */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', marginBottom: '20px', fontSize: '0.9rem' }}>CORE ASSETS</h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Emblem */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
+                <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: `2px solid ${kingdom.color || 'var(--gold-primary)'}` }}>
+                  {kingdom.emblem ? <img src={kingdom.emblem} alt="Emblem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <Shield size={24} color="var(--text-muted)" />}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '5px' }}>Kingdom Emblem</div>
+                  <input type="file" accept="image/*" id="upload-emblem" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'emblem')} disabled={uploadingField === 'emblem'} />
+                  <label htmlFor="upload-emblem" className="btn-gold" style={{ display: 'inline-flex', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', opacity: uploadingField === 'emblem' ? 0.7 : 1 }}>
+                    <Upload size={14} style={{ marginRight: '5px' }} /> {uploadingField === 'emblem' ? 'Uploading...' : 'Upload Emblem'}
+                  </label>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>DESIGNS/MOODBOARD URL</label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input className="admin-input" style={{ flex: 1 }} value={designsUrl} onChange={e => setDesignsUrl(e.target.value)} placeholder="https://..." />
-                <button className="btn-gold" onClick={() => handleUpdate({ designs: designsUrl })}>Save</button>
+              {/* Flag */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
+                <div style={{ width: '90px', height: '60px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  {kingdom.flag ? <img src={kingdom.flag} alt="Flag" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <ImageIcon size={24} color="var(--text-muted)" />}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '5px' }}>Kingdom Flag</div>
+                  <input type="file" accept="image/*" id="upload-flag" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'flag')} disabled={uploadingField === 'flag'} />
+                  <label htmlFor="upload-flag" className="btn-gold" style={{ display: 'inline-flex', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', opacity: uploadingField === 'flag' ? 0.7 : 1 }}>
+                    <Upload size={14} style={{ marginRight: '5px' }} /> {uploadingField === 'flag' ? 'Uploading...' : 'Upload Flag'}
+                  </label>
+                </div>
+              </div>
+
+              {/* Map */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
+                <div style={{ width: '90px', height: '60px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  {kingdom.map ? <img src={kingdom.map} alt="Map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <ImageIcon size={24} color="var(--text-muted)" />}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '5px' }}>Kingdom Map</div>
+                  <input type="file" accept="image/*" id="upload-map" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'map')} disabled={uploadingField === 'map'} />
+                  <label htmlFor="upload-map" className="btn-gold" style={{ display: 'inline-flex', padding: '6px 12px', fontSize: '0.8rem', cursor: 'pointer', opacity: uploadingField === 'map' ? 0.7 : 1 }}>
+                    <Upload size={14} style={{ marginRight: '5px' }} /> {uploadingField === 'map' ? 'Uploading...' : 'Upload Map'}
+                  </label>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Col: Team Roles */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
-          <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', marginBottom: '20px', fontSize: '0.9rem' }}>TEAM ROLES</h3>
+        {/* Right Col: Designs & Team Summary */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <input className="admin-input" placeholder="Role (e.g. King)" value={newRole} onChange={e => setNewRole(e.target.value)} style={{ flex: 1 }} />
-              <input className="admin-input" placeholder="Name" value={newMemberName} onChange={e => setNewMemberName(e.target.value)} style={{ flex: 1 }} />
+          {/* Designs / Moodboard */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', fontSize: '0.9rem', margin: 0 }}>DESIGNS & MOODBOARD</h3>
+              
+              <input type="file" accept="image/*" id="upload-design" style={{ display: 'none' }} onChange={(e) => handleFileUpload(e, 'designs')} disabled={uploadingField === 'designs'} />
+              <label htmlFor="upload-design" className="btn-gold" style={{ display: 'inline-flex', padding: '5px 10px', fontSize: '0.75rem', cursor: 'pointer', opacity: uploadingField === 'designs' ? 0.7 : 1 }}>
+                <Upload size={12} style={{ marginRight: '5px' }} /> Add Design
+              </label>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <input type="file" accept="image/*" ref={fileInputRef} onChange={e => setNewMemberImage(e.target.files[0])} style={{ color: 'var(--text-muted)', fontSize: '0.8rem', flex: 1 }} />
-              <button className="btn-gold" onClick={handleAddMember} disabled={isUploading} style={{ padding: '8px 15px' }}>
-                {isUploading ? 'Adding...' : 'Add Role'}
-              </button>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '10px' }}>
+              {kingdom.designs && kingdom.designs.length > 0 ? kingdom.designs.map((design, idx) => (
+                <div key={idx} style={{ position: 'relative', aspectRatio: '1', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <img src={design} alt={`Design ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <button 
+                    onClick={() => handleRemoveDesign(idx)}
+                    style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(239, 68, 68, 0.9)', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px', cursor: 'pointer', display: 'flex' }}
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              )) : (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '30px', color: 'var(--text-muted)', fontSize: '0.8rem', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>
+                  No designs uploaded yet.
+                </div>
+              )}
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {teamMembers.map((member, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)', padding: '10px 15px', borderRadius: '4px', borderLeft: '2px solid var(--gold-primary)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          {/* Team Summary */}
+          <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', fontSize: '0.9rem', margin: 0 }}>TEAM ROSTER</h3>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Manage in Teams Tab</div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {kingdom.teamMembers && kingdom.teamMembers.length > 0 ? kingdom.teamMembers.map((member, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '4px', borderLeft: `2px solid ${kingdom.color || 'var(--gold-primary)'}` }}>
                   {member.image ? (
-                    <img src={member.image.startsWith('http') ? member.image : `http://localhost:5001${member.image}`} alt={member.name} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--gold-dark)' }} />
+                    <img src={member.image.startsWith('http') ? member.image : `http://localhost:5001${member.image}`} alt={member.name} style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                      <ImageIcon size={20} />
+                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+                      <ImageIcon size={14} />
                     </div>
                   )}
                   <div>
-                    <div style={{ fontSize: '0.9rem', color: 'var(--gold-bright)' }}>{member.role}</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{member.name}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--gold-bright)' }}>{member.role}</div>
+                    <div style={{ fontSize: '0.9rem', color: '#fff' }}>{member.name}</div>
                   </div>
                 </div>
-                <button className="btn-danger" onClick={() => handleRemoveMember(idx)} style={{ padding: '5px' }}><Trash2 size={16} /></button>
-              </div>
-            ))}
-            {teamMembers.length === 0 && <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>No team members assigned yet.</div>}
+              )) : (
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '20px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>
+                  No team members assigned yet.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   );

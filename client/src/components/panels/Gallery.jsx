@@ -5,7 +5,7 @@ import { getGallery, uploadGalleryImage, deleteGalleryImage } from '../../api';
 import './Gallery.css';
 
 export default function Gallery() {
-  const { isAdmin } = useAdmin();
+  const { admin, isAdmin, isSuperAdmin, isKingdomAdmin } = useAdmin();
   const { addToast } = useToast();
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
@@ -97,24 +97,27 @@ export default function Gallery() {
         </div>
       ) : (
         <div className="gallery-grid">
-          {images.map((img) => (
-            <div key={img._id} className="gallery-item">
-              <img src={`/uploads/${img.filename}`} alt={img.caption || 'Gallery Image'} loading="lazy" />
-              <div className="gallery-overlay" style={{ flexDirection: 'column', gap: '10px' }}>
-                <span className="gallery-view-btn">VIEW</span>
-                {img.caption && <span style={{ color: '#fff', fontSize: '0.75rem', textAlign: 'center', padding: '0 10px' }}>{img.caption}</span>}
+          {images.map((img) => {
+            const canDelete = isSuperAdmin || (isKingdomAdmin && admin.kingdomId && img.uploadedByKingdom === admin.kingdomId._id);
+            return (
+              <div key={img._id} className="gallery-item">
+                <img src={`/uploads/${img.filename}`} alt={img.caption || 'Gallery Image'} loading="lazy" />
+                <div className="gallery-overlay" style={{ flexDirection: 'column', gap: '10px' }}>
+                  <span className="gallery-view-btn">VIEW</span>
+                  {img.caption && <span style={{ color: '#fff', fontSize: '0.75rem', textAlign: 'center', padding: '0 10px' }}>{img.caption}</span>}
+                </div>
+                {canDelete && (
+                  <button 
+                    className="btn-danger" 
+                    style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10, padding: '4px 8px', fontSize: '0.6rem' }}
+                    onClick={() => handleDelete(img._id)}
+                  >
+                    X
+                  </button>
+                )}
               </div>
-              {isAdmin && (
-                <button 
-                  className="btn-danger" 
-                  style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10, padding: '4px 8px', fontSize: '0.6rem' }}
-                  onClick={() => handleDelete(img._id)}
-                >
-                  X
-                </button>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </section>
