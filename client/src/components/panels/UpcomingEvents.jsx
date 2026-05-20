@@ -5,7 +5,7 @@ import './RightPanels.css';
 
 const STATUS_META = {
   ended:    { icon: '', label: 'COMPLETED', color: '#44dd88', lineColor: '#44dd88' },
-  live:     { icon: '', label: 'LIVE NOW',  color: '#c9a227', lineColor: '#c9a227', pulse: true },
+  live:     { icon: '', label: 'LIVE NOW',  color: '#B87333', lineColor: '#B87333', pulse: true },
   paused:   { icon: '⏸', label: 'PAUSED',    color: '#ffc107', lineColor: '#ffc107' },
   upcoming: { icon: '', label: 'UP NEXT',   color: '#5a4a2a', lineColor: 'rgba(255,255,255,0.1)' },
 };

@@ -1,13 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Admin = require('../models/Admin');
-const { protect } = require('../middleware/auth');
+const { requireAdmin, requireSuperAdmin } = require('../middleware/auth');
 const bcrypt = require('bcryptjs');
 
+// Apply both middlewares to all routes in this file (Super Admin only)
+router.use(requireAdmin, requireSuperAdmin);
+
 // GET all admins
-router.get('/', protect, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const admins = await Admin.find({}).select('-accessKeyHash');
+    const admins = await Admin.find({}).select('-accessKeyHash').populate('kingdomId', 'name');
     res.json(admins);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -15,9 +18,9 @@ router.get('/', protect, async (req, res) => {
 });
 
 // POST create new admin
-router.post('/', protect, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const { username, displayName, role, accessKey } = req.body;
+    const { username, displayName, role, accessKey, kingdomId } = req.body;
     
     // Check if exists
     const existing = await Admin.findOne({ username });
@@ -31,10 +34,14 @@ router.post('/', protect, async (req, res) => {
       username,
       displayName,
       role: role || 'admin',
-      accessKeyHash
+      accessKeyHash,
+      kingdomId: kingdomId || null
     });
 
     await admin.save();
+    
+    // Populate kingdom name before returning
+    await admin.populate('kingdomId', 'name');
     
     // Return without hash
     const adminObj = admin.toObject();
@@ -46,10 +53,10 @@ router.post('/', protect, async (req, res) => {
 });
 
 // DELETE admin
-router.delete('/:id', protect, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     // Prevent deleting oneself
-    if (req.admin.id === req.params.id) {
+    if (String(req.admin._id) === req.params.id) {
       return res.status(400).json({ message: 'Cannot delete your own account' });
     }
     

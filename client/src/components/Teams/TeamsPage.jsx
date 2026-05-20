@@ -63,7 +63,7 @@ export default function TeamsPage() {
       <div className="teams-grid-wrap">
         <div className="teams-grid">
           {kingdoms.map((k, idx) => {
-            const baseColor = k.color || '#c9a227';
+            const baseColor = k.color || '#B87333';
             const borderColor = baseColor;
             const glowColor = hexToRgba(baseColor, 0.45);
 
@@ -114,7 +114,15 @@ export default function TeamsPage() {
                             <div key={i} className="tc-roster-row">
                               <div className="tc-roster-glow" style={{ background: baseColor }}></div>
                               <div className="tc-member-name-wrap">
-                                {getRoleIcon(member.role)}
+                                {member.image ? (
+                                  <img 
+                                    src={member.image.startsWith('http') ? member.image : `http://localhost:5001${member.image}`} 
+                                    alt={member.name} 
+                                    style={{ width: '20px', height: '20px', borderRadius: '50%', objectFit: 'cover', border: `1px solid ${baseColor}` }}
+                                  />
+                                ) : (
+                                  getRoleIcon(member.role)
+                                )}
                                 <span className="tc-member-name">{member.name}</span>
                               </div>
                               <span className="tc-member-role" style={{ color: baseColor }}>{member.role}</span>

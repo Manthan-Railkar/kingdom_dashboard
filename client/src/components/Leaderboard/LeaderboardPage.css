@@ -40,8 +40,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(6, 5, 10, 0.6) 0%, rgba(6, 5, 10, 0.4) 40%, rgba(6, 5, 10, 0.95) 100%),
-    linear-gradient(90deg, rgba(6, 5, 10, 0.8) 0%, rgba(6, 5, 10, 0.5) 20%, rgba(6, 5, 10, 0.5) 80%, rgba(6, 5, 10, 0.8) 100%);
+    linear-gradient(180deg, rgba(8, 6, 4, 0.6) 0%, rgba(8, 6, 4, 0.4) 40%, rgba(8, 6, 4, 0.95) 100%),
+    linear-gradient(90deg, rgba(8, 6, 4, 0.8) 0%, rgba(8, 6, 4, 0.5) 20%, rgba(8, 6, 4, 0.5) 80%, rgba(8, 6, 4, 0.8) 100%);
 }
 
 .lb-page-header-content {
@@ -61,10 +61,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(201, 162, 39, 0.5);
+  border: 2px solid rgba(184, 115, 51, 0.5);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: linear-gradient(180deg, rgba(20, 15, 8, 0.95) 0%, rgba(10, 8, 4, 0.95) 100%);
-  color: #e5d39a;
+  background: linear-gradient(180deg, rgba(20, 14, 8, 0.95) 0%, rgba(10, 8, 4, 0.95) 100%);
+  color: #dcc0a0;
   margin-bottom: 4px;
   animation: crestFloat 3s ease-in-out infinite;
 }
@@ -80,11 +80,11 @@
   font-size: 2.8rem;
   font-weight: 900;
   letter-spacing: 0.12em;
-  background: linear-gradient(180deg, #f5e070 0%, #c9a227 50%, #8b6200 100%);
+  background: linear-gradient(180deg, #e8b080 0%, #B87333 50%, #6B4226 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.4));
+  filter: drop-shadow(0 0 20px rgba(184, 115, 51, 0.4));
   line-height: 1;
   margin: 0;
 }
@@ -94,7 +94,7 @@
   font-size: 0.65rem;
   font-weight: 400;
   letter-spacing: 0.4em;
-  color: rgba(201, 162, 39, 0.6);
+  color: rgba(184, 115, 51, 0.6);
   margin: 0;
 }
 
@@ -110,11 +110,11 @@
   display: block;
   width: 80px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(184, 115, 51, 0.5), transparent);
 }
 
 .lb-page-divider-diamond {
-  color: rgba(201, 162, 39, 0.5);
+  color: rgba(184, 115, 51, 0.5);
   font-size: 0.6rem;
 }
 
@@ -124,12 +124,12 @@
 
 .lb-table-wrap {
   background: rgba(10, 8, 5, 0.85);
-  border: 1px solid rgba(201, 162, 39, 0.2);
+  border: 1px solid rgba(184, 115, 51, 0.2);
   border-radius: 6px;
   overflow: hidden;
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(201, 162, 39, 0.1);
+    inset 0 1px 0 rgba(184, 115, 51, 0.1);
 }
 
 /* ---- Table Header ---- */
@@ -137,7 +137,7 @@
   display: grid;
   grid-template-columns: 100px 1fr 160px 120px;
   padding: 14px 20px;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  border-bottom: 1px solid rgba(184, 115, 51, 0.15);
   background: rgba(15, 12, 8, 0.9);
 }
 
@@ -146,7 +146,7 @@
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.2em;
-  color: rgba(201, 162, 39, 0.55);
+  color: rgba(184, 115, 51, 0.55);
   text-transform: uppercase;
 }
 
@@ -166,7 +166,7 @@
   grid-template-columns: 100px 1fr 160px 120px;
   align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.06);
+  border-bottom: 1px solid rgba(184, 115, 51, 0.06);
   position: relative;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.3s ease;
@@ -180,14 +180,14 @@
 }
 
 .lb-row:hover {
-  background: rgba(201, 162, 39, 0.05);
+  background: rgba(184, 115, 51, 0.05);
   transform: scale(1.005);
 }
 
 /* Top 3 rows get a subtle left accent */
 .lb-row--top {
-  border-bottom: 1px solid rgba(201, 162, 39, 0.1);
-  background: rgba(201, 162, 39, 0.02);
+  border-bottom: 1px solid rgba(184, 115, 51, 0.1);
+  background: rgba(184, 115, 51, 0.02);
 }
 
 .lb-row--top::before {
@@ -217,7 +217,7 @@
 }
 
 .lb-row:hover::after {
-  border-color: rgba(201, 162, 39, 0.12);
+  border-color: rgba(184, 115, 51, 0.12);
 }
 
 /* ---- Cells ---- */
@@ -238,7 +238,7 @@
   align-items: center;
   justify-content: center;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background: linear-gradient(180deg, #1a1408 0%, #0c0804 100%);
+  background: linear-gradient(180deg, #1a1208 0%, #0c0804 100%);
   border: none;
   position: relative;
   transition: transform 0.3s ease, filter 0.3s ease;
@@ -249,17 +249,17 @@
   filter: drop-shadow(0 0 8px var(--row-glow));
 }
 
-/* Gold shield for #1 */
+/* Copper shield for #1 */
 .lb-rank-shield--1 {
-  background: linear-gradient(180deg, #3d2f10 0%, #1a1408 100%);
-  box-shadow: 0 0 15px rgba(201, 162, 39, 0.3);
+  background: linear-gradient(180deg, #3d2510 0%, #1a1208 100%);
+  box-shadow: 0 0 15px rgba(184, 115, 51, 0.3);
 }
 .lb-rank-shield--1::before {
   content: '';
   position: absolute;
   inset: 2px;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  border: 1.5px solid rgba(201, 162, 39, 0.6);
+  border: 1.5px solid rgba(184, 115, 51, 0.6);
 }
 
 /* Silver shield for #2 */
@@ -292,8 +292,8 @@
   font-family: var(--font-title);
   font-size: 1.2rem;
   font-weight: 700;
-  color: #e5d39a;
-  text-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
+  color: #dcc0a0;
+  text-shadow: 0 0 8px rgba(184, 115, 51, 0.3);
   line-height: 1;
 }
 
@@ -313,7 +313,7 @@
   justify-content: center;
   border-radius: 50%;
   background: rgba(15, 12, 8, 0.9);
-  border: 1px solid rgba(201, 162, 39, 0.15);
+  border: 1px solid rgba(184, 115, 51, 0.15);
   flex-shrink: 0;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -327,7 +327,7 @@
   font-family: var(--font-heading);
   font-size: 1.05rem;
   font-weight: 600;
-  color: #f0e6d0;
+  color: #f0e0d0;
   letter-spacing: 0.04em;
   transition: color 0.3s ease;
 }
@@ -346,7 +346,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  text-shadow: 0 0 15px rgba(201, 162, 39, 0.2);
+  text-shadow: 0 0 15px rgba(184, 115, 51, 0.2);
 }
 
 /* ---- Delta Cell ---- */

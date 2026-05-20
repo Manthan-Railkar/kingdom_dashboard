@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function SparklineCanvas({ data = [], color = '#c9a227', width = 100, height = 30, className = '' }) {
+export default function SparklineCanvas({ data = [], color = '#B87333', width = 100, height = 30, className = '' }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {

@@ -37,7 +37,7 @@ export default function LiveUpdates() {
     <section className="panel live-updates-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <Activity size={14} className="panel-icon" color="#c9a227" />
+          <Activity size={14} className="panel-icon" color="#B87333" />
           <h2 className="panel-title">LIVE UPDATES</h2>
           {isAdmin && <span className="admin-control-badge">(ADMIN CONTROL)</span>}
         </div>

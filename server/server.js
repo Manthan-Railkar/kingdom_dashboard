@@ -14,6 +14,8 @@ const newsRoutes = require('./routes/news');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admins');
 const galleryRoutes = require('./routes/gallery');
+const settingsRoutes = require('./routes/settings');
+const pointCategoryRoutes = require('./routes/pointCategories');
 const { initializeSocketHandlers } = require('./socket/handlers');
 const { autoSeed } = require('./seed/seed');
 
@@ -46,6 +48,8 @@ app.use('/api/news', newsRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/settings', settingsRoutes);
+app.use('/api/point-categories', pointCategoryRoutes);
 
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', timestamp: new Date().toISOString() })

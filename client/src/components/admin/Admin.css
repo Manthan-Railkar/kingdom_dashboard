@@ -70,10 +70,10 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   color: var(--gold-primary);
-  background: rgba(201,162,39,0.1);
+  background: rgba(184,115,51,0.1);
   padding: 1px 5px;
   border-radius: 3px;
-  border: 1px solid rgba(201,162,39,0.3);
+  border: 1px solid rgba(184,115,51,0.3);
 }
 
 /* Admin Login Inline Panel (right sidebar) */
@@ -117,7 +117,7 @@
 
 .admin-table th, .admin-table td {
   padding: 12px;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  border-bottom: 1px solid rgba(184, 115, 51, 0.15);
   font-family: var(--font-body);
   font-size: 0.85rem;
 }
@@ -139,7 +139,7 @@
 
 .admin-input {
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(201, 162, 39, 0.3);
+  border: 1px solid rgba(184, 115, 51, 0.3);
   color: var(--text-primary);
   padding: 8px 12px;
   border-radius: 4px;

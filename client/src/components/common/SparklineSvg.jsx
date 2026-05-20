@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './SparklineSvg.css';
 
-export default function SparklineSvg({ data = [], color = '#c9a227', width = 100, height = 30, animate = true }) {
+export default function SparklineSvg({ data = [], color = '#B87333', width = 100, height = 30, animate = true }) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {

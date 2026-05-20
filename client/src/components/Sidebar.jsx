@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAdmin } from '../context/AdminContext';
+import { useSettings } from '../context/SettingsContext';
 import { 
   Home, Trophy, TrendingUp, Newspaper, Users, Calendar, 
   Target, SlidersHorizontal, Image as ImageIcon, Settings, 
@@ -8,23 +9,25 @@ import {
 import './Sidebar.css';
 
 const NAV = [
-  { id: 'overview',   icon: Home, label: 'OVERVIEW', adminOnly: false },
-  { id: 'leaderboard',icon: Trophy, label: 'LEADERBOARD', adminOnly: false },
-  { id: 'trends',     icon: TrendingUp, label: 'TRENDS', adminOnly: false },
-  { id: 'news',       icon: Newspaper, label: 'NEWS & UPDATES', adminOnly: false },
-  { id: 'teams',      icon: Users, label: 'TEAMS', adminOnly: false },
-  { id: 'events',     icon: Calendar, label: 'EVENTS', adminOnly: false },
-  { id: 'gallery',    icon: ImageIcon, label: 'MEDIA & GALLERY', adminOnly: false },
-  { id: 'round_mgmt', icon: Target, label: 'ROUND MANAGEMENT', adminOnly: true },
-  { id: 'points_mgmt',icon: SlidersHorizontal, label: 'POINTS MANAGEMENT', adminOnly: true },
-  { id: 'settings',   icon: Settings, label: 'SETTINGS', adminOnly: true },
-  { id: 'activity',   icon: Activity, label: 'ACTIVITY LOGS', adminOnly: true },
-  { id: 'admin_users',icon: UserCog, label: 'ADMIN USERS', adminOnly: true },
+  { id: 'overview',   icon: Home, label: 'OVERVIEW', adminOnly: false, settingKey: null },
+  { id: 'leaderboard',icon: Trophy, label: 'LEADERBOARD', adminOnly: false, settingKey: 'showLeaderboard' },
+  { id: 'trends',     icon: TrendingUp, label: 'TRENDS', adminOnly: false, settingKey: 'showTrends' },
+  { id: 'news',       icon: Newspaper, label: 'NEWS & UPDATES', adminOnly: false, settingKey: 'showNews' },
+  { id: 'teams',      icon: Users, label: 'TEAMS', adminOnly: false, settingKey: 'showTeams' },
+  { id: 'events',     icon: Calendar, label: 'EVENTS', adminOnly: false, settingKey: 'showEvents' },
+  { id: 'gallery',    icon: ImageIcon, label: 'MEDIA & GALLERY', adminOnly: false, settingKey: 'showGallery' },
+  { id: 'round_mgmt', icon: Target, label: 'ROUND MANAGEMENT', superAdminOnly: true },
+  { id: 'points_mgmt',icon: SlidersHorizontal, label: 'POINTS MANAGEMENT', superAdminOnly: true },
+  { id: 'settings',   icon: Settings, label: 'SETTINGS', superAdminOnly: true },
+  { id: 'activity',   icon: Activity, label: 'ACTIVITY LOGS', superAdminOnly: true },
+  { id: 'admin_users',icon: UserCog, label: 'ADMIN USERS', superAdminOnly: true },
+  { id: 'kingdom_profile', icon: Target, label: 'MY KINGDOM', kingdomAdminOnly: true, adminOnly: true },
   { id: 'logout',     icon: LogOut, label: 'LOGOUT', adminOnly: true },
 ];
 
 export default function Sidebar({ active, onSelect }) {
-  const { isAdmin, logout } = useAdmin();
+  const { admin, isAdmin, isSuperAdmin, isKingdomAdmin, logout } = useAdmin();
+  const { settings } = useSettings();
 
   const handleSelect = (id) => {
     if (id === 'logout') {
@@ -35,7 +38,18 @@ export default function Sidebar({ active, onSelect }) {
     onSelect(id);
   };
 
-  const visibleNav = NAV.filter(item => !item.adminOnly || isAdmin);
+  const visibleNav = NAV.filter(item => {
+    // 1. Check SuperAdmin strict restrictions
+    if (item.superAdminOnly && !isSuperAdmin) return false;
+    // 2. Check KingdomAdmin strict restrictions
+    if (item.kingdomAdminOnly && !isKingdomAdmin) return false;
+    // 3. Check Admin restrictions
+    if (item.adminOnly && !isAdmin) return false;
+    // 4. Check Settings (only hide for non-admins)
+    if (!isAdmin && item.settingKey && settings[item.settingKey] === false) return false;
+    
+    return true;
+  });
 
   return (
     <aside className="sidebar">
@@ -49,7 +63,7 @@ export default function Sidebar({ active, onSelect }) {
         </div>
         <div className="sb-brand">
           <span className="sb-title">QUANTUM 26</span>
-          <span className="sb-tagline">{isAdmin ? 'ADMIN MODE' : 'Unite. Compete. Reign.'}</span>
+          <span className="sb-tagline">{isSuperAdmin ? 'SUPER ADMIN' : (isKingdomAdmin ? 'CAPTAIN MODE' : 'Unite. Compete. Reign.')}</span>
         </div>
       </div>
 
@@ -79,12 +93,14 @@ export default function Sidebar({ active, onSelect }) {
         <div className="sb-admin-status-box">
           <div className="sb-admin-status-header">
             <CheckSquare size={16} className="sb-admin-status-icon" color="#4caf50" />
-            <span>ADMIN STATUS</span>
+            <span>{isSuperAdmin ? 'SUPER ADMIN' : 'CAPTAIN'}</span>
           </div>
           <div className="sb-admin-status-content">
-            <p className="sb-logged-in-text">You are logged in as</p>
-            <p className="sb-admin-role">Super Admin</p>
-            <p className="sb-last-login">Last Login: Today, 09:15 AM</p>
+            <p className="sb-logged-in-text">Logged in as</p>
+            <p className="sb-admin-role">{admin?.displayName || admin?.username}</p>
+            {isKingdomAdmin && admin?.kingdomId?.name && (
+              <p className="sb-last-login">Kingdom: {admin.kingdomId.name}</p>
+            )}
           </div>
         </div>
       )}

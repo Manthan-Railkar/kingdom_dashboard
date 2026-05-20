@@ -75,7 +75,7 @@ export default function LeaderboardPage() {
           {kingdoms.map((k, i) => {
             const rank = i + 1;
             const isTopThree = rank <= 3;
-            const baseColor = k.color || '#c9a227';
+            const baseColor = k.color || '#B87333';
             const glowColor = hexToRgba(baseColor, 0.4);
             const isPos = k.pointsDelta >= 0;
 

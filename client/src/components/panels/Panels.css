@@ -236,7 +236,7 @@
   padding: 10px 8px;
   transition: all var(--transition-fast);
 }
-.aqa-btn:hover { background: rgba(201,162,39,0.08); border-color: var(--border-gold); transform: translateY(-1px); }
+.aqa-btn:hover { background: rgba(184,115,51,0.08); border-color: var(--border-gold); transform: translateY(-1px); }
 .aqa-icon { font-size: 1.2rem; }
 .aqa-label { font-family: var(--font-mono); font-size: 0.48rem; color: var(--text-secondary); letter-spacing: 0.08em; text-align: center; }
 

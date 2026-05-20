@@ -3,8 +3,8 @@
   top: 0; left: 0;
   width: var(--sidebar-w);
   height: 100vh;
-  background: linear-gradient(180deg, #12100a 0%, #0e0c08 40%, #0a0806 100%);
-  border-right: 1px solid rgba(201,162,39,0.18);
+  background: linear-gradient(180deg, #120e0a 0%, #0e0b08 40%, #0a0806 100%);
+  border-right: 1px solid rgba(184,115,51,0.18);
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -18,7 +18,7 @@
   top: 0; right: -1px;
   width: 1px;
   height: 100%;
-  background: linear-gradient(180deg, transparent 0%, rgba(201,162,39,0.5) 30%, rgba(201,162,39,0.3) 70%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(184,115,51,0.5) 30%, rgba(184,115,51,0.3) 70%, transparent 100%);
 }
 
 /* ---- Logo ---- */
@@ -27,7 +27,7 @@
   align-items: center;
   gap: 10px;
   padding: 16px 14px 14px;
-  border-bottom: 1px solid rgba(201,162,39,0.12);
+  border-bottom: 1px solid rgba(184,115,51,0.12);
 }
 
 .sb-emblem { position: relative; flex-shrink: 0; }
@@ -46,13 +46,13 @@
 .sb-shield {
   width: 44px;
   height: 48px;
-  background: linear-gradient(145deg, #1c1400, #2a1e00);
+  background: linear-gradient(145deg, #1c1208, #2a1a08);
   border: 1.5px solid var(--gold-primary);
   clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 14px rgba(201,162,39,0.25), inset 0 0 10px rgba(201,162,39,0.08);
+  box-shadow: 0 0 14px rgba(184,115,51,0.25), inset 0 0 10px rgba(184,115,51,0.08);
   margin-top: 6px;
 }
 
@@ -73,14 +73,14 @@
   font-weight: 700;
   color: var(--gold-text);
   letter-spacing: 0.04em;
-  text-shadow: 0 0 12px rgba(201,162,39,0.3);
+  text-shadow: 0 0 12px rgba(184,115,51,0.3);
   line-height: 1.2;
 }
 
 .sb-tagline {
   font-family: var(--font-body);
   font-size: 0.56rem;
-  color: rgba(160,120,60,0.7);
+  color: rgba(150,100,50,0.7);
   letter-spacing: 0.04em;
 }
 
@@ -103,16 +103,16 @@
   position: relative;
   text-align: left;
   width: 100%;
-  color: rgba(160,130,70,0.7);
+  color: rgba(150,110,60,0.7);
   transition: all var(--t-fast);
   border-radius: 0;
 }
 .sb-nav-item:hover {
-  background: rgba(201,162,39,0.06);
+  background: rgba(184,115,51,0.06);
   color: var(--gold-text);
 }
 .sb-nav-item.active {
-  background: linear-gradient(90deg, rgba(120,20,20,0.85) 0%, rgba(80,10,10,0.5) 100%);
+  background: linear-gradient(90deg, rgba(120,40,10,0.85) 0%, rgba(80,20,5,0.5) 100%);
   color: var(--gold-text);
   border-right: none;
 }
@@ -142,7 +142,7 @@
 /* ---- Footer / Admin Status ---- */
 .sb-admin-status-box {
   margin: 10px 14px;
-  border: 1px solid rgba(201, 162, 39, 0.3);
+  border: 1px solid rgba(184, 115, 51, 0.3);
   border-radius: 6px;
   background: rgba(10, 8, 6, 0.8);
   padding: 12px;
@@ -158,7 +158,7 @@
   letter-spacing: 0.1em;
   color: var(--gold-text);
   margin-bottom: 8px;
-  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+  border-bottom: 1px solid rgba(184, 115, 51, 0.15);
   padding-bottom: 6px;
 }
 
@@ -184,14 +184,14 @@
 .sb-last-login {
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  color: rgba(160, 130, 70, 0.5);
+  color: rgba(150, 110, 60, 0.5);
   margin-top: 4px;
 }
 
 .sb-copyright {
   font-family: var(--font-body);
   font-size: 0.55rem;
-  color: rgba(160, 130, 70, 0.4);
+  color: rgba(150, 110, 60, 0.4);
   text-align: center;
   padding: 10px 0 16px;
 }

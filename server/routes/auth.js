@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
-const { protect } = require('../middleware/auth');
+const { requireAdmin } = require('../middleware/auth');
 
 // POST login with access key
 router.post('/login', async (req, res) => {
@@ -31,6 +31,7 @@ router.post('/login', async (req, res) => {
         displayName: admin.displayName,
         role: admin.role,
         lastLogin: admin.lastLogin,
+        kingdomId: admin.kingdomId,
       },
     });
   } catch (err) {
@@ -39,9 +40,16 @@ router.post('/login', async (req, res) => {
 });
 
 // GET current admin
-router.get('/me', protect, (req, res) => res.json(req.admin));
+router.get('/me', requireAdmin, (req, res) => res.json({
+  id: req.admin._id,
+  username: req.admin.username,
+  displayName: req.admin.displayName,
+  role: req.admin.role,
+  lastLogin: req.admin.lastLogin,
+  kingdomId: req.admin.kingdomId,
+}));
 
 // POST logout (client-side, but for audit)
-router.post('/logout', protect, (req, res) => res.json({ message: 'Logged out' }));
+router.post('/logout', requireAdmin, (req, res) => res.json({ message: 'Logged out' }));
 
 module.exports = router;

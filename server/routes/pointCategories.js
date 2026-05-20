@@ -1,36 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const News = require('../models/News');
+const PointCategory = require('../models/PointCategory');
 const { requireSuperAdmin } = require('../middleware/auth');
 
-// GET recent news
+// GET all categories
 router.get('/', async (req, res) => {
   try {
-    const news = await News.find({ isVisible: true }).sort({ createdAt: -1 }).limit(20);
-    res.json(news);
+    const categories = await PointCategory.find({});
+    res.json(categories);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// POST news (admin)
+// POST create category
 router.post('/', requireSuperAdmin, async (req, res) => {
   try {
-    const item = new News(req.body);
-    await item.save();
-    req.io.emit('news:new', item);
-    res.status(201).json(item);
+    const category = new PointCategory(req.body);
+    await category.save();
+    res.status(201).json(category);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// DELETE news (admin)
+// DELETE category
 router.delete('/:id', requireSuperAdmin, async (req, res) => {
   try {
-    await News.findByIdAndDelete(req.params.id);
-    req.io.emit('news:delete', req.params.id);
-    res.json({ message: 'Deleted' });
+    await PointCategory.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Category deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

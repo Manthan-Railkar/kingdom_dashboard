@@ -22,7 +22,7 @@ export default function MiniKingdomCard({ kingdom, delay = 0, rank }) {
   return (
     <div
       className="mcard"
-      style={{ '--delay': `${delay}s`, '--mc': kingdom.color || '#c9a227' }}
+      style={{ '--delay': `${delay}s`, '--mc': kingdom.color || '#B87333' }}
     >
       {/* Parchment grain overlay */}
       <div className="mcard-parchment" />

@@ -35,11 +35,11 @@
       0deg,
       transparent,
       transparent 2px,
-      rgba(60, 45, 20, 0.04) 2px,
-      rgba(60, 45, 20, 0.04) 4px
+      rgba(60, 40, 20, 0.04) 2px,
+      rgba(60, 40, 20, 0.04) 4px
     ),
     /* Subtle aged vignette */
-    radial-gradient(ellipse at 50% 20%, rgba(80, 60, 25, 0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 20%, rgba(80, 50, 25, 0.25) 0%, transparent 55%),
     radial-gradient(ellipse at 50% 90%, rgba(40, 25, 10, 0.4) 0%, transparent 60%),
     /* Noise texture for parchment feel */
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12' style='mix-blend-mode: overlay;'/%3E%3C/svg%3E");
@@ -74,23 +74,23 @@
   transform: translate(-50%, -55%) scale(1.15);
 }
 
-/* ---- Hammered Iron & Gold Border Frame ---- */
+/* ---- Hammered Iron & Copper Border Frame ---- */
 .kc-main-frame {
   position: absolute;
   inset: 0;
-  border: 3px solid #2a1e0e;
+  border: 3px solid #2a1a0e;
   border-radius: 4px;
   clip-path: polygon(8% 0, 92% 0, 100% 6%, 100% 84%, 50% 100%, 0 84%, 0 6%);
   box-shadow:
     inset 0 0 20px rgba(0, 0, 0, 1),
     0 0 25px rgba(0, 0, 0, 0.95);
-  background: linear-gradient(160deg, rgba(120, 90, 40, 0.12) 0%, transparent 40%, transparent 60%, rgba(120, 90, 40, 0.08) 100%);
+  background: linear-gradient(160deg, rgba(120, 70, 30, 0.12) 0%, transparent 40%, transparent 60%, rgba(120, 70, 30, 0.08) 100%);
   z-index: 2;
   pointer-events: none;
   transition: border-color 0.5s ease;
 }
 
-/* Ornate inner gold tracery border */
+/* Ornate inner copper tracery border */
 .kc-main-frame::before {
   content: '';
   position: absolute;
@@ -106,12 +106,12 @@
   content: '';
   position: absolute;
   inset: 11px;
-  border: 1px solid rgba(201, 162, 39, 0.15);
+  border: 1px solid rgba(184, 115, 51, 0.15);
   clip-path: polygon(7% 0, 93% 0, 100% 5%, 100% 82%, 50% 96%, 0 82%, 0 5%);
 }
 
 .kcard:hover .kc-main-frame {
-  border-color: #3d2a10;
+  border-color: #3d2510;
 }
 .kcard:hover .kc-main-frame::before {
   opacity: 0.9;
@@ -124,8 +124,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #c9a227, #5a4010 70%, #2a1e0e);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,220,120,0.3);
+  background: radial-gradient(circle at 40% 35%, #B87333, #5a3510 70%, #2a1a0e);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.8), inset 0 1px 1px rgba(220,170,100,0.3);
   z-index: 6;
 }
 
@@ -137,7 +137,7 @@
   transform: translateX(-50%);
   width: 74px;
   height: 68px;
-  background: linear-gradient(175deg, #1a1408 0%, #0e0a04 100%);
+  background: linear-gradient(175deg, #1a1208 0%, #0e0a04 100%);
   border: 2.5px solid var(--border-c);
   clip-path: polygon(50% 0, 100% 22%, 100% 65%, 50% 100%, 0 65%, 0 22%);
   display: flex;
@@ -154,7 +154,7 @@
   position: absolute;
   inset: 4px;
   clip-path: polygon(50% 0, 100% 22%, 100% 65%, 50% 100%, 0 65%, 0 22%);
-  background: linear-gradient(170deg, rgba(201, 162, 39, 0.15) 0%, transparent 50%);
+  background: linear-gradient(170deg, rgba(184, 115, 51, 0.15) 0%, transparent 50%);
   pointer-events: none;
 }
 
@@ -167,7 +167,7 @@
   font-family: var(--font-title);
   font-size: 1.8rem;
   font-weight: 700;
-  color: #e5d39a;
+  color: #dcc0a0;
   text-shadow: 0 0 12px var(--glow-c), 0 2px 4px rgba(0,0,0,0.9);
   margin-top: 2px;
 }
@@ -179,7 +179,7 @@
   left: -14px;
   width: 28px;
   height: 110px;
-  background: linear-gradient(180deg, #1a1408 0%, #0c0804 80%);
+  background: linear-gradient(180deg, #1a1208 0%, #0c0804 80%);
   border: 1.5px solid var(--border-c);
   border-top: none;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
@@ -258,7 +258,7 @@
   height: 90px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(20, 15, 8, 0.9) 40%, transparent 100%);
-  border: 1.5px solid rgba(201, 162, 39, 0.2);
+  border: 1.5px solid rgba(184, 115, 51, 0.2);
   transition: transform 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
@@ -281,15 +281,15 @@
   font-family: var(--font-heading);
   font-size: 1.3rem;
   font-weight: 600;
-  color: #e5d39a;
+  color: #dcc0a0;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 2px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 12px rgba(201, 162, 39, 0.2);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 12px rgba(184, 115, 51, 0.2);
   text-align: center;
 }
 
-/* ---- Points Display (Old Gold Numerals) ---- */
+/* ---- Points Display (Old Copper Numerals) ---- */
 .kc-points-wrap {
   display: flex;
   flex-direction: column;
@@ -301,7 +301,7 @@
   font-family: var(--font-title);
   font-size: 2.6rem;
   font-weight: 700;
-  color: #e5d39a;
+  color: #dcc0a0;
   line-height: 1;
   text-shadow: 0 0 20px var(--glow-c), 0 3px 8px rgba(0, 0, 0, 0.9);
   white-space: nowrap;
@@ -311,7 +311,7 @@
   font-family: var(--font-heading);
   font-size: 0.6rem;
   letter-spacing: 0.35em;
-  color: rgba(201, 162, 39, 0.55);
+  color: rgba(184, 115, 51, 0.55);
   margin-top: 6px;
   text-transform: uppercase;
 }

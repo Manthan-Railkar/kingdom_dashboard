@@ -17,14 +17,18 @@ import ManagePoints from '../components/admin/ManagePoints';
 import ManageTeams from '../components/admin/ManageTeams';
 import ManageEvents from '../components/admin/ManageEvents';
 import ManageAdmins from '../components/admin/ManageAdmins';
+import ManageSettings from '../components/admin/ManageSettings';
+import KingdomProfile from '../components/admin/KingdomProfile';
 import RoundManagement from '../components/panels/RoundManagement';
 import Gallery from '../components/panels/Gallery';
 import { useAdmin } from '../context/AdminContext';
+import { useSettings } from '../context/SettingsContext';
 
 export default function Dashboard() {
   const [active, setActive] = useState('overview');
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const { isAdmin } = useAdmin();
+  const { isAdmin, isSuperAdmin, isKingdomAdmin } = useAdmin();
+  const { settings } = useSettings();
 
   const handleTabChange = (newTab) => {
     if (newTab === active) return;
@@ -38,7 +42,7 @@ export default function Dashboard() {
   };
 
   const renderContent = () => {
-    if (isAdmin && active === 'points_mgmt') {
+    if (isSuperAdmin && active === 'points_mgmt') {
       return (
         <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <ManagePoints />
@@ -46,7 +50,7 @@ export default function Dashboard() {
       );
     }
     
-    if (isAdmin && active === 'round_mgmt') {
+    if (isSuperAdmin && active === 'round_mgmt') {
       return (
         <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <RoundManagement />
@@ -73,10 +77,26 @@ export default function Dashboard() {
       );
     }
 
-    if (isAdmin && active === 'admin_users') {
+    if (isSuperAdmin && active === 'admin_users') {
       return (
         <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
           <ManageAdmins />
+        </div>
+      );
+    }
+
+    if (isSuperAdmin && active === 'settings') {
+      return (
+        <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <ManageSettings />
+        </div>
+      );
+    }
+
+    if (isKingdomAdmin && active === 'kingdom_profile') {
+      return (
+        <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <KingdomProfile />
         </div>
       );
     }

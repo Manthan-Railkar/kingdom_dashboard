@@ -67,7 +67,7 @@ export default function Gallery() {
       </div>
 
       {isAdmin && (
-        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(201,162,39,0.2)', marginTop: '15px' }}>
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)', marginTop: '15px' }}>
           <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', fontSize: '0.8rem', marginBottom: '10px' }}>UPLOAD NEW IMAGE</h3>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
             <input 
@@ -99,7 +99,7 @@ export default function Gallery() {
         <div className="gallery-grid">
           {images.map((img) => (
             <div key={img._id} className="gallery-item">
-              <img src={`http://localhost:5000/uploads/${img.filename}`} alt={img.caption || 'Gallery Image'} loading="lazy" />
+              <img src={`/uploads/${img.filename}`} alt={img.caption || 'Gallery Image'} loading="lazy" />
               <div className="gallery-overlay" style={{ flexDirection: 'column', gap: '10px' }}>
                 <span className="gallery-view-btn">VIEW</span>
                 {img.caption && <span style={{ color: '#fff', fontSize: '0.75rem', textAlign: 'center', padding: '0 10px' }}>{img.caption}</span>}

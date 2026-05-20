@@ -18,7 +18,7 @@ export default function AdminQuickActions() {
     <section className="panel admin-actions-panel">
       <div className="panel-header">
         <div className="panel-title-group">
-          <Home size={14} className="panel-icon" color="#c9a227" />
+          <Home size={14} className="panel-icon" color="#B87333" />
           <h2 className="panel-title">ADMIN QUICK ACTIONS</h2>
         </div>
       </div>
@@ -27,7 +27,7 @@ export default function AdminQuickActions() {
           const Icon = a.icon;
           return (
             <button key={a.label} className="aqa-btn">
-              <span className="aqa-icon"><Icon size={20} color="#c9a227" /></span>
+              <span className="aqa-icon"><Icon size={20} color="#B87333" /></span>
               <span className="aqa-label">{a.label}</span>
             </button>
           );

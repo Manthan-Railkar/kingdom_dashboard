@@ -6,7 +6,8 @@ const gallerySchema = new mongoose.Schema({
   caption: { type: String, default: '' },
   mimetype: { type: String },
   size: { type: Number },
-  uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }
+  uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+  uploadedByKingdom: { type: mongoose.Schema.Types.ObjectId, ref: 'Kingdom', default: null }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Gallery', gallerySchema);

@@ -26,7 +26,7 @@ const getKingdomIcon = (name, size = 64) => {
 
 export default function KingdomCard({ kingdom, rank, delay = 0, onClick }) {
   const pts = useCountUp(kingdom.points, 1600, delay * 180);
-  const baseColor = kingdom.color || '#c9a227';
+  const baseColor = kingdom.color || '#B87333';
   const borderColor = baseColor;
   const glowColor = hexToRgba(baseColor, 0.45);
   const isPos = kingdom.pointsDelta >= 0;

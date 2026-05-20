@@ -8,28 +8,37 @@ export default function ManageAdmins() {
   const { token, admin: currentAdmin } = useAdmin();
   const { addToast } = useToast();
   const [admins, setAdmins] = useState([]);
-  const [formData, setFormData] = useState({ username: '', displayName: '', accessKey: '', role: 'admin' });
+  const [kingdoms, setKingdoms] = useState([]);
+  const [formData, setFormData] = useState({ username: '', displayName: '', accessKey: '', role: 'admin', kingdomId: '' });
 
-  const fetchAdmins = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get('/admins', { headers: { Authorization: `Bearer ${token}` } });
-      setAdmins(res.data);
+      const [adminRes, kingdomRes] = await Promise.all([
+        api.get('/admins', { headers: { Authorization: `Bearer ${token}` } }),
+        api.get('/kingdoms', { headers: { Authorization: `Bearer ${token}` } })
+      ]);
+      setAdmins(adminRes.data);
+      setKingdoms(kingdomRes.data);
     } catch (err) {
-      addToast('Failed to load admins', 'error');
+      addToast('Failed to load data', 'error');
     }
   };
 
   useEffect(() => {
-    if (token) fetchAdmins();
+    if (token) fetchData();
   }, [token]);
 
   const handleCreate = async () => {
     if (!formData.username || !formData.accessKey) return addToast('Username and Key are required', 'error');
     try {
-      await api.post('/admins', formData, { headers: { Authorization: `Bearer ${token}` } });
+      const payload = { ...formData };
+      if (!payload.kingdomId) delete payload.kingdomId;
+      if (payload.role === 'superadmin') delete payload.kingdomId; // SuperAdmins don't need kingdoms
+
+      await api.post('/admins', payload, { headers: { Authorization: `Bearer ${token}` } });
       addToast('Admin created successfully', 'success');
-      setFormData({ username: '', displayName: '', accessKey: '', role: 'admin' });
-      fetchAdmins();
+      setFormData({ username: '', displayName: '', accessKey: '', role: 'admin', kingdomId: '' });
+      fetchData();
     } catch (err) {
       addToast(err.response?.data?.message || 'Failed to create admin', 'error');
     }
@@ -40,7 +49,7 @@ export default function ManageAdmins() {
     try {
       await api.delete(`/admins/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       addToast('Admin deleted', 'success');
-      fetchAdmins();
+      fetchData();
     } catch (err) {
       addToast(err.response?.data?.message || 'Failed to delete admin', 'error');
     }
@@ -54,16 +63,22 @@ export default function ManageAdmins() {
       <div className="admin-content" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         
         {/* Create Admin Form */}
-        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(201,162,39,0.2)' }}>
+        <div style={{ background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
           <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', fontSize: '0.8rem', marginBottom: '10px' }}>CREATE NEW ADMIN</h3>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <input className="admin-input" placeholder="Username" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} />
             <input className="admin-input" placeholder="Display Name" value={formData.displayName} onChange={e => setFormData({ ...formData, displayName: e.target.value })} />
             <input type="password" className="admin-input" placeholder="4-Digit Key" value={formData.accessKey} onChange={e => setFormData({ ...formData, accessKey: e.target.value })} maxLength={10} />
-            <select className="admin-input" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })} style={{ width: '100px' }}>
-              <option value="admin">Admin</option>
+            <select className="admin-input" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value })} style={{ width: '120px' }}>
+              <option value="admin">Captain (Admin)</option>
               <option value="superadmin">Super Admin</option>
             </select>
+            {formData.role === 'admin' && (
+              <select className="admin-input" value={formData.kingdomId} onChange={e => setFormData({ ...formData, kingdomId: e.target.value })} style={{ width: '150px' }}>
+                <option value="">Select Kingdom...</option>
+                {kingdoms.map(k => <option key={k._id} value={k._id}>{k.name}</option>)}
+              </select>
+            )}
             <button className="btn-gold" onClick={handleCreate}>Create</button>
           </div>
         </div>
@@ -76,6 +91,7 @@ export default function ManageAdmins() {
               <th>Username</th>
               <th>Display Name</th>
               <th>Role</th>
+              <th>Kingdom</th>
               <th>Last Active</th>
               <th>Actions</th>
             </tr>
@@ -91,7 +107,10 @@ export default function ManageAdmins() {
                 </td>
                 <td>{a.displayName}</td>
                 <td style={{ color: a.role === 'superadmin' ? 'var(--gold-bright)' : 'var(--text-muted)' }}>
-                  {a.role.toUpperCase()}
+                  {a.role === 'superadmin' ? 'SUPER ADMIN' : 'CAPTAIN'}
+                </td>
+                <td style={{ fontSize: '0.8rem' }}>
+                  {a.kingdomId ? a.kingdomId.name : '--'}
                 </td>
                 <td style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   {a.lastLogin ? new Date(a.lastLogin).toLocaleString() : 'Never'}

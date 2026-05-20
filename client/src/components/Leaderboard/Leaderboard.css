@@ -31,10 +31,10 @@
   align-content: stretch;    /* rows stretch to fill space */
 }
 
-/* Top 3 — gold / silver / bronze accents */
-.lb-unified-grid .mcard:nth-child(1) { --mc: #f5c842; }
+/* Top 3 — copper / silver / bronze accents */
+.lb-unified-grid .mcard:nth-child(1) { --mc: #D4956A; }
 .lb-unified-grid .mcard:nth-child(2) { --mc: #b8c4d0; }
-.lb-unified-grid .mcard:nth-child(3) { --mc: #d4845a; }
+.lb-unified-grid .mcard:nth-child(3) { --mc: #c4784a; }
 
 /* All mcards fill their cell — width AND height */
 .lb-unified-grid .mcard {

@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const Gallery = require('../models/Gallery');
-const { protect } = require('../middleware/auth');
+const { requireAdmin } = require('../middleware/auth');
 
 // Multer Config
 const storage = multer.diskStorage({
@@ -41,8 +41,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST new image (Admin)
-router.post('/', protect, upload.single('image'), async (req, res) => {
+// POST new image (Admin or Superadmin)
+router.post('/', requireAdmin, upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'Please upload a file' });
@@ -55,7 +55,8 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
       caption: caption || '',
       mimetype: req.file.mimetype,
       size: req.file.size,
-      uploadedBy: req.admin.id
+      uploadedBy: req.admin._id,
+      uploadedByKingdom: req.admin.kingdomId || null
     });
 
     await newImage.save();
@@ -65,11 +66,18 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
   }
 });
 
-// DELETE image (Admin)
-router.delete('/:id', protect, async (req, res) => {
+// DELETE image (Admin or Superadmin)
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
     const image = await Gallery.findById(req.params.id);
     if (!image) return res.status(404).json({ message: 'Image not found' });
+
+    // Kingdom Admins can only delete images they uploaded for their kingdom
+    if (req.admin.role !== 'superadmin') {
+      if (!image.uploadedByKingdom || String(image.uploadedByKingdom) !== String(req.admin.kingdomId)) {
+        return res.status(403).json({ message: 'You can only delete images uploaded by your kingdom' });
+      }
+    }
 
     // Remove file from filesystem
     const filePath = path.join(__dirname, '../uploads/', image.filename);

@@ -22,7 +22,7 @@ export default function TrendsPanel() {
             <div className="trend-emblem">{k.emblem}</div>
             <span className="trend-name">{k.name}</span>
             <div className="trend-spark">
-              <SparklineCanvas data={k.deltaHistory || []} color={k.color || '#c9a227'} width={90} height={26} />
+              <SparklineCanvas data={k.deltaHistory || []} color={k.color || '#B87333'} width={90} height={26} />
             </div>
             <span className={`trend-delta ${k.pointsDelta >= 0 ? 'positive' : 'negative'}`}>
               {k.pointsDelta >= 0 ? '+' : ''}{k.pointsDelta} pts

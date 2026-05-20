@@ -25,7 +25,7 @@ export default function EmberParticles() {
       speedX: (Math.random() - 0.5) * 0.4,
       opacity: Math.random() * 0.7 + 0.3,
       decay: Math.random() * 0.003 + 0.001,
-      color: Math.random() > 0.5 ? '#ff6600' : '#c9a227',
+      color: Math.random() > 0.5 ? '#ff6600' : '#B87333',
       flicker: Math.random() * Math.PI * 2,
     });
 

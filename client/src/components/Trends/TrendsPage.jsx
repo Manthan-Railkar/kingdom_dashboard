@@ -38,7 +38,7 @@ export default function TrendsPage() {
       <div className="tp-grid-wrap">
         <div className="tp-grid">
           {kingdoms.map((k, i) => {
-            const baseColor = k.color || '#c9a227';
+            const baseColor = k.color || '#B87333';
             const isPos = k.pointsDelta >= 0;
             return (
               <div 
@@ -103,7 +103,7 @@ export default function TrendsPage() {
               <div className="kd-stat-lbl" style={{ marginBottom: '10px' }}>PERFORMANCE HISTORY</div>
               <SparklineSvg
                 data={selectedKingdom.deltaHistory || []}
-                color={selectedKingdom.color || '#c9a227'}
+                color={selectedKingdom.color || '#B87333'}
                 width={310}
                 height={120}
                 animate={true}

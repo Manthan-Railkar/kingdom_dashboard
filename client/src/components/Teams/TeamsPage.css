@@ -28,7 +28,7 @@
 .teams-header-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top, rgba(201, 162, 39, 0.15), transparent 70%);
+  background: radial-gradient(circle at top, rgba(184, 115, 51, 0.15), transparent 70%);
 }
 .teams-header-overlay {
   position: absolute;
@@ -45,7 +45,7 @@
 }
 .teams-crest {
   color: var(--gold-bright);
-  filter: drop-shadow(0 0 12px rgba(201, 162, 39, 0.4));
+  filter: drop-shadow(0 0 12px rgba(184, 115, 51, 0.4));
   margin-bottom: 8px;
 }
 .teams-title {
@@ -127,8 +127,8 @@
   inset: 10px;
   background-color: #0d0b08;
   background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(60, 45, 20, 0.04) 2px, rgba(60, 45, 20, 0.04) 4px),
-    radial-gradient(ellipse at 50% 20%, rgba(80, 60, 25, 0.25) 0%, transparent 55%),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(60, 40, 20, 0.04) 2px, rgba(60, 40, 20, 0.04) 4px),
+    radial-gradient(ellipse at 50% 20%, rgba(80, 50, 25, 0.25) 0%, transparent 55%),
     radial-gradient(ellipse at 50% 90%, rgba(40, 25, 10, 0.4) 0%, transparent 60%),
     url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12' style='mix-blend-mode: overlay;'/%3E%3C/svg%3E");
   clip-path: polygon(8% 0, 92% 0, 100% 4%, 100% 96%, 50% 100%, 0 96%, 0 4%);
@@ -164,11 +164,11 @@
 .tc-main-frame {
   position: absolute;
   inset: 0;
-  border: 3px solid #2a1e0e;
+  border: 3px solid #2a1a0e;
   border-radius: 4px;
   clip-path: polygon(8% 0, 92% 0, 100% 4%, 100% 96%, 50% 100%, 0 96%, 0 4%);
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 1), 0 0 25px rgba(0, 0, 0, 0.95);
-  background: linear-gradient(160deg, rgba(120, 90, 40, 0.12) 0%, transparent 40%, transparent 60%, rgba(120, 90, 40, 0.08) 100%);
+  background: linear-gradient(160deg, rgba(120, 70, 30, 0.12) 0%, transparent 40%, transparent 60%, rgba(120, 70, 30, 0.08) 100%);
   z-index: 2;
   pointer-events: none;
   transition: border-color 0.5s ease;
@@ -189,12 +189,12 @@
   content: '';
   position: absolute;
   inset: 11px;
-  border: 1px solid rgba(201, 162, 39, 0.15);
+  border: 1px solid rgba(184, 115, 51, 0.15);
   clip-path: polygon(7% 0, 93% 0, 100% 3%, 100% 97%, 50% 98%, 0 97%, 0 3%);
 }
 
 .tcard:hover .tc-main-frame {
-  border-color: #3d2a10;
+  border-color: #3d2510;
 }
 .tcard:hover .tc-main-frame::before {
   opacity: 0.9;
@@ -207,7 +207,7 @@
   left: -14px;
   width: 28px;
   height: 110px;
-  background: linear-gradient(180deg, #1a1408 0%, #0c0804 80%);
+  background: linear-gradient(180deg, #1a1208 0%, #0c0804 80%);
   border: 1.5px solid var(--border-c);
   border-top: none;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
@@ -279,7 +279,7 @@
   height: 80px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(20, 15, 8, 0.9) 40%, transparent 100%);
-  border: 1.5px solid rgba(201, 162, 39, 0.2);
+  border: 1.5px solid rgba(184, 115, 51, 0.2);
   transition: transform 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
 }
 
@@ -293,11 +293,11 @@
   font-family: var(--font-heading);
   font-size: 1.3rem;
   font-weight: 600;
-  color: #e5d39a;
+  color: #dcc0a0;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 2px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 12px rgba(201, 162, 39, 0.2);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 1), 0 0 12px rgba(184, 115, 51, 0.2);
   text-align: center;
 }
 
@@ -319,7 +319,7 @@
   font-family: var(--font-title);
   font-size: 2.6rem;
   font-weight: 700;
-  color: #e5d39a;
+  color: #dcc0a0;
   line-height: 1;
   text-shadow: 0 0 20px var(--glow-c), 0 3px 8px rgba(0, 0, 0, 0.9);
   white-space: nowrap;
@@ -329,7 +329,7 @@
   font-family: var(--font-heading);
   font-size: 0.6rem;
   letter-spacing: 0.35em;
-  color: rgba(201, 162, 39, 0.55);
+  color: rgba(184, 115, 51, 0.55);
   margin-top: 6px;
   text-transform: uppercase;
 }
@@ -345,7 +345,7 @@
 .tc-roster-header {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: rgba(201, 162, 39, 0.65);
+  color: rgba(184, 115, 51, 0.65);
   letter-spacing: 0.2em;
   text-align: center;
   margin-bottom: 12px;
@@ -359,7 +359,7 @@
   display: block;
   width: 40px;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(201,162,39,0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(184,115,51,0.5), transparent);
   margin: 6px auto 0 auto;
 }
 
@@ -376,7 +376,7 @@
   align-items: center;
   padding: 8px 10px;
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(201, 162, 39, 0.05);
+  border: 1px solid rgba(184, 115, 51, 0.05);
   border-radius: 4px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -413,7 +413,7 @@
 }
 
 .tc-member-name {
-  color: #e5d39a;
+  color: #dcc0a0;
   font-family: var(--font-heading);
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -435,7 +435,7 @@
 }
 
 .tc-roster-empty {
-  color: rgba(201, 162, 39, 0.55);
+  color: rgba(184, 115, 51, 0.55);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-style: italic;

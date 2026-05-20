@@ -7,12 +7,12 @@
   width: 100%;
   background: linear-gradient(
     170deg,
-    #14110a 0%,
+    #14100a 0%,
     #0e0c07 40%,
     #0a0806 100%
   );
-  border: 1px solid rgba(201, 162, 39, 0.35);
-  border-top: 3px solid var(--mc, #c9a227);
+  border: 1px solid rgba(184, 115, 51, 0.35);
+  border-top: 3px solid var(--mc, #B87333);
   border-radius: 4px;
   padding: 36px 14px 18px;
   display: flex;
@@ -32,21 +32,21 @@
   box-shadow:
     0 4px 20px rgba(0,0,0,0.7),
     inset 0 0 40px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(201,162,39,0.08);
+    inset 0 1px 0 rgba(184,115,51,0.08);
 }
 
 .mcard:hover {
   transform: translateY(-6px) scale(1.02);
-  border-color: var(--mc, #c9a227);
+  border-color: var(--mc, #B87333);
   box-shadow:
     0 16px 40px rgba(0,0,0,0.85),
-    0 0 24px color-mix(in srgb, var(--mc, #c9a227) 25%, transparent),
+    0 0 24px color-mix(in srgb, var(--mc, #B87333) 25%, transparent),
     inset 0 0 40px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,220,120,0.12);
+    inset 0 1px 0 rgba(220,170,100,0.12);
 }
 
-/* ---- Gold decorative watermark background ---- */
-/* Layer 1: radial gold glow from centre */
+/* ---- Copper decorative watermark background ---- */
+/* Layer 1: radial copper glow from centre */
 .mcard::before {
   content: '';
   position: absolute;
@@ -55,12 +55,12 @@
   background:
     radial-gradient(
       ellipse 70% 55% at 50% 55%,
-      rgba(201, 162, 39, 0.07) 0%,
+      rgba(184, 115, 51, 0.07) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse 40% 30% at 50% 20%,
-      rgba(201, 162, 39, 0.05) 0%,
+      rgba(184, 115, 51, 0.05) 0%,
       transparent 100%
     );
   pointer-events: none;
@@ -71,12 +71,12 @@
   background:
     radial-gradient(
       ellipse 80% 65% at 50% 55%,
-      rgba(201, 162, 39, 0.13) 0%,
+      rgba(184, 115, 51, 0.13) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse 45% 35% at 50% 20%,
-      rgba(201, 162, 39, 0.08) 0%,
+      rgba(184, 115, 51, 0.08) 0%,
       transparent 100%
     );
 }
@@ -90,7 +90,7 @@
   transform: translate(-50%, -45%);
   font-size: 7rem;
   line-height: 1;
-  color: var(--mc, #c9a227);
+  color: var(--mc, #B87333);
   opacity: 0.045;
   pointer-events: none;
   z-index: 0;
@@ -112,15 +112,15 @@
       0deg,
       transparent,
       transparent 3px,
-      rgba(60,45,20,0.025) 3px,
-      rgba(60,45,20,0.025) 4px
+      rgba(60,40,20,0.025) 3px,
+      rgba(60,40,20,0.025) 4px
     ),
     repeating-linear-gradient(
       90deg,
       transparent,
       transparent 5px,
-      rgba(60,45,20,0.015) 5px,
-      rgba(60,45,20,0.015) 6px
+      rgba(60,40,20,0.015) 5px,
+      rgba(60,40,20,0.015) 6px
     );
   pointer-events: none;
   z-index: 1;
@@ -130,7 +130,7 @@
 .mcard-corner {
   position: absolute;
   font-size: 0.6rem;
-  color: var(--mc, #c9a227);
+  color: var(--mc, #B87333);
   opacity: 0.45;
   z-index: 3;
   transition: opacity 0.3s ease;
@@ -159,7 +159,7 @@
   transform: translateX(-50%) translateY(-4px);
   filter:
     drop-shadow(0 10px 20px rgba(0,0,0,1))
-    drop-shadow(0 0 10px color-mix(in srgb, var(--mc, #c9a227) 50%, transparent));
+    drop-shadow(0 0 10px color-mix(in srgb, var(--mc, #B87333) 50%, transparent));
 }
 
 /* Border layer */
@@ -168,7 +168,7 @@
   position: absolute;
   inset: 0;
   clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
-  background: var(--mc, #c9a227);
+  background: var(--mc, #B87333);
   z-index: 0;
 }
 
@@ -177,7 +177,7 @@
   position: absolute;
   inset: 2.5px;
   clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
-  background: linear-gradient(170deg, #201808 0%, #100b04 60%, #0a0703 100%);
+  background: linear-gradient(170deg, #201408 0%, #100b04 60%, #0a0703 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -190,7 +190,7 @@
   position: absolute;
   inset: 0;
   clip-path: polygon(50% 0%, 100% 20%, 100% 65%, 50% 100%, 0% 65%, 0% 20%);
-  background: linear-gradient(160deg, rgba(255,220,100,0.18) 0%, transparent 55%);
+  background: linear-gradient(160deg, rgba(220,170,100,0.18) 0%, transparent 55%);
   pointer-events: none;
 }
 
@@ -199,9 +199,9 @@
   font-family: var(--font-title);
   font-size: 0.9rem;
   font-weight: 700;
-  color: #eddfa0;
+  color: #dcc0a0;
   letter-spacing: 0.04em;
-  text-shadow: 0 0 10px var(--mc, #c9a227);
+  text-shadow: 0 0 10px var(--mc, #B87333);
   position: relative;
   z-index: 2;
 }
@@ -212,8 +212,8 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(30,22,8,0.9), rgba(10,8,4,0.98));
-  border: 1.5px solid rgba(201,162,39,0.25);
+  background: radial-gradient(circle at 40% 35%, rgba(30,20,8,0.9), rgba(10,8,4,0.98));
+  border: 1.5px solid rgba(184,115,51,0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +223,7 @@
 }
 
 .mcard:hover .mcard-emblem-wrap {
-  border-color: var(--mc, #c9a227);
+  border-color: var(--mc, #B87333);
   transform: scale(1.1);
 }
 
@@ -231,7 +231,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--mc, #c9a227) 35%, transparent), transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--mc, #B87333) 35%, transparent), transparent 70%);
   opacity: 0;
   transition: opacity 0.35s ease;
 }
@@ -242,7 +242,7 @@
   font-size: 2.4rem;
   font-weight: 400;
   line-height: 1;
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--mc, #c9a227) 65%, transparent));
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--mc, #B87333) 65%, transparent));
   z-index: 1;
   position: relative;
 }
@@ -252,7 +252,7 @@
   font-family: var(--font-heading);
   font-size: 0.75rem;
   font-weight: 700;
-  color: #eddfa0;
+  color: #dcc0a0;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
@@ -276,11 +276,11 @@
 .mcard-divider-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201,162,39,0.45), transparent);
+  background: linear-gradient(90deg, transparent, rgba(184,115,51,0.45), transparent);
 }
 .mcard-divider-gem {
   font-size: 0.5rem;
-  color: var(--mc, #c9a227);
+  color: var(--mc, #B87333);
   opacity: 0.75;
   line-height: 1;
 }
@@ -300,14 +300,14 @@
   font-weight: 700;
   color: #ffffff;
   line-height: 1;
-  text-shadow: 0 0 18px var(--mc, #c9a227), 0 2px 6px rgba(0,0,0,0.9);
+  text-shadow: 0 0 18px var(--mc, #B87333), 0 2px 6px rgba(0,0,0,0.9);
 }
 
 .mcard-glory-lbl {
   font-family: var(--font-heading);
   font-size: 0.5rem;
   letter-spacing: 0.24em;
-  color: rgba(201,162,39,0.6);
+  color: rgba(184,115,51,0.6);
   text-transform: uppercase;
 }
 

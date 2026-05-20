@@ -14,7 +14,7 @@ export default function ManageTeams() {
 
   const handleEdit = (k) => {
     setEditingKingdom(k._id);
-    setFormData({ name: k.name, color: k.color || '#c9a227', teamMembers: k.teamMembers || [] });
+    setFormData({ name: k.name, color: k.color || '#B87333', teamMembers: k.teamMembers || [] });
     setNewMemberName('');
     setNewMemberRole('');
   };
@@ -92,8 +92,8 @@ export default function ManageTeams() {
                     />
                   ) : (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: k.color || '#c9a227' }} />
-                      {k.color || '#c9a227'}
+                      <span style={{ width: '16px', height: '16px', borderRadius: '50%', background: k.color || '#B87333' }} />
+                      {k.color || '#B87333'}
                     </div>
                   )}
                 </td>

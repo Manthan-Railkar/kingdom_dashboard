@@ -23,7 +23,7 @@ export default function LiveTrends() {
             <div className="trend-spark">
               <SparklineCanvas
                 data={k.deltaHistory || []}
-                color={k.color || '#c9a227'}
+                color={k.color || '#B87333'}
                 width={88}
                 height={24}
               />

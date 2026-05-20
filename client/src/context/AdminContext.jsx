@@ -11,6 +11,8 @@ export function AdminProvider({ children }) {
   const [loginError, setLoginError] = useState('');
 
   const isAdmin = Boolean(admin);
+  const isSuperAdmin = admin?.role === 'superadmin';
+  const isKingdomAdmin = admin?.role === 'admin';
 
   // Restore session on mount
   useEffect(() => {
@@ -21,14 +23,14 @@ export function AdminProvider({ children }) {
     }
   }, [token]);
 
-  // Ctrl+M hotkey
+  // Ctrl+A hotkey for Super Admin
   useEffect(() => {
     const keys = new Set();
     const handleKeyDown = (e) => {
       keys.add(e.key.toLowerCase());
       if (
         (keys.has('control') || keys.has('meta')) &&
-        keys.has('m')
+        keys.has('a')
       ) {
         e.preventDefault();
         setShowLoginModal(true);
@@ -69,7 +71,7 @@ export function AdminProvider({ children }) {
 
   return (
     <AdminContext.Provider value={{
-      admin, token, isAdmin, isLoading,
+      admin, token, isAdmin, isSuperAdmin, isKingdomAdmin, isLoading,
       showLoginModal, setShowLoginModal,
       loginError, setLoginError,
       login, logout,

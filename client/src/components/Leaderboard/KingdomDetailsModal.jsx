@@ -23,7 +23,7 @@ export default function KingdomDetailsModal({ kingdom, onClose }) {
 
   if (!kingdom) return null;
 
-  const baseColor = kingdom.color || '#c9a227';
+  const baseColor = kingdom.color || '#B87333';
   const glowColor = `rgba(${parseInt(baseColor.slice(1,3),16)}, ${parseInt(baseColor.slice(3,5),16)}, ${parseInt(baseColor.slice(5,7),16)}, 0.5)`;
 
   return (
