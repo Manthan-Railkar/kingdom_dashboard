@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { ScrollText } from 'lucide-react';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './RightPanels.css';
 
 function timeAgo(d) {
@@ -25,7 +26,7 @@ export default function KingdomNews() {
       <div className="kn-list">
         {items.map((item, i) => (
           <div key={item._id} className="kn-item animate-entrance" style={{ '--delay': `${i * 0.07}s` }}>
-            <div className="kn-emblem">{item.kingdomEmblem || ''}</div>
+            <div className="kn-emblem">{isImagePath(item.kingdomEmblem) ? <img src={resolveImageUrl(item.kingdomEmblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : (item.kingdomEmblem || '')}</div>
             <div className="kn-content">
               <p className="kn-text">{item.text}</p>
               <span className="kn-time">{timeAgo(item.createdAt)}</span>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 import SparklineCanvas from '../common/SparklineCanvas';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './Panels.css';
 
 export default function TrendsPanel() {
@@ -19,7 +20,7 @@ export default function TrendsPanel() {
       <div className="trends-list">
         {top5.map((k, i) => (
           <div key={k._id} className="trend-row animate-entrance" style={{ '--delay': `${i * 0.08}s` }}>
-            <div className="trend-emblem">{k.emblem}</div>
+            <div className="trend-emblem">{isImagePath(k.emblem) ? <img src={resolveImageUrl(k.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : k.emblem}</div>
             <span className="trend-name">{k.name}</span>
             <div className="trend-spark">
               <SparklineCanvas data={k.deltaHistory || []} color={k.color || '#B87333'} width={90} height={26} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { useToast } from '../../context/ToastContext';
 import { uploadGalleryImage, updateKingdom, getKingdom } from '../../api';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import { Crown, BookOpen, Swords, Eye, Shield, Award, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
 import './CaptainTeams.css';
 
@@ -109,8 +110,8 @@ export default function CaptainTeams() {
         {/* Left Col: Kingdom Identity & Read-Only Roster */}
         <div className="ct-card">
           <div className="ct-card-header" style={{ borderColor: kingdom.color }}>
-            {kingdom.emblem ? (
-               <img src={kingdom.emblem.startsWith('http') ? kingdom.emblem : `http://localhost:5001${kingdom.emblem}`} className="ct-card-emblem" alt="emblem" />
+            {isImagePath(kingdom.emblem) ? (
+               <img src={resolveImageUrl(kingdom.emblem)} className="ct-card-emblem" alt="emblem" />
             ) : (
               <Shield size={40} color={kingdom.color || "var(--gold-bright)"} />
             )}
@@ -123,8 +124,8 @@ export default function CaptainTeams() {
               kingdom.teamMembers.map((member, idx) => (
                 <div key={idx} className="ct-roster-item" style={{ borderLeftColor: kingdom.color || 'var(--gold-primary)' }}>
                   <div className="ct-roster-avatar">
-                     {member.image ? (
-                        <img src={member.image.startsWith('http') ? member.image : `http://localhost:5001${member.image}`} alt={member.name} />
+                     {isImagePath(member.image) ? (
+                        <img src={resolveImageUrl(member.image)} alt={member.name} />
                       ) : (
                         <ImageIcon size={18} color="rgba(255,255,255,0.4)" />
                       )}

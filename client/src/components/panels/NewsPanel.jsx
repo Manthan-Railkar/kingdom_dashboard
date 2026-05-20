@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './Panels.css';
 
 function timeAgo(dateStr) {
@@ -26,7 +27,7 @@ export default function NewsPanel() {
       <div className="news-list" ref={listRef}>
         {news.slice(0, 6).map((item, i) => (
           <div key={item._id} className={`news-item animate-entrance ${item.type === 'announcement' ? 'news-announce' : ''}`} style={{ '--delay': `${i * 0.07}s` }}>
-            <div className="news-emblem">{item.kingdomEmblem || ''}</div>
+            <div className="news-emblem">{isImagePath(item.kingdomEmblem) ? <img src={resolveImageUrl(item.kingdomEmblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : (item.kingdomEmblem || '')}</div>
             <div className="news-content">
               <p className="news-text">{item.text}</p>
               <span className="news-time">{timeAgo(item.createdAt)}</span>

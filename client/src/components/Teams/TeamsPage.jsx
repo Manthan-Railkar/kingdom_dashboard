@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Users, Crown, BookOpen, Swords, Eye, Shield, Award, Flame, Mountain, Anchor, Wind, Bird, Star, Zap } from 'lucide-react';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './TeamsPage.css';
 
 const hexToRgba = (hex, alpha) => {
@@ -114,9 +115,9 @@ export default function TeamsPage() {
                             <div key={i} className="tc-roster-row">
                               <div className="tc-roster-glow" style={{ background: baseColor }}></div>
                               <div className="tc-member-name-wrap">
-                                {member.image ? (
+                                {isImagePath(member.image) ? (
                                   <img 
-                                    src={member.image.startsWith('http') ? member.image : `http://localhost:5001${member.image}`} 
+                                    src={resolveImageUrl(member.image)} 
                                     alt={member.name} 
                                     style={{ width: '20px', height: '20px', borderRadius: '50%', objectFit: 'cover', border: `1px solid ${baseColor}` }}
                                   />

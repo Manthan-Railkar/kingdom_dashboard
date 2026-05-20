@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { useToast } from '../../context/ToastContext';
 import { getKingdom, updateKingdom, uploadKingdomAsset } from '../../api';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './Admin.css';
-import { Upload, Image as ImageIcon, Trash2, Edit3, Shield } from 'lucide-react';
+import { Upload, Image as ImageIcon, Trash2, Shield } from 'lucide-react';
 
 export default function KingdomProfile() {
   const { admin } = useAdmin();
@@ -58,9 +59,9 @@ export default function KingdomProfile() {
     formData.append('field', field);
 
     try {
-      await uploadKingdomAsset(kingdom._id, formData);
+      const res = await uploadKingdomAsset(kingdom._id, formData);
+      setKingdom(res);
       addToast(`${field} uploaded successfully`, 'success');
-      fetchKingdom();
     } catch (err) {
       addToast(`Failed to upload ${field}`, 'error');
     } finally {
@@ -135,7 +136,11 @@ export default function KingdomProfile() {
               {/* Emblem */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
                 <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: `2px solid ${kingdom.color || 'var(--gold-primary)'}` }}>
-                  {kingdom.emblem ? <img src={kingdom.emblem} alt="Emblem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <Shield size={24} color="var(--text-muted)" />}
+                  {isImagePath(kingdom.emblem) ? (
+                    <img src={resolveImageUrl(kingdom.emblem)} alt="Emblem" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <Shield size={24} color="var(--text-muted)" />
+                  )}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '5px' }}>Kingdom Emblem</div>
@@ -149,7 +154,11 @@ export default function KingdomProfile() {
               {/* Flag */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
                 <div style={{ width: '90px', height: '60px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  {kingdom.flag ? <img src={kingdom.flag} alt="Flag" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <ImageIcon size={24} color="var(--text-muted)" />}
+                  {isImagePath(kingdom.flag) ? (
+                    <img src={resolveImageUrl(kingdom.flag)} alt="Flag" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <ImageIcon size={24} color="var(--text-muted)" />
+                  )}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '5px' }}>Kingdom Flag</div>
@@ -163,7 +172,11 @@ export default function KingdomProfile() {
               {/* Map */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px' }}>
                 <div style={{ width: '90px', height: '60px', borderRadius: '4px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  {kingdom.map ? <img src={kingdom.map} alt="Map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <ImageIcon size={24} color="var(--text-muted)" />}
+                  {isImagePath(kingdom.map) ? (
+                    <img src={resolveImageUrl(kingdom.map)} alt="Map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <ImageIcon size={24} color="var(--text-muted)" />
+                  )}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '0.9rem', color: '#fff', marginBottom: '5px' }}>Kingdom Map</div>
@@ -194,7 +207,7 @@ export default function KingdomProfile() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '10px' }}>
               {kingdom.designs && kingdom.designs.length > 0 ? kingdom.designs.map((design, idx) => (
                 <div key={idx} style={{ position: 'relative', aspectRatio: '1', borderRadius: '4px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <img src={design} alt={`Design ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={resolveImageUrl(design)} alt={`Design ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   <button 
                     onClick={() => handleRemoveDesign(idx)}
                     style={{ position: 'absolute', top: '5px', right: '5px', background: 'rgba(239, 68, 68, 0.9)', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px', cursor: 'pointer', display: 'flex' }}
@@ -220,8 +233,8 @@ export default function KingdomProfile() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {kingdom.teamMembers && kingdom.teamMembers.length > 0 ? kingdom.teamMembers.map((member, idx) => (
                 <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '4px', borderLeft: `2px solid ${kingdom.color || 'var(--gold-primary)'}` }}>
-                  {member.image ? (
-                    <img src={member.image.startsWith('http') ? member.image : `http://localhost:5001${member.image}`} alt={member.name} style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} />
+                  {isImagePath(member.image) ? (
+                    <img src={resolveImageUrl(member.image)} alt={member.name} style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
                       <ImageIcon size={14} />
