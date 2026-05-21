@@ -20,12 +20,29 @@
 }
 
 /* ---- Unified Grid — all 10 kingdoms, same card size ---- */
+.lb-unified-grid-wrapper {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: visible;
+  display: flex;
+  flex-direction: column;
+}
+
+.lb-unified-grid-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.lb-unified-grid-wrapper::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 3px;
+}
+
 .lb-unified-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(240px, 1fr));
   grid-auto-rows: 1fr;       /* all rows equal height */
-  gap: 12px;
-  padding: 28px 16px 16px;
+  gap: 16px;
+  /* Left/Right padding prevents 3D clipping when cards flip. Top padding for badges. */
+  padding: 30px 40px 30px 40px; 
   overflow: visible;
   flex: 1;                   /* fill remaining panel height */
   align-content: stretch;    /* rows stretch to fill space */

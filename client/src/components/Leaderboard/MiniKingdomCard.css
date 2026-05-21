@@ -42,8 +42,7 @@
 }
 
 /* Both faces — must be more specific than .mcard to override position */
-.mcard.mcard-front,
-.mcard.mcard-back {
+.mcard.mcard-front {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
@@ -51,6 +50,12 @@
 }
 
 .mcard.mcard-back {
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transform: rotateY(180deg);
 }
 
@@ -463,8 +468,8 @@
   gap: 6px;
   width: 100%;
   z-index: 2;
-  flex: 1;
-  overflow-y: auto;
+  flex: 1 0 auto;
+  overflow-y: visible;
   padding-right: 2px;
 }
 

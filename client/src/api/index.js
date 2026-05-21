@@ -18,6 +18,8 @@ export const createKingdom = (body) => api.post('/kingdoms', body).then((r) => r
 export const uploadKingdomAsset = (id, field, formData) => api.post(`/kingdoms/${id}/upload-asset?field=${field}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
 export const uploadMemberPortrait = (id, formData) => api.post(`/kingdoms/${id}/upload-member`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
 
+export const getCategories = () => api.get('/point-categories').then((r) => r.data);
+
 // Rounds
 export const getRounds = () => api.get('/rounds').then((r) => r.data);
 export const getCurrentRound = () => api.get('/rounds/current').then((r) => r.data);

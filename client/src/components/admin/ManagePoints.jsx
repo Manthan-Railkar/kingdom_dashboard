@@ -96,6 +96,8 @@ export default function ManagePoints() {
     }
   };
 
+  const sortedKingdoms = [...kingdoms].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <section className="panel admin-panel">
       <div className="panel-header">
@@ -144,7 +146,7 @@ export default function ManagePoints() {
               </tr>
             </thead>
             <tbody>
-              {kingdoms.map(k => (
+              {sortedKingdoms.map(k => (
                 <tr key={k._id}>
                   <td>{k.name}</td>
                   <td className="gold-text" style={{ fontSize: '1.2rem' }}>{k.points}</td>

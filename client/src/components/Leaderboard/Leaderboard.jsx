@@ -17,10 +17,12 @@ export default function Leaderboard() {
       </div>
 
       {/* Unified grid — all 10 kingdoms, same card size */}
-      <div className="lb-unified-grid">
-        {kingdoms.map((k, i) => (
-          <MiniKingdomCard key={k._id} kingdom={k} rank={i + 1} delay={i * 0.05} />
-        ))}
+      <div className="lb-unified-grid-wrapper">
+        <div className="lb-unified-grid">
+          {kingdoms.map((k, i) => (
+            <MiniKingdomCard key={k._id} kingdom={k} rank={i + 1} delay={i * 0.05} />
+          ))}
+        </div>
       </div>
 
       {/* Pagination dots */}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useApp } from '../../context/AppContext';
 import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './MiniKingdomCard.css';
 
@@ -14,6 +15,7 @@ const toRoman = (n) => {
 };
 
 export default function MiniKingdomCard({ kingdom, delay = 0, rank }) {
+  const { categories } = useApp();
   const [isFlipped, setIsFlipped] = useState(false);
   
   // Drag-to-spin state
@@ -166,9 +168,26 @@ export default function MiniKingdomCard({ kingdom, delay = 0, rank }) {
 
           {/* Breakdown list */}
           <div className="mcard-breakdown-list">
-            {breakdown.length > 0 ? breakdown.map((item, idx) => {
+            {categories && categories.length > 0 ? categories.map((cat, idx) => {
+              const existing = breakdown.find(b => (b.category?._id || b.category) === cat._id);
+              const val = existing ? (existing.value || 0) : 0;
+              const pct = kingdom.points > 0 ? Math.round((val / kingdom.points) * 100) : 0;
+              return (
+                <div key={idx} className="mcard-breakdown-row">
+                  <span className="mcard-breakdown-name">{cat.name}</span>
+                  <div className="mcard-breakdown-bar-track">
+                    <div
+                      className="mcard-breakdown-bar-fill"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <span className="mcard-breakdown-val">{val.toLocaleString()}</span>
+                </div>
+              );
+            }) : breakdown.length > 0 ? breakdown.map((item, idx) => {
               const catName = item.category?.name || 'Unknown';
-              const pct = kingdom.points > 0 ? Math.round((item.value / kingdom.points) * 100) : 0;
+              const val = item.value || 0;
+              const pct = kingdom.points > 0 ? Math.round((val / kingdom.points) * 100) : 0;
               return (
                 <div key={idx} className="mcard-breakdown-row">
                   <span className="mcard-breakdown-name">{catName}</span>
@@ -178,7 +197,7 @@ export default function MiniKingdomCard({ kingdom, delay = 0, rank }) {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="mcard-breakdown-val">{item.value.toLocaleString()}</span>
+                  <span className="mcard-breakdown-val">{val.toLocaleString()}</span>
                 </div>
               );
             }) : (

@@ -51,6 +51,8 @@ export default function ManageTeams() {
     }
   };
 
+  const sortedKingdoms = [...kingdoms].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <section className="panel admin-panel">
       <div className="panel-header">
@@ -68,7 +70,7 @@ export default function ManageTeams() {
             </tr>
           </thead>
           <tbody>
-            {kingdoms.map(k => (
+            {sortedKingdoms.map(k => (
               <tr key={k._id}>
                 <td>
                   {editingKingdom === k._id ? (

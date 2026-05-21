@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getKingdoms } from '../api';
+import { getKingdoms, getCategories } from '../api';
 import { getRounds, getCurrentRound } from '../api';
 import { getNews } from '../api';
 import { useSocket } from '../hooks/useSocket';
@@ -12,6 +12,7 @@ export function AppProvider({ children }) {
   const [currentRound, setCurrentRound] = useState(null);
   const [allRounds, setAllRounds] = useState([]);
   const [news, setNews] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [latestNewsItem, setLatestNewsItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [connectedClients, setConnectedClients] = useState(0);
@@ -21,16 +22,18 @@ export function AppProvider({ children }) {
   // Initial data fetch
   const fetchAll = useCallback(async () => {
     try {
-      const [k, r, n, rounds] = await Promise.all([
+      const [k, r, n, rounds, cats] = await Promise.all([
         getKingdoms(),
         getCurrentRound(),
         getNews(),
         getRounds(),
+        getCategories(),
       ]);
       setKingdoms(k);
       setCurrentRound(r);
       setNews(n);
       setAllRounds(rounds);
+      setCategories(cats);
 
       // Trigger popup for very fresh news on reload (last 5 mins)
       if (n && n.length > 0) {
@@ -105,6 +108,10 @@ export function AppProvider({ children }) {
       if (n) setNews(n);
     });
 
+    socket.on('categories:update', (cats) => {
+      setCategories(cats);
+    });
+
     return () => {
       socket.off('leaderboard:update');
       socket.off('round:update');
@@ -113,6 +120,7 @@ export function AppProvider({ children }) {
       socket.off('news:delete');
       socket.off('clients:count');
       socket.off('state:sync');
+      socket.off('categories:update');
     };
   }, [socket]);
 
@@ -122,6 +130,7 @@ export function AppProvider({ children }) {
       currentRound, setCurrentRound,
       allRounds, setAllRounds,
       news, setNews,
+      categories, setCategories,
       latestNewsItem, setLatestNewsItem,
       loading,
       connectedClients,
