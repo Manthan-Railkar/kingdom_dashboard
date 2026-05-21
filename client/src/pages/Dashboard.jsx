@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { ToastProvider } from '../context/ToastContext';
 import Sidebar from '../components/Sidebar';
 import Leaderboard from '../components/Leaderboard/Leaderboard';
@@ -26,6 +26,7 @@ import Gallery from '../components/panels/Gallery';
 import NewsPopup from '../components/common/NewsPopup';
 import { useAdmin } from '../context/AdminContext';
 import { useSettings } from '../context/SettingsContext';
+const KnowYourKingdomPortal = React.lazy(() => import('../components/KnowYourKingdoms/KnowYourKingdomPortal'));
 
 export default function Dashboard() {
   const [active, setActive] = useState('overview');
@@ -138,6 +139,14 @@ export default function Dashboard() {
       );
     }
 
+    if (active === 'know_kingdoms') {
+      return (
+        <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh', color: 'rgba(130,160,220,0.4)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.1em' }}>LOADING PORTAL...</div>}>
+          <KnowYourKingdomPortal />
+        </Suspense>
+      );
+    }
+
     if (active === 'leaderboard') {
       return <LeaderboardPage />;
     }
@@ -196,7 +205,7 @@ export default function Dashboard() {
         <Sidebar active={active} onSelect={handleTabChange} />
 
         <main className="main-area">
-          <div className={['leaderboard', 'news', 'gallery', 'trends', 'teams', 'events'].includes(active) ? "content-area content-area--full" : "content-area"}>
+          <div className={['leaderboard', 'news', 'gallery', 'trends', 'teams', 'events', 'know_kingdoms'].includes(active) ? "content-area content-area--full" : "content-area"}>
             {renderContent()}
           </div>
         </main>

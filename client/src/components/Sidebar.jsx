@@ -1,11 +1,10 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { useSettings } from '../context/SettingsContext';
-const KnowYourKingdoms = React.lazy(() => import('./KnowYourKingdoms/KnowYourKingdoms'));
 import { 
   Home, Trophy, TrendingUp, Newspaper, Users, Calendar, 
   Target, SlidersHorizontal, Image as ImageIcon, Settings, 
-  Activity, UserCog, LogOut, CheckSquare
+  Activity, UserCog, LogOut, CheckSquare, Sparkles
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -16,6 +15,7 @@ const NAV = [
   { id: 'news',       icon: Newspaper, label: 'NEWS & UPDATES', adminOnly: false, settingKey: 'showNews' },
   { id: 'teams',      icon: Users, label: 'TEAMS', adminOnly: false, settingKey: 'showTeams' },
   { id: 'events',     icon: Calendar, label: 'EVENTS', adminOnly: false, settingKey: 'showEvents' },
+  { id: 'know_kingdoms', icon: Sparkles, label: 'KNOW YOUR KINGDOM', adminOnly: false, settingKey: null },
   { id: 'gallery',    icon: ImageIcon, label: 'MEDIA & GALLERY', adminOnly: false, settingKey: 'showGallery' },
   { id: 'manage_news', icon: Newspaper, label: 'MANAGE NEWS', superAdminOnly: true },
   { id: 'manage_gallery', icon: ImageIcon, label: 'MANAGE GALLERY', superAdminOnly: true },
@@ -130,11 +130,6 @@ export default function Sidebar({ active, onSelect }) {
           </div>
         )}
       </nav>
-
-      {/* Know Your Kingdoms Widget */}
-      <Suspense fallback={<div className="kyk-loading" style={{ height: '210px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 8px', color: 'rgba(130,160,220,0.3)', fontSize: '0.5rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>LOADING COSMOS...</div>}>
-        <KnowYourKingdoms />
-      </Suspense>
 
       {/* Admin Status */}
       {isAdmin && (

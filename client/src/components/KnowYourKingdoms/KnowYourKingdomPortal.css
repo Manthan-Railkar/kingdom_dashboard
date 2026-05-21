@@ -1,0 +1,316 @@
+/* ============================================ */
+/* KNOW YOUR KINGDOM — CINEMATIC PORTAL         */
+/* ============================================ */
+
+/* ---- Full Portal Container ---- */
+.kyk-portal {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+/* ---- LANDING STATE ---- */
+.kyk-landing {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 50%, #0d0520 0%, #060210 40%, #020108 100%);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* ---- CSS Ambient Particles (Landing) ---- */
+.kyk-css-particles { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+
+.kyk-css-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(140, 90, 255, 0.7), transparent 70%);
+  pointer-events: none;
+  animation: kyk-drift ease-in-out infinite alternate;
+}
+
+@keyframes kyk-drift {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.7; }
+  100% { transform: translateY(-40px) translateX(20px) scale(0.6); opacity: 0; }
+}
+
+/* ---- Subtle Grid Overlay ---- */
+.kyk-landing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(100, 60, 200, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100, 60, 200, 0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- Decorative Subtitle ---- */
+.kyk-landing-subtitle {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  color: rgba(150, 120, 255, 0.4);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  z-index: 2;
+}
+
+/* ---- The Giant Button ---- */
+.kyk-btn-wrap {
+  position: relative;
+  z-index: 2;
+}
+
+.kyk-btn {
+  position: relative;
+  padding: 22px 56px;
+  font-family: var(--font-title, 'Cinzel', serif);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(80, 40, 160, 0.35), rgba(30, 15, 80, 0.5));
+  border: 1.5px solid rgba(150, 100, 255, 0.4);
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: visible;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-shadow: 0 0 20px rgba(150, 100, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.kyk-btn:hover {
+  transform: scale(1.06);
+  border-color: rgba(180, 130, 255, 0.6);
+  background: linear-gradient(135deg, rgba(100, 50, 200, 0.45), rgba(50, 25, 120, 0.55));
+  box-shadow: 0 0 40px rgba(120, 60, 255, 0.3), 0 0 80px rgba(120, 60, 255, 0.1);
+  text-shadow: 0 0 30px rgba(180, 140, 255, 0.8);
+}
+
+.kyk-btn:active {
+  transform: scale(0.98);
+}
+
+/* ---- Energy Pulse Rings ---- */
+.kyk-pulse-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  border: 1px solid rgba(150, 100, 255, 0.3);
+  border-radius: 8px;
+  transform: translate(-50%, -50%);
+  animation: kyk-ring-pulse 3s ease-out infinite;
+  pointer-events: none;
+}
+.kyk-pulse-ring:nth-child(2) { animation-delay: 1s; }
+.kyk-pulse-ring:nth-child(3) { animation-delay: 2s; }
+
+@keyframes kyk-ring-pulse {
+  0% { width: 100%; height: 100%; opacity: 0.5; }
+  100% { width: 220%; height: 280%; opacity: 0; border-radius: 50%; }
+}
+
+/* ---- Bottom Hint ---- */
+.kyk-landing-hint {
+  position: absolute;
+  bottom: 40px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgba(150, 120, 255, 0.2);
+  z-index: 2;
+  animation: kyk-hint-pulse 2.5s ease infinite;
+}
+
+@keyframes kyk-hint-pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+}
+
+/* ===== EXPANSION / TRANSITION ===== */
+.kyk-portal.activating .kyk-landing {
+  animation: kyk-portal-burst 1.3s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+@keyframes kyk-portal-burst {
+  0% { filter: brightness(1); transform: scale(1); opacity: 1; }
+  15% { filter: brightness(3); transform: scale(1.02); }
+  35% { filter: brightness(5) saturate(1.5); transform: scale(1.06); }
+  60% { filter: brightness(2); opacity: 0.6; }
+  100% { filter: brightness(0); transform: scale(1.15); opacity: 0; pointer-events: none; }
+}
+
+/* ===== ACTIVE 3D SCENE ===== */
+.kyk-scene-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1s ease 0.4s;
+}
+
+.kyk-portal.active .kyk-scene-wrap {
+  z-index: 1;
+  opacity: 1;
+}
+
+.kyk-scene-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+  cursor: grab;
+}
+.kyk-scene-wrap canvas:active { cursor: grabbing; }
+
+/* ===== GLASSMORPHISM CONTROL PANEL ===== */
+.kyk-glass-panel {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 28px;
+  background: rgba(10, 5, 30, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(150, 100, 255, 0.18);
+  border-radius: 14px;
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  animation: kyk-panel-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 0.8s;
+  opacity: 0;
+}
+
+@keyframes kyk-panel-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.kyk-glass-title {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(180, 150, 255, 0.6);
+  white-space: nowrap;
+}
+
+/* ---- Upload Button ---- */
+.kyk-upload-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(100, 50, 200, 0.4), rgba(60, 20, 140, 0.5));
+  border: 1px solid rgba(150, 100, 255, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.kyk-upload-label:hover {
+  background: linear-gradient(135deg, rgba(120, 60, 220, 0.5), rgba(80, 30, 160, 0.6));
+  border-color: rgba(180, 130, 255, 0.5);
+  box-shadow: 0 0 16px rgba(120, 60, 255, 0.2);
+}
+.kyk-upload-label input { display: none; }
+
+.kyk-upload-status {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.5rem;
+  color: rgba(100, 220, 160, 0.7);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- Back Button ---- */
+.kyk-back-btn {
+  padding: 8px 18px;
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 150, 150, 0.8);
+  background: rgba(200, 50, 50, 0.1);
+  border: 1px solid rgba(200, 80, 80, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.kyk-back-btn:hover {
+  background: rgba(200, 50, 50, 0.2);
+  border-color: rgba(200, 80, 80, 0.4);
+  color: #ff8888;
+}
+
+/* ---- Info Badge ---- */
+.kyk-info-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  padding: 10px 18px;
+  background: rgba(10, 5, 30, 0.5);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(150, 100, 255, 0.15);
+  border-radius: 10px;
+  animation: kyk-panel-in 0.6s ease forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.kyk-info-badge h3 {
+  font-family: var(--font-title, 'Cinzel', serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(220, 200, 255, 0.8);
+  margin-bottom: 2px;
+}
+
+.kyk-info-badge p {
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.5rem;
+  color: rgba(150, 120, 255, 0.4);
+  letter-spacing: 0.06em;
+}
+
+/* ---- Responsive Mobile ---- */
+@media (max-width: 768px) {
+  .kyk-btn {
+    padding: 16px 36px;
+    font-size: 0.85rem;
+  }
+  .kyk-glass-panel {
+    flex-wrap: wrap;
+    justify-content: center;
+    bottom: 12px;
+    padding: 10px 16px;
+    gap: 8px;
+    width: calc(100% - 24px);
+  }
+}
