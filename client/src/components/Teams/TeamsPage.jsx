@@ -89,8 +89,12 @@ export default function TeamsPage() {
                 <div className="tc-main-frame">
                   <div className="tc-content">
                     <div className="tc-top-section">
-                      <div className="tc-emblem-wrap" style={{ color: baseColor, filter: `drop-shadow(0 0 15px ${glowColor})` }}>
-                        {getKingdomIcon(k.name, 48)}
+                      <div className="tc-emblem-wrap" style={{ color: baseColor, filter: `drop-shadow(0 0 15px ${glowColor})`, padding: isImagePath(k.emblem) ? '0' : undefined, overflow: 'hidden' }}>
+                        {isImagePath(k.emblem) ? (
+                          <img src={resolveImageUrl(k.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        ) : (
+                          k.name.split(' ')[1]?.[0] || k.name[0]
+                        )}
                       </div>
                       <h3 className="tc-name">{k.name}</h3>
                     </div>

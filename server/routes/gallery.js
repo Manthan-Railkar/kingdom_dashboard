@@ -9,7 +9,9 @@ const { requireAdmin } = require('../middleware/auth');
 // Multer Config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/'));
+    const dir = path.join(__dirname, '../uploads/gallery/');
+    fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -50,7 +52,7 @@ router.post('/', requireAdmin, upload.single('image'), async (req, res) => {
 
     const { caption } = req.body;
     const newImage = new Gallery({
-      filename: req.file.filename,
+      filename: `gallery/${req.file.filename}`,
       originalName: req.file.originalname,
       caption: caption || '',
       mimetype: req.file.mimetype,

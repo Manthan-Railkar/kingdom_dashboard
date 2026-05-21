@@ -105,6 +105,23 @@
   color: #8b6a4a;
 }
 
+.mn-label-optional {
+  color: #5a4030;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  font-style: italic;
+}
+
+.mn-post-heading {
+  font-family: var(--font-heading, 'Cinzel', serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold-bright, #D4956A);
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
 .mn-type-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

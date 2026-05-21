@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const newsSchema = new mongoose.Schema(
   {
+    heading: { type: String, default: '' },
     text: { type: String, required: true },
     type: {
       type: String,

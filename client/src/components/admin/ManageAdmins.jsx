@@ -10,6 +10,11 @@ export default function ManageAdmins() {
   const [admins, setAdmins] = useState([]);
   const [kingdoms, setKingdoms] = useState([]);
   const [formData, setFormData] = useState({ username: '', displayName: '', accessKey: '', role: 'admin', kingdomId: '' });
+  const [visibleKeys, setVisibleKeys] = useState({});
+
+  const toggleKeyVisibility = (id) => {
+    setVisibleKeys(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const fetchData = async () => {
     try {
@@ -92,6 +97,7 @@ export default function ManageAdmins() {
               <th>Display Name</th>
               <th>Role</th>
               <th>Kingdom</th>
+              <th>Access Key</th>
               <th>Last Active</th>
               <th>Actions</th>
             </tr>
@@ -111,6 +117,19 @@ export default function ManageAdmins() {
                 </td>
                 <td style={{ fontSize: '0.8rem' }}>
                   {a.kingdomId ? a.kingdomId.name : '--'}
+                </td>
+                <td>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
+                      {visibleKeys[a._id] ? a.accessKey : '••••'}
+                    </span>
+                    <button 
+                      style={{ background: 'none', border: 'none', color: 'var(--gold-primary)', cursor: 'pointer', fontSize: '0.65rem', textDecoration: 'underline' }}
+                      onClick={() => toggleKeyVisibility(a._id)}
+                    >
+                      {visibleKeys[a._id] ? 'HIDE' : 'SHOW'}
+                    </button>
+                  </div>
                 </td>
                 <td style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   {a.lastLogin ? new Date(a.lastLogin).toLocaleString() : 'Never'}

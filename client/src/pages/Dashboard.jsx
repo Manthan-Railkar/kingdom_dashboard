@@ -17,11 +17,13 @@ import PageTransition from '../components/common/PageTransition';
 import ManagePoints from '../components/admin/ManagePoints';
 import ManageTeams from '../components/admin/ManageTeams';
 import ManageEvents from '../components/admin/ManageEvents';
+import EventsPage from '../components/Events/EventsPage';
 import ManageAdmins from '../components/admin/ManageAdmins';
 import ManageSettings from '../components/admin/ManageSettings';
 import KingdomProfile from '../components/admin/KingdomProfile';
 import RoundManagement from '../components/panels/RoundManagement';
 import Gallery from '../components/panels/Gallery';
+import NewsPopup from '../components/common/NewsPopup';
 import { useAdmin } from '../context/AdminContext';
 import { useSettings } from '../context/SettingsContext';
 
@@ -59,6 +61,22 @@ export default function Dashboard() {
       );
     }
 
+    if (isSuperAdmin && active === 'manage_news') {
+      return (
+        <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <ManageNews />
+        </div>
+      );
+    }
+
+    if (isSuperAdmin && active === 'manage_gallery') {
+      return (
+        <div className="leaderboard-col" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <Gallery />
+        </div>
+      );
+    }
+
     if (active === 'teams') {
       if (isSuperAdmin) {
         return (
@@ -77,12 +95,15 @@ export default function Dashboard() {
       return <TeamsPage />;
     }
 
-    if (isSuperAdmin && active === 'events') {
-      return (
-        <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <ManageEvents />
-        </div>
-      );
+    if (active === 'events') {
+      if (isSuperAdmin) {
+        return (
+          <div className="leaderboard-col" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+            <ManageEvents />
+          </div>
+        );
+      }
+      return <EventsPage />;
     }
 
     if (isSuperAdmin && active === 'admin_users') {
@@ -168,13 +189,14 @@ export default function Dashboard() {
 
       <EmberParticles />
       <AdminLogin />
+      <NewsPopup />
       <PageTransition isVisible={isTransitioning} />
 
       <div className="app-root">
         <Sidebar active={active} onSelect={handleTabChange} />
 
         <main className="main-area">
-          <div className={active === 'leaderboard' ? "content-area content-area--full" : "content-area"}>
+          <div className={['leaderboard', 'news', 'gallery', 'trends', 'teams', 'events'].includes(active) ? "content-area content-area--full" : "content-area"}>
             {renderContent()}
           </div>
         </main>

@@ -15,6 +15,11 @@ const roundSchema = new mongoose.Schema(
     endTime: { type: Date },
     nextRoundName: { type: String, default: '' },
     isDoublePoints: { type: Boolean, default: false },
+    dayNumber: { type: Number },
+    dayTitle: { type: String, default: '' },
+    timeLabel: { type: String, default: '' },
+    location: { type: String, default: '' },
+    theme: { type: String, default: '' },
   },
   { timestamps: true }
 );

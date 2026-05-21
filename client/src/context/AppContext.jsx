@@ -12,6 +12,7 @@ export function AppProvider({ children }) {
   const [currentRound, setCurrentRound] = useState(null);
   const [allRounds, setAllRounds] = useState([]);
   const [news, setNews] = useState([]);
+  const [latestNewsItem, setLatestNewsItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [connectedClients, setConnectedClients] = useState(0);
 
@@ -30,6 +31,15 @@ export function AppProvider({ children }) {
       setCurrentRound(r);
       setNews(n);
       setAllRounds(rounds);
+
+      // Trigger popup for very fresh news on reload (last 5 mins)
+      if (n && n.length > 0) {
+        const latest = n[0];
+        const ageMs = Date.now() - new Date(latest.createdAt).getTime();
+        if (ageMs < 5 * 60 * 1000) {
+          setLatestNewsItem(latest);
+        }
+      }
     } catch (err) {
       console.error('Fetch error:', err.message);
     } finally {
@@ -75,6 +85,7 @@ export function AppProvider({ children }) {
 
     socket.on('news:new', (item) => {
       setNews((prev) => [item, ...prev].slice(0, 20));
+      setLatestNewsItem(item);
     });
 
     socket.on('news:delete', (id) => {
@@ -111,6 +122,7 @@ export function AppProvider({ children }) {
       currentRound, setCurrentRound,
       allRounds, setAllRounds,
       news, setNews,
+      latestNewsItem, setLatestNewsItem,
       loading,
       connectedClients,
       socket,

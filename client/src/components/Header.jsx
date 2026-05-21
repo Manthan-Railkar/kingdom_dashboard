@@ -6,7 +6,7 @@ import { Settings } from 'lucide-react';
 import './Header.css';
 
 export default function Header() {
-  const { currentRound } = useApp();
+  const { currentRound, theme, toggleTheme } = useApp();
   const { isAdmin, setShowLoginModal } = useAdmin();
   const timer = useTimer(currentRound);
 

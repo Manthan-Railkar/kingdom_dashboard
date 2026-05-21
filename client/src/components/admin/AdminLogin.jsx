@@ -69,7 +69,7 @@ export default function AdminLogin() {
             {isLoading ? 'VERIFYING...' : 'LOGIN →'}
           </button>
 
-          <p className="al-hint">Default Key: <kbd>Ctrl + Q + 2 + 6</kbd></p>
+          <p className="al-hint">Default Key: <kbd>Ctrl + M</kbd></p>
         </div>
       </div>
     </div>

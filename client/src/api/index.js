@@ -16,6 +16,7 @@ export const updatePoints = (id, body) => api.patch(`/kingdoms/${id}/points`, bo
 export const updateKingdom = (id, body) => api.patch(`/kingdoms/${id}`, body).then((r) => r.data);
 export const createKingdom = (body) => api.post('/kingdoms', body).then((r) => r.data);
 export const uploadKingdomAsset = (id, formData) => api.post(`/kingdoms/${id}/upload-asset`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
+export const uploadMemberPortrait = (id, formData) => api.post(`/kingdoms/${id}/upload-member`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data);
 
 // Rounds
 export const getRounds = () => api.get('/rounds').then((r) => r.data);

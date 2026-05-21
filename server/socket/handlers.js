@@ -24,7 +24,9 @@ const initializeSocketHandlers = (io) => {
         const Kingdom = require('../models/Kingdom');
         const Round = require('../models/Round');
         const News = require('../models/News');
-        const kingdoms = await Kingdom.find({ isActive: true }).sort({ rank: 1 });
+        const kingdoms = await Kingdom.find({ isActive: true })
+          .sort({ rank: 1 })
+          .populate('pointsBreakdown.category', 'name icon');
         const round = await Round.findOne({ status: { $in: ['live', 'paused'] } });
         const news = await News.find({ isVisible: true }).sort({ createdAt: -1 }).limit(10);
         socket.emit('state:sync', { kingdoms, round, news });

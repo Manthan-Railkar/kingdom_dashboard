@@ -106,6 +106,162 @@
   letter-spacing: 0.05em;
 }
 
+.kn-item--expandable {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.kn-item--expandable:hover {
+  background: rgba(184, 115, 51, 0.06) !important;
+}
+
+.kn-read-more {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.05em;
+  font-style: italic;
+  margin-bottom: 2px;
+}
+
+/* ---- KN MODAL ---- */
+.kn-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: modalFadeIn 0.25s ease;
+  box-sizing: border-box;
+}
+
+.kn-modal {
+  position: relative;
+  background: linear-gradient(180deg, #1a120a 0%, #100d08 100%);
+  border: 1px solid rgba(184, 115, 51, 0.4);
+  border-top: 3px solid var(--gold-primary);
+  border-radius: 8px;
+  padding: 36px 32px 28px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 40px rgba(184,115,51,0.1);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  animation: modalSlideIn 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.kn-modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: rgba(184, 115, 51, 0.1);
+  border: 1px solid rgba(184, 115, 51, 0.3);
+  color: var(--text-muted);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 10;
+}
+.kn-modal-close:hover { 
+  background: rgba(184, 115, 51, 0.25); 
+  color: var(--gold-bright); 
+  transform: scale(1.05);
+}
+.kn-modal-close:active {
+  transform: scale(0.95);
+}
+
+.kn-modal-heading {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--gold-bright);
+  letter-spacing: 0.04em;
+  margin: 0 0 16px;
+  padding-bottom: 14px;
+  padding-right: 36px; /* Clear the close button */
+  border-bottom: 1px solid rgba(184, 115, 51, 0.2);
+  flex-shrink: 0;
+}
+
+.kn-modal-body {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 10px;
+}
+
+.kn-modal-time {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(184, 115, 51, 0.15);
+  display: block;
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Responsive Overrides */
+@media (max-width: 600px) {
+  .kn-modal-overlay {
+    padding: 16px;
+  }
+  
+  .kn-modal {
+    padding: 28px 20px 20px;
+    max-height: 90vh;
+  }
+
+  .kn-modal-close {
+    top: 10px; right: 10px;
+    width: 28px; height: 28px;
+  }
+
+  .kn-modal-heading {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    padding-right: 32px;
+  }
+
+  .kn-modal-body {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    padding-right: 6px;
+  }
+  
+  .kn-modal-time {
+    font-size: 0.55rem;
+    padding-top: 8px;
+  }
+}
+
+
+
 /* ---- UPCOMING EVENTS ---- */
 .ue-timeline {
   padding: 12px 16px 14px;

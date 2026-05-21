@@ -1,10 +1,64 @@
 /* =====================================================
-   MINI KINGDOM CARD — Medieval Heraldic Design
+   MINI KINGDOM CARD — 3D Flip with Medieval Heraldic Design
    ===================================================== */
 
+/* ---- 3D Flip Container ---- */
+.mcard-scene {
+  perspective: 900px;
+  width: 100%;
+  height: 100%;
+  animation: cardEntrance 0.5s ease forwards;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+
+.mcard-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+/* Flip on hover (desktop) or tap (mobile with .flipped class) */
+@media (hover: hover) {
+  .mcard-scene:hover .mcard-flip-hint {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+.mcard-scene.flipped .mcard-flip-hint {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+@media (hover: hover) {
+  .mcard-scene:hover .mcard-flipper {
+    transform: rotateY(180deg);
+  }
+}
+.mcard-scene.flipped .mcard-flipper {
+  transform: rotateY(180deg);
+}
+
+/* Both faces — must be more specific than .mcard to override position */
+.mcard.mcard-front,
+.mcard.mcard-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.mcard.mcard-back {
+  transform: rotateY(180deg);
+}
+
+/* ---- Shared .mcard base ---- */
 .mcard {
   position: relative;
   width: 100%;
+  height: 100%;
   background: linear-gradient(
     170deg,
     #14100a 0%,
@@ -21,12 +75,6 @@
   gap: 6px;
   justify-content: space-evenly;
   cursor: default;
-  transition: transform 0.35s cubic-bezier(0.2,1,0.4,1),
-              box-shadow 0.35s ease,
-              border-color 0.35s ease;
-  animation: cardEntrance 0.5s ease forwards;
-  animation-delay: var(--delay, 0s);
-  opacity: 0;
   overflow: visible;
 
   box-shadow:
@@ -35,8 +83,17 @@
     inset 0 1px 0 rgba(184,115,51,0.08);
 }
 
-.mcard:hover {
-  transform: translateY(-6px) scale(1.02);
+@media (hover: hover) {
+  .mcard-scene:hover .mcard {
+    border-color: var(--mc, #B87333);
+    box-shadow:
+      0 16px 40px rgba(0,0,0,0.85),
+      0 0 24px color-mix(in srgb, var(--mc, #B87333) 25%, transparent),
+      inset 0 0 40px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(220,170,100,0.12);
+  }
+}
+.mcard-scene.flipped .mcard {
   border-color: var(--mc, #B87333);
   box-shadow:
     0 16px 40px rgba(0,0,0,0.85),
@@ -46,8 +103,7 @@
 }
 
 /* ---- Copper decorative watermark background ---- */
-/* Layer 1: radial copper glow from centre */
-.mcard::before {
+.mcard-front::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -65,25 +121,11 @@
     );
   pointer-events: none;
   z-index: 0;
-  transition: opacity 0.35s ease;
-}
-.mcard:hover::before {
-  background:
-    radial-gradient(
-      ellipse 80% 65% at 50% 55%,
-      rgba(184, 115, 51, 0.13) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 45% 35% at 50% 20%,
-      rgba(184, 115, 51, 0.08) 0%,
-      transparent 100%
-    );
 }
 
-/* Layer 2: large fleur-de-lis watermark letter centred behind content */
-.mcard::after {
-  content: '⚜';
+/* Fleur-de-lis watermark */
+.mcard-front::after {
+  content: '\269C';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -94,12 +136,7 @@
   opacity: 0.045;
   pointer-events: none;
   z-index: 0;
-  transition: opacity 0.35s ease, font-size 0.35s ease;
   user-select: none;
-}
-.mcard:hover::after {
-  opacity: 0.08;
-  font-size: 7.5rem;
 }
 
 /* ---- Aged parchment grain overlay ---- */
@@ -136,7 +173,10 @@
   transition: opacity 0.3s ease;
   line-height: 1;
 }
-.mcard:hover .mcard-corner { opacity: 1; }
+@media (hover: hover) {
+  .mcard-scene:hover .mcard-corner { opacity: 1; }
+}
+.mcard-scene.flipped .mcard-corner { opacity: 1; }
 .mcard-corner--tl { top: 5px;    left: 6px;  }
 .mcard-corner--tr { top: 5px;    right: 6px; }
 .mcard-corner--bl { bottom: 5px; left: 6px;  }
@@ -151,15 +191,7 @@
   width: 38px;
   height: 44px;
   z-index: 5;
-  transition: transform 0.35s ease, filter 0.35s ease;
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.95));
-}
-
-.mcard:hover .mcard-shield {
-  transform: translateX(-50%) translateY(-4px);
-  filter:
-    drop-shadow(0 10px 20px rgba(0,0,0,1))
-    drop-shadow(0 0 10px color-mix(in srgb, var(--mc, #B87333) 50%, transparent));
 }
 
 /* Border layer */
@@ -220,11 +252,7 @@
   z-index: 2;
   transition: border-color 0.35s ease, transform 0.35s ease;
   flex-shrink: 0;
-}
-
-.mcard:hover .mcard-emblem-wrap {
-  border-color: var(--mc, #B87333);
-  transform: scale(1.1);
+  overflow: hidden;
 }
 
 .mcard-emblem-glow {
@@ -235,7 +263,6 @@
   opacity: 0;
   transition: opacity 0.35s ease;
 }
-.mcard:hover .mcard-emblem-glow { opacity: 1; }
 
 .mcard-emblem {
   font-family: var(--font-title);
@@ -326,3 +353,220 @@
 }
 .mcard-honour.pos { color: #7effa0; }
 .mcard-honour.neg { color: #ff9090; }
+
+/* ---- Flip Hint ---- */
+.mcard-flip-hint {
+  font-family: var(--font-mono);
+  font-size: 0.45rem;
+  letter-spacing: 0.15em;
+  color: rgba(184,115,51,0.3);
+  z-index: 2;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+.mcard-scene:hover .mcard-flip-hint {
+  color: rgba(184,115,51,0.6);
+}
+
+
+/* ===========================================================
+   BACK FACE — Section-Wise Points Breakdown
+   =========================================================== */
+
+.mcard.mcard-back {
+  padding: 18px 12px 14px;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+/* Back watermark */
+.mcard-back::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 50%,
+      rgba(184, 115, 51, 0.06) 0%,
+      transparent 70%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mcard-back::after {
+  content: '\2694';
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--mc, #B87333);
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+/* ---- Back Header ---- */
+.mcard-back-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 2;
+  width: 100%;
+}
+
+.mcard-back-emblem {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(30,20,8,0.9), rgba(10,8,4,0.98));
+  border: 1.5px solid rgba(184,115,51,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  color: var(--mc, #B87333);
+}
+
+.mcard-back-title {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #dcc0a0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Section Title ---- */
+.mcard-back-section-title {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--mc, #B87333);
+  text-align: center;
+  z-index: 2;
+  opacity: 0.8;
+}
+
+/* ---- Breakdown List ---- */
+.mcard-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  z-index: 2;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+/* Scrollbar */
+.mcard-breakdown-list::-webkit-scrollbar { width: 3px; }
+.mcard-breakdown-list::-webkit-scrollbar-track { background: transparent; }
+.mcard-breakdown-list::-webkit-scrollbar-thumb {
+  background: rgba(184,115,51,0.25);
+  border-radius: 3px;
+}
+
+.mcard-breakdown-row {
+  display: grid;
+  grid-template-columns: 1fr 50px 42px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(184,115,51,0.08);
+}
+
+.mcard-breakdown-row:last-child {
+  border-bottom: none;
+}
+
+.mcard-breakdown-name {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: #c8b090;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mcard-breakdown-bar-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.mcard-breakdown-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--mc, #B87333), color-mix(in srgb, var(--mc, #B87333) 70%, #fff));
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.3, 1) 0.3s;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--mc, #B87333) 50%, transparent);
+}
+
+.mcard-breakdown-val {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #e5d39a;
+  text-align: right;
+  letter-spacing: 0.02em;
+}
+
+.mcard-breakdown-empty {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: rgba(184,115,51,0.4);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ---- Total Footer ---- */
+.mcard-back-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-top: 6px;
+  border-top: 1px solid rgba(184,115,51,0.2);
+  z-index: 2;
+}
+
+.mcard-back-total-lbl {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: rgba(184,115,51,0.6);
+}
+
+.mcard-back-total-val {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 12px var(--mc, #B87333);
+}
+
+/* ---- Entrance Animation ---- */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

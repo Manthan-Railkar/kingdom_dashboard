@@ -8,11 +8,18 @@ const path = require('path');
 // Multer Config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/'));
+    const isMemberUpload = req.path.includes('/upload-member');
+    const folderType = isMemberUpload ? 'rosters' : 'kingdoms';
+    const kingdomId = req.params.id || 'general';
+    const dir = path.join(__dirname, `../uploads/${folderType}/`, kingdomId);
+    const fs = require('fs');
+    fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
+    const prefix = req.path.includes('/upload-member') ? 'roster-' : 'kingdom-';
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'kingdom-' + uniqueSuffix + path.extname(file.originalname));
+    cb(null, prefix + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
@@ -33,8 +40,9 @@ const upload = multer({
 // GET all kingdoms sorted by rank
 router.get('/', async (req, res) => {
   try {
-    // Populate point categories if we were to support deep population, but standard is fine
-    const kingdoms = await Kingdom.find({ isActive: true }).sort({ rank: 1 });
+    const kingdoms = await Kingdom.find({ isActive: true })
+      .sort({ rank: 1 })
+      .populate('pointsBreakdown.category', 'name icon');
     res.json(kingdoms);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -44,7 +52,8 @@ router.get('/', async (req, res) => {
 // GET single kingdom
 router.get('/:id', async (req, res) => {
   try {
-    const kingdom = await Kingdom.findById(req.params.id);
+    const kingdom = await Kingdom.findById(req.params.id)
+      .populate('pointsBreakdown.category', 'name icon');
     if (!kingdom) return res.status(404).json({ message: 'Kingdom not found' });
     res.json(kingdom);
   } catch (err) {
@@ -53,7 +62,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // PATCH update points (super admin only)
-router.patch('/:id/points', requireSuperAdmin, async (req, res) => {
+router.patch('/:id/points', requireAdmin, requireSuperAdmin, async (req, res) => {
   try {
     const { points, delta, clearDelta, pointsBreakdown } = req.body;
     const kingdom = await Kingdom.findById(req.params.id);
@@ -70,8 +79,11 @@ router.patch('/:id/points', requireSuperAdmin, async (req, res) => {
     
     if (pointsBreakdown !== undefined) {
       kingdom.pointsBreakdown = pointsBreakdown;
-      // Option: Auto-sum pointsBreakdown to update points
-      kingdom.points = pointsBreakdown.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
+      const newPoints = pointsBreakdown.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
+      if (delta === undefined && points === undefined) {
+        kingdom.pointsDelta = newPoints - kingdom.previousPoints;
+      }
+      kingdom.points = newPoints;
     }
 
     // Add snapshot to history
@@ -86,7 +98,9 @@ router.patch('/:id/points', requireSuperAdmin, async (req, res) => {
     const all = await Kingdom.find({ isActive: true }).sort({ points: -1 });
     await Promise.all(all.map((k, i) => Kingdom.findByIdAndUpdate(k._id, { rank: i + 1 })));
 
-    const updated = await Kingdom.find({ isActive: true }).sort({ rank: 1 });
+    const updated = await Kingdom.find({ isActive: true })
+      .sort({ rank: 1 })
+      .populate('pointsBreakdown.category', 'name icon');
     req.io.emit('leaderboard:update', updated);
     res.json(kingdom);
   } catch (err) {
@@ -105,7 +119,9 @@ router.patch('/:id', requireAdmin, async (req, res) => {
     const kingdom = await Kingdom.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!kingdom) return res.status(404).json({ message: 'Kingdom not found' });
     
-    const updated = await Kingdom.find({ isActive: true }).sort({ rank: 1 });
+    const updated = await Kingdom.find({ isActive: true })
+      .sort({ rank: 1 })
+      .populate('pointsBreakdown.category', 'name icon');
     req.io.emit('leaderboard:update', updated);
     res.json(kingdom);
   } catch (err) {
@@ -114,13 +130,15 @@ router.patch('/:id', requireAdmin, async (req, res) => {
 });
 
 // POST create kingdom (super admin)
-router.post('/', requireSuperAdmin, async (req, res) => {
+router.post('/', requireAdmin, requireSuperAdmin, async (req, res) => {
   try {
     const kingdom = new Kingdom(req.body);
     await kingdom.save();
     const all = await Kingdom.find({ isActive: true }).sort({ points: -1 });
     await Promise.all(all.map((k, i) => Kingdom.findByIdAndUpdate(k._id, { rank: i + 1 })));
-    const updated = await Kingdom.find({ isActive: true }).sort({ rank: 1 });
+    const updated = await Kingdom.find({ isActive: true })
+      .sort({ rank: 1 })
+      .populate('pointsBreakdown.category', 'name icon');
     req.io.emit('leaderboard:update', updated);
     res.status(201).json(kingdom);
   } catch (err) {
@@ -147,7 +165,7 @@ router.post('/:id/upload-asset', requireAdmin, upload.single('image'), async (re
     const kingdom = await Kingdom.findById(req.params.id);
     if (!kingdom) return res.status(404).json({ message: 'Kingdom not found' });
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+    const fileUrl = `/uploads/kingdoms/${req.params.id}/${req.file.filename}`;
 
     if (field === 'designs') {
       kingdom.designs.push(fileUrl);
@@ -157,10 +175,30 @@ router.post('/:id/upload-asset', requireAdmin, upload.single('image'), async (re
 
     await kingdom.save();
     
-    const updated = await Kingdom.find({ isActive: true }).sort({ rank: 1 });
+    const updated = await Kingdom.find({ isActive: true })
+      .sort({ rank: 1 })
+      .populate('pointsBreakdown.category', 'name icon');
     req.io.emit('leaderboard:update', updated);
     
     res.json(kingdom);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST upload team member portrait
+router.post('/:id/upload-member', requireAdmin, upload.single('image'), async (req, res) => {
+  try {
+    if (req.admin.role !== 'superadmin' && String(req.admin.kingdomId) !== req.params.id) {
+      return res.status(403).json({ message: 'You can only edit your own kingdom' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Please upload a file' });
+    }
+
+    const fileUrl = `/uploads/rosters/${req.params.id}/${req.file.filename}`;
+    res.json({ filename: fileUrl });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

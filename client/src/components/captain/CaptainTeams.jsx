@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { useToast } from '../../context/ToastContext';
-import { uploadGalleryImage, updateKingdom, getKingdom } from '../../api';
+import { uploadMemberPortrait, updateKingdom, getKingdom } from '../../api';
 import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import { Crown, BookOpen, Swords, Eye, Shield, Award, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
 import './CaptainTeams.css';
@@ -58,8 +58,8 @@ export default function CaptainTeams() {
       const formData = new FormData();
       formData.append('image', newMemberImage);
       try {
-        const res = await uploadGalleryImage(formData);
-        imageUrl = `/uploads/${res.filename}`;
+        const res = await uploadMemberPortrait(kingdom._id, formData);
+        imageUrl = res.filename;
       } catch (err) {
         addToast('Failed to upload image', 'error');
         setIsUploading(false);

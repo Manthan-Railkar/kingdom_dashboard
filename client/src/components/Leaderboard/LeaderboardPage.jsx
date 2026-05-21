@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Shield, Flame, Mountain, Bird, Wind, Anchor, Star, Zap, Crown, Trophy } from 'lucide-react';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import KingdomDetailsModal from './KingdomDetailsModal';
 import './LeaderboardPage.css';
 
@@ -99,8 +100,12 @@ export default function LeaderboardPage() {
 
                 {/* Kingdom */}
                 <div className="lb-cell lb-cell-kingdom">
-                  <div className="lb-kingdom-icon" style={{ color: baseColor, filter: `drop-shadow(0 0 6px ${glowColor})` }}>
-                    {getKingdomIcon(k.name, 26)}
+                  <div className="lb-kingdom-icon" style={{ color: baseColor, filter: `drop-shadow(0 0 6px ${glowColor})`, width: '26px', height: '26px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '50%' }}>
+                    {isImagePath(k.emblem) ? (
+                      <img src={resolveImageUrl(k.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      getKingdomIcon(k.name, 26)
+                    )}
                   </div>
                   <span className="lb-kingdom-name">{k.name}</span>
                 </div>
@@ -124,8 +129,12 @@ export default function LeaderboardPage() {
                 </div>
 
                 {/* Decorative crest icon on right */}
-                <div className="lb-row-crest" style={{ color: baseColor, opacity: 0.25 }}>
-                  {getKingdomIcon(k.name, 18)}
+                <div className="lb-row-crest" style={{ color: baseColor, opacity: 0.25, width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: '50%' }}>
+                  {isImagePath(k.emblem) ? (
+                    <img src={resolveImageUrl(k.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.5, filter: 'grayscale(100%) brightness(200%)' }} />
+                  ) : (
+                    getKingdomIcon(k.name, 18)
+                  )}
                 </div>
               </div>
             );

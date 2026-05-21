@@ -23,7 +23,7 @@ export function AdminProvider({ children }) {
     }
   }, [token]);
 
-  // Hidden hotkey to open Admin Login modal (Ctrl+Q+2+6)
+  // Hidden hotkey to open Admin Login modal (Ctrl+M)
   useEffect(() => {
     const keys = new Set();
     const handleKeyDown = (e) => {
@@ -31,9 +31,7 @@ export function AdminProvider({ children }) {
       
       if (
         (keys.has('control') || keys.has('meta')) &&
-        keys.has('q') &&
-        keys.has('2') &&
-        keys.has('6')
+        keys.has('m')
       ) {
         e.preventDefault();
         setShowLoginModal(true);

@@ -9,7 +9,9 @@ export default function SystemAnnouncement() {
   const { news } = useApp();
   const { isAdmin } = useAdmin();
   const { addToast } = useToast();
-  const pinned = news.find((n) => n.isPinned) || news.find((n) => n.type === 'announcement');
+  
+  // Logic: Pinned > Announcement > Latest News > Default
+  const pinned = news.find((n) => n.isPinned) || news.find((n) => n.type === 'announcement') || news[0];
 
   return (
     <section className="panel announcement-panel">
@@ -24,7 +26,11 @@ export default function SystemAnnouncement() {
         <span className="announcement-icon"></span>
         {pinned ? (
           <>
-            <h3 className="announcement-title">Welcome to QUANTUM 26!</h3>
+            <h3 className="announcement-title">
+              {pinned.type === 'announcement' ? 'OFFICIAL DECREE' : 
+               pinned.type === 'alert' ? 'WAR ALERT' : 
+               pinned.type === 'achievement' ? 'GLORIOUS FEAT' : 'LATEST DISPATCH'}
+            </h3>
             <p className="announcement-text">{pinned.text}</p>
           </>
         ) : (

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const News = require('../models/News');
-const { requireSuperAdmin } = require('../middleware/auth');
+const { requireAdmin, requireSuperAdmin } = require('../middleware/auth');
 
 // GET recent news
 router.get('/', async (req, res) => {
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST news (admin)
-router.post('/', requireSuperAdmin, async (req, res) => {
+router.post('/', requireAdmin, requireSuperAdmin, async (req, res) => {
   try {
     const item = new News(req.body);
     await item.save();
@@ -26,7 +26,7 @@ router.post('/', requireSuperAdmin, async (req, res) => {
 });
 
 // DELETE news (admin)
-router.delete('/:id', requireSuperAdmin, async (req, res) => {
+router.delete('/:id', requireAdmin, requireSuperAdmin, async (req, res) => {
   try {
     await News.findByIdAndDelete(req.params.id);
     req.io.emit('news:delete', req.params.id);

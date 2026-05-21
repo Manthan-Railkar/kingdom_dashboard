@@ -16,6 +16,8 @@ const NAV = [
   { id: 'teams',      icon: Users, label: 'TEAMS', adminOnly: false, settingKey: 'showTeams' },
   { id: 'events',     icon: Calendar, label: 'EVENTS', adminOnly: false, settingKey: 'showEvents' },
   { id: 'gallery',    icon: ImageIcon, label: 'MEDIA & GALLERY', adminOnly: false, settingKey: 'showGallery' },
+  { id: 'manage_news', icon: Newspaper, label: 'MANAGE NEWS', superAdminOnly: true },
+  { id: 'manage_gallery', icon: ImageIcon, label: 'MANAGE GALLERY', superAdminOnly: true },
   { id: 'round_mgmt', icon: Target, label: 'ROUND MANAGEMENT', superAdminOnly: true },
   { id: 'points_mgmt',icon: SlidersHorizontal, label: 'POINTS MANAGEMENT', superAdminOnly: true },
   { id: 'settings',   icon: Settings, label: 'SETTINGS', superAdminOnly: true },
@@ -69,23 +71,63 @@ export default function Sidebar({ active, onSelect }) {
 
       {/* Navigation */}
       <nav className="sb-nav">
-        {visibleNav.map((item) => {
-          const Icon = item.icon;
-          return (
+        <div className="sb-nav-section">
+          <span className="sb-nav-section-title">THE REALM</span>
+          {visibleNav.filter(item => !item.superAdminOnly && !item.kingdomAdminOnly && item.id !== 'logout').map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                className={`sb-nav-item ${active === item.id ? 'active' : ''}`}
+                onClick={() => handleSelect(item.id)}
+                data-label={item.label}
+              >
+                {active === item.id && <span className="sb-active-bar" />}
+                <span className="sb-nav-icon">
+                  <Icon size={16} strokeWidth={2} />
+                </span>
+                <span className="sb-nav-label">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {(isSuperAdmin || isKingdomAdmin) && (
+          <div className="sb-nav-section" style={{ marginTop: '16px' }}>
+            <span className="sb-nav-section-title">GOVERNANCE</span>
+            {visibleNav.filter(item => item.superAdminOnly || item.kingdomAdminOnly).map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  className={`sb-nav-item ${active === item.id ? 'active' : ''}`}
+                  onClick={() => handleSelect(item.id)}
+                  data-label={item.label}
+                >
+                  {active === item.id && <span className="sb-active-bar" />}
+                  <span className="sb-nav-icon">
+                    <Icon size={16} strokeWidth={2} />
+                  </span>
+                  <span className="sb-nav-label">{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {isAdmin && (
+          <div className="sb-nav-section" style={{ marginTop: 'auto' }}>
             <button
-              key={item.id}
-              className={`sb-nav-item ${active === item.id ? 'active' : ''}`}
-              onClick={() => handleSelect(item.id)}
-              data-label={item.label}
+              className="sb-nav-item sb-nav-item--logout"
+              onClick={() => handleSelect('logout')}
             >
-              {active === item.id && <span className="sb-active-bar" />}
               <span className="sb-nav-icon">
-                <Icon size={16} strokeWidth={2} />
+                <LogOut size={16} strokeWidth={2} />
               </span>
-              <span className="sb-nav-label">{item.label}</span>
+              <span className="sb-nav-label">LOGOUT</span>
             </button>
-          );
-        })}
+          </div>
+        )}
       </nav>
 
       {/* Admin Status */}
@@ -107,7 +149,8 @@ export default function Sidebar({ active, onSelect }) {
 
       {/* Copyright */}
       <div className="sb-copyright">
-        © Quantum 26 | All Rights Reserved
+        <div style={{ marginBottom: '4px' }}>© Quantum 26 | All Rights Reserved</div>
+        <div className="sb-powered-by">Powered by Vaidnyanic</div>
       </div>
     </aside>
   );

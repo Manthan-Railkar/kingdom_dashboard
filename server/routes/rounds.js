@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Round = require('../models/Round');
-const { requireSuperAdmin } = require('../middleware/auth');
+const { requireAdmin, requireSuperAdmin } = require('../middleware/auth');
 
 // GET current live/paused round
 router.get('/current', async (req, res) => {
@@ -24,8 +24,11 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Protect all following routes
+router.use(requireAdmin, requireSuperAdmin);
+
 // POST create round (admin)
-router.post('/', requireSuperAdmin, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const data = { ...req.body };
     if (data.roundNumber === undefined) {
@@ -42,7 +45,7 @@ router.post('/', requireSuperAdmin, async (req, res) => {
 });
 
 // PATCH update round status (admin)
-router.patch('/:id/status', requireSuperAdmin, async (req, res) => {
+router.patch('/:id/status', async (req, res) => {
   try {
     const { status } = req.body;
     const round = await Round.findById(req.params.id);
@@ -60,7 +63,7 @@ router.patch('/:id/status', requireSuperAdmin, async (req, res) => {
 });
 
 // PATCH update round details (admin)
-router.patch('/:id', requireSuperAdmin, async (req, res) => {
+router.patch('/:id', async (req, res) => {
   try {
     const updateData = { ...req.body };
     const oldRound = await Round.findById(req.params.id);
@@ -81,7 +84,7 @@ router.patch('/:id', requireSuperAdmin, async (req, res) => {
 });
 
 // DELETE round (admin)
-router.delete('/:id', requireSuperAdmin, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const round = await Round.findByIdAndDelete(req.params.id);
     if (!round) return res.status(404).json({ message: 'Round not found' });

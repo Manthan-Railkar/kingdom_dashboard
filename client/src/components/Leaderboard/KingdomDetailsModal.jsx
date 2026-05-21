@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Crown, Star, ArrowUpRight, TrendingUp, Search } from 'lucide-react';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './KingdomDetailsModal.css';
 
 export default function KingdomDetailsModal({ kingdom, onClose }) {
@@ -36,7 +38,11 @@ export default function KingdomDetailsModal({ kingdom, onClose }) {
 
         <div className="kd-modal-header">
           <div className="kd-emblem-wrap">
-            <span className="kd-emblem">{kingdom.name.split(' ')[1]?.[0] || kingdom.name[0]}</span>
+            {isImagePath(kingdom.emblem) ? (
+              <img src={resolveImageUrl(kingdom.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            ) : (
+              <span className="kd-emblem">{kingdom.name.split(' ')[1]?.[0] || kingdom.name[0]}</span>
+            )}
           </div>
           <h2 className="kd-name">{kingdom.name}</h2>
           <div className="kd-points-badge">

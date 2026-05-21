@@ -13,9 +13,15 @@ export default function KingdomProfile() {
   const [loading, setLoading] = useState(true);
 
   // Text inputs
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [color, setColor] = useState('#B87333');
   const [accentColor, setAccentColor] = useState('#D4956A');
+  const [teamMembers, setTeamMembers] = useState([]);
+
+  // New member inputs
+  const [newMemberName, setNewMemberName] = useState('');
+  const [newMemberRole, setNewMemberRole] = useState('');
 
   // Loading states for individual uploads
   const [uploadingField, setUploadingField] = useState(null);
@@ -25,9 +31,11 @@ export default function KingdomProfile() {
       if (!admin?.kingdomId?._id) return;
       const k = await getKingdom(admin.kingdomId._id);
       setKingdom(k);
+      setName(k.name || '');
       setDescription(k.description || '');
       setColor(k.color || '#B87333');
       setAccentColor(k.accentColor || '#D4956A');
+      setTeamMembers(k.teamMembers || []);
     } catch (err) {
       addToast('Failed to load kingdom profile', 'error');
     } finally {
@@ -41,12 +49,25 @@ export default function KingdomProfile() {
 
   const handleUpdateText = async () => {
     try {
-      await updateKingdom(kingdom._id, { description, color, accentColor });
+      await updateKingdom(kingdom._id, { name, description, color, accentColor, teamMembers });
       addToast('Kingdom details updated', 'success');
       fetchKingdom();
     } catch (err) {
       addToast('Failed to update details', 'error');
     }
+  };
+
+  const handleAddMember = () => {
+    if (!newMemberName.trim()) return;
+    const newList = [...teamMembers, { name: newMemberName.trim(), role: newMemberRole.trim() || 'Member' }];
+    setTeamMembers(newList);
+    setNewMemberName('');
+    setNewMemberRole('');
+  };
+
+  const handleRemoveMember = (idx) => {
+    const newList = teamMembers.filter((_, i) => i !== idx);
+    setTeamMembers(newList);
   };
 
   const handleFileUpload = async (e, field) => {
@@ -102,6 +123,18 @@ export default function KingdomProfile() {
             <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', marginBottom: '20px', fontSize: '0.9rem' }}>IDENTITY & LORE</h3>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>KINGDOM NAME</label>
+                <input 
+                  type="text"
+                  className="admin-input" 
+                  style={{ width: '100%' }} 
+                  value={name} 
+                  onChange={e => setName(e.target.value)} 
+                  placeholder="Enter kingdom name..." 
+                />
+              </div>
+
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '5px' }}>DESCRIPTION / LORE</label>
                 <textarea 
@@ -223,34 +256,57 @@ export default function KingdomProfile() {
             </div>
           </div>
 
-          {/* Team Summary */}
+          {/* Team Summary / Management */}
           <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(184,115,51,0.2)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ fontFamily: 'var(--font-heading)', color: 'var(--gold-bright)', fontSize: '0.9rem', margin: 0 }}>TEAM ROSTER</h3>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Manage in Teams Tab</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Manage team members below</div>
+            </div>
+
+            {/* Add Member Form */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '4px' }}>
+              <input 
+                type="text" 
+                placeholder="Name" 
+                className="admin-input" 
+                style={{ flex: 2, fontSize: '0.8rem' }}
+                value={newMemberName}
+                onChange={e => setNewMemberName(e.target.value)}
+              />
+              <input 
+                type="text" 
+                placeholder="Role" 
+                className="admin-input" 
+                style={{ flex: 1, fontSize: '0.8rem' }}
+                value={newMemberRole}
+                onChange={e => setNewMemberRole(e.target.value)}
+              />
+              <button className="btn-gold" style={{ padding: '5px 15px' }} onClick={handleAddMember}>Add</button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {kingdom.teamMembers && kingdom.teamMembers.length > 0 ? kingdom.teamMembers.map((member, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '4px', borderLeft: `2px solid ${kingdom.color || 'var(--gold-primary)'}` }}>
-                  {isImagePath(member.image) ? (
-                    <img src={resolveImageUrl(member.image)} alt={member.name} style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                      <ImageIcon size={14} />
-                    </div>
-                  )}
-                  <div>
+              {teamMembers.length > 0 ? teamMembers.map((member, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '4px', borderLeft: `2px solid ${color || 'var(--gold-primary)'}` }}>
+                  <div style={{ flex: 1 }}>
                     <div style={{ fontSize: '0.8rem', color: 'var(--gold-bright)' }}>{member.role}</div>
                     <div style={{ fontSize: '0.9rem', color: '#fff' }}>{member.name}</div>
                   </div>
+                  <button 
+                    className="btn-danger" 
+                    style={{ padding: '5px', borderRadius: '3px', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.4)' }}
+                    onClick={() => handleRemoveMember(idx)}
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               )) : (
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center', padding: '20px', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>
-                  No team members assigned yet.
+                  No team members added yet.
                 </div>
               )}
             </div>
+            
+            <button className="btn-gold" style={{ marginTop: '20px', width: '100%' }} onClick={handleUpdateText}>Save Team Roster</button>
           </div>
 
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { TrendingUp, Trophy } from 'lucide-react';
 import SparklineSvg from '../common/SparklineSvg';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './TrendsPage.css';
 
 export default function TrendsPage() {
@@ -48,7 +49,13 @@ export default function TrendsPage() {
                 onClick={() => setSelectedKingdom(k)}
               >
                 <div className="tp-card-header">
-                  <div className="tp-card-emblem">{k.name.split(' ')[1]?.[0] || k.name[0]}</div>
+                  <div className="tp-card-emblem" style={{ padding: isImagePath(k.emblem) ? '0' : undefined, overflow: 'hidden' }}>
+                    {isImagePath(k.emblem) ? (
+                      <img src={resolveImageUrl(k.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      k.name.split(' ')[1]?.[0] || k.name[0]
+                    )}
+                  </div>
                   <div className="tp-card-info">
                     <h3 className="tp-card-name">{k.name}</h3>
                     <span className="tp-card-rank">Rank {k.rank}</span>
@@ -79,8 +86,12 @@ export default function TrendsPage() {
           <div className="modal-box kingdom-detail-modal" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedKingdom(null)}>✕</button>
             <div className="kd-header">
-              <div className="kd-emblem" style={{ borderColor: selectedKingdom.color, color: selectedKingdom.color }}>
-                {selectedKingdom.name.split(' ')[1]?.[0] || selectedKingdom.name[0]}
+              <div className="kd-emblem" style={{ borderColor: selectedKingdom.color, color: selectedKingdom.color, padding: isImagePath(selectedKingdom.emblem) ? '0' : undefined, overflow: 'hidden' }}>
+                {isImagePath(selectedKingdom.emblem) ? (
+                  <img src={resolveImageUrl(selectedKingdom.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                ) : (
+                  selectedKingdom.name.split(' ')[1]?.[0] || selectedKingdom.name[0]
+                )}
               </div>
               <div>
                 <h3 className="kd-name" style={{ color: selectedKingdom.color }}>{selectedKingdom.name}</h3>

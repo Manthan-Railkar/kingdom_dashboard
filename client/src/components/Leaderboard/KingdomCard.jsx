@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useCountUp } from '../../hooks/useCountUp';
 import SparklineCanvas from '../common/SparklineCanvas';
 import { Shield, Flame, Mountain, Bird, Wind, Anchor, Star, Zap, Crown } from 'lucide-react';
+import { isImagePath, resolveImageUrl } from '../../utils/imageHelpers';
 import './KingdomCard.css';
 
 const hexToRgba = (hex, alpha) => {
@@ -83,14 +84,21 @@ export default function KingdomCard({ kingdom, rank, delay = 0, onClick }) {
         
         {/* Heraldic Shield Crest */}
         <div className="kc-rank-crest">
+          {isImagePath(kingdom.emblem) && (
+            <img src={resolveImageUrl(kingdom.emblem)} alt="" className="kc-rank-img" />
+          )}
           <span className="kc-rank-num">{rank}</span>
         </div>
 
         {/* Inner Content */}
         <div className="kc-content">
           <div className="kc-top-section">
-            <div className="kc-emblem-wrap" style={{ color: baseColor, filter: `drop-shadow(0 0 15px ${glowColor})` }}>
-              {getKingdomIcon(kingdom.name, 48)}
+            <div className="kc-emblem-wrap" style={{ color: baseColor, filter: `drop-shadow(0 0 15px ${glowColor})`, overflow: 'hidden' }}>
+              {isImagePath(kingdom.emblem) ? (
+                <img src={resolveImageUrl(kingdom.emblem)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                getKingdomIcon(kingdom.name, 48)
+              )}
             </div>
             <h3 className="kc-name">{kingdom.name}</h3>
           </div>

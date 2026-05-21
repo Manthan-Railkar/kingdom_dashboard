@@ -33,10 +33,11 @@ const formatDate = (dateStr) => {
 };
 
 export default function ManageNews() {
-  const { news } = useApp();
+  const { news, setNews } = useApp();
   const { addToast } = useToast();
 
   const [form, setForm] = useState({
+    heading: '',
     text: '',
     type: 'news',
     kingdomName: '',
@@ -53,9 +54,14 @@ export default function ManageNews() {
     if (!form.text.trim()) return;
     setSubmitting(true);
     try {
-      await postNews({ text: form.text.trim(), type: form.type, kingdomName: form.kingdomName.trim() });
+      await postNews({
+        heading: form.heading.trim(),
+        text: form.text.trim(),
+        type: form.type,
+        kingdomName: form.kingdomName.trim()
+      });
       addToast('News post published successfully.', 'success');
-      setForm({ text: '', type: 'news', kingdomName: '' });
+      setForm({ heading: '', text: '', type: 'news', kingdomName: '' });
     } catch (err) {
       addToast('Failed to publish post. Please try again.', 'error');
     } finally {
@@ -64,10 +70,13 @@ export default function ManageNews() {
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this news item?')) return;
     setDeletingId(id);
     try {
       await deleteNews(id);
       addToast('Post deleted.', 'success');
+      // Update local state immediately for better UX
+      setNews(prev => prev.filter(n => n._id !== id));
     } catch (err) {
       addToast('Failed to delete post.', 'error');
     } finally {
@@ -123,6 +132,22 @@ export default function ManageNews() {
           </div>
 
           <div className="mn-field">
+            <label className="mn-label" htmlFor="mn-heading">
+              HEADING <span className="mn-label-optional">(OPTIONAL — appears for messages over 20 words)</span>
+            </label>
+            <input
+              id="mn-heading"
+              className="mn-input"
+              type="text"
+              name="heading"
+              value={form.heading}
+              onChange={handleChange}
+              placeholder="e.g. The Great Siege of the Eastern Gate begins..."
+              maxLength={120}
+            />
+          </div>
+
+          <div className="mn-field">
             <label className="mn-label" htmlFor="mn-text">POST CONTENT</label>
             <textarea
               id="mn-text"
@@ -166,6 +191,7 @@ export default function ManageNews() {
                   <span>{getTypeLabel(item.type)}</span>
                 </div>
                 <div className="mn-post-body">
+                  {item.heading && <p className="mn-post-heading">{item.heading}</p>}
                   <p className="mn-post-text">{item.text}</p>
                   <div className="mn-post-meta">
                     {item.kingdomName && <span className="mn-post-kingdom">{item.kingdomName}</span>}

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Settings = require('../models/Settings');
-const { requireSuperAdmin } = require('../middleware/auth');
+const { requireAdmin, requireSuperAdmin } = require('../middleware/auth');
 
 // GET settings (public, so sidebar can fetch)
 router.get('/', async (req, res) => {
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 // PATCH settings (super admin only)
-router.patch('/', requireSuperAdmin, async (req, res) => {
+router.patch('/', requireAdmin, requireSuperAdmin, async (req, res) => {
   try {
     const settings = await Settings.findOneAndUpdate(
       { key: 'global' },
