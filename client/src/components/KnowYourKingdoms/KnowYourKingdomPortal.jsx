@@ -17,7 +17,7 @@ const FLAG_HEIGHT = 1.4;
 const FLAG_SEGMENTS_X = 40;
 const FLAG_SEGMENTS_Y = 28;
 const ORBIT_RADIUS = 5;
-const PARTICLE_COUNT = 200;
+const PARTICLE_COUNT = 180;
 
 // ============================================================
 // HELPERS
@@ -39,23 +39,33 @@ function createDefaultFlagTexture() {
   canvas.width = 512;
   canvas.height = 360;
   const ctx = canvas.getContext('2d');
+  // Warm royal copper gradient
   const grad = ctx.createLinearGradient(0, 0, 512, 360);
-  grad.addColorStop(0, '#1a0a3e');
-  grad.addColorStop(0.5, '#2d1566');
-  grad.addColorStop(1, '#0a0520');
+  grad.addColorStop(0, '#1a0e04');
+  grad.addColorStop(0.5, '#2a1808');
+  grad.addColorStop(1, '#0d0804');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 360);
-  ctx.strokeStyle = '#ffd700';
+  // Copper border
+  ctx.strokeStyle = '#D4956A';
   ctx.lineWidth = 6;
   ctx.strokeRect(8, 8, 496, 344);
-  ctx.fillStyle = '#ffd700';
+  // Inner border for richness
+  ctx.strokeStyle = 'rgba(184, 115, 51, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(18, 18, 476, 324);
+  // Royal "Q" monogram
+  ctx.fillStyle = '#D4956A';
   ctx.font = 'bold 110px serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('Q', 256, 140);
+  // Subtitle
   ctx.font = 'bold 32px sans-serif';
+  ctx.fillStyle = '#B87333';
   ctx.fillText('QUANTUM 26', 256, 250);
-  ctx.strokeStyle = 'rgba(255,215,0,0.4)';
+  // Decorative line
+  ctx.strokeStyle = 'rgba(212, 149, 106, 0.35)';
   ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(140, 290); ctx.lineTo(372, 290); ctx.stroke();
   const tex = new THREE.CanvasTexture(canvas);
@@ -70,12 +80,14 @@ function createFallbackFlagTexture(letter, color) {
   const ctx = canvas.getContext('2d');
   const grad = ctx.createLinearGradient(0, 0, 256, 180);
   grad.addColorStop(0, color || '#B87333');
-  grad.addColorStop(1, '#1a0a2e');
+  grad.addColorStop(1, '#0d0804');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 256, 180);
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  // Subtle inner border
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
   ctx.lineWidth = 3;
   ctx.strokeRect(4, 4, 248, 172);
+  // Letter
   ctx.fillStyle = 'rgba(255,255,255,0.85)';
   ctx.font = 'bold 72px sans-serif';
   ctx.textAlign = 'center';
@@ -173,8 +185,8 @@ function WavingFlag({ textureUrl, defaultTexture }) {
       <meshStandardMaterial
         map={activeTex}
         side={THREE.DoubleSide}
-        roughness={0.85}
-        metalness={0.05}
+        roughness={0.75}
+        metalness={0.08}
         color="#ffffff"
       />
     </mesh>
@@ -182,27 +194,37 @@ function WavingFlag({ textureUrl, defaultTexture }) {
 }
 
 // ============================================================
-// FLAG POLE — Metallic pole with golden ornament
+// FLAG POLE — Royal bronze pole with golden ornament
 // ============================================================
 function FlagPoleModel({ poleHeight = 3.2, flagTextureUrl, defaultTexture }) {
   const flagY = poleHeight - 0.2;
 
   return (
     <group position={[0, -1, 0]}>
-      {/* Pole shaft */}
+      {/* Pole shaft — warm bronze */}
       <mesh position={[0, poleHeight / 2, 0]} castShadow>
         <cylinderGeometry args={[0.025, 0.04, poleHeight, 16]} />
-        <meshStandardMaterial color="#555" metalness={0.92} roughness={0.12} />
+        <meshStandardMaterial color="#8B6B4A" metalness={0.88} roughness={0.15} />
       </mesh>
       {/* Gold top ornament */}
       <mesh position={[0, poleHeight + 0.06, 0]}>
         <sphereGeometry args={[0.065, 16, 16]} />
-        <meshStandardMaterial color="#ffd700" metalness={0.8} roughness={0.15} emissive="#ffd700" emissiveIntensity={0.3} />
+        <meshStandardMaterial color="#D4956A" metalness={0.85} roughness={0.12} emissive="#B87333" emissiveIntensity={0.25} />
       </mesh>
-      {/* Base */}
+      {/* Ornament ring detail */}
+      <mesh position={[0, poleHeight - 0.02, 0]}>
+        <torusGeometry args={[0.035, 0.008, 8, 16]} />
+        <meshStandardMaterial color="#D4956A" metalness={0.9} roughness={0.1} />
+      </mesh>
+      {/* Base — dark bronze pedestal */}
       <mesh position={[0, 0.06, 0]}>
         <cylinderGeometry args={[0.13, 0.17, 0.12, 16]} />
-        <meshStandardMaterial color="#333" metalness={0.75} roughness={0.25} />
+        <meshStandardMaterial color="#4A3520" metalness={0.7} roughness={0.3} />
+      </mesh>
+      {/* Base ring detail */}
+      <mesh position={[0, 0.12, 0]}>
+        <torusGeometry args={[0.13, 0.006, 8, 24]} />
+        <meshStandardMaterial color="#B87333" metalness={0.85} roughness={0.15} />
       </mesh>
       {/* Waving flag at top */}
       <group position={[0, flagY, 0]}>
@@ -233,24 +255,26 @@ function FloatingKingdomFlag({ position, texture, color, delay, onFlagClick }) {
 
   return (
     <group ref={groupRef} position={position}>
+      {/* Copper glow ring behind flag */}
       <mesh position={[0, 0, -0.015]}>
         <ringGeometry args={[0.35, 0.42, 32]} />
-        <meshBasicMaterial color={threeColor} transparent opacity={hovered ? 0.5 : 0.12} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
+        <meshBasicMaterial color={threeColor} transparent opacity={hovered ? 0.45 : 0.1} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
       </mesh>
+      {/* Flag card */}
       <mesh
         onClick={(e) => { e.stopPropagation(); onFlagClick(); }}
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = ''; }}
       >
         <planeGeometry args={[0.65, 0.46]} />
-        <meshStandardMaterial map={texture} side={THREE.DoubleSide} emissive={threeColor} emissiveIntensity={hovered ? 0.2 : 0.04} roughness={0.6} metalness={0.15} />
+        <meshStandardMaterial map={texture} side={THREE.DoubleSide} emissive={threeColor} emissiveIntensity={hovered ? 0.18 : 0.04} roughness={0.55} metalness={0.18} />
       </mesh>
     </group>
   );
 }
 
 // ============================================================
-// 3D SCENE PARTICLES — Cosmic floating dust
+// 3D SCENE PARTICLES — Warm copper floating dust
 // ============================================================
 function SceneParticles() {
   const pointsRef = useRef();
@@ -278,31 +302,31 @@ function SceneParticles() {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT} array={positions} itemSize={3} />
       </bufferGeometry>
-      <pointsMaterial size={0.035} color="#9977dd" transparent opacity={0.45} sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false} />
+      <pointsMaterial size={0.03} color="#D4956A" transparent opacity={0.35} sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false} />
     </points>
   );
 }
 
 // ============================================================
-// GLOWING TERRAIN — Futuristic grid floor
+// GLOWING TERRAIN — Royal copper wireframe floor
 // ============================================================
 function GlowingTerrain() {
   const meshRef = useRef();
   useFrame(({ clock }) => {
     if (meshRef.current) {
-      meshRef.current.material.emissiveIntensity = 0.04 + Math.sin(clock.getElapsedTime() * 0.4) * 0.015;
+      meshRef.current.material.emissiveIntensity = 0.03 + Math.sin(clock.getElapsedTime() * 0.4) * 0.012;
     }
   });
   return (
     <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
       <planeGeometry args={[40, 40, 80, 80]} />
-      <meshStandardMaterial color="#050510" emissive="#2a1060" emissiveIntensity={0.04} wireframe transparent opacity={0.12} />
+      <meshStandardMaterial color="#0a0806" emissive="#6B4226" emissiveIntensity={0.03} wireframe transparent opacity={0.1} />
     </mesh>
   );
 }
 
 // ============================================================
-// ORBIT RINGS — Decorative glowing torus rings
+// ORBIT RINGS — Elegant copper-toned decorative torus rings
 // ============================================================
 function SceneOrbitRings() {
   const r1 = useRef();
@@ -316,11 +340,11 @@ function SceneOrbitRings() {
     <group position={[0, 0.5, 0]}>
       <mesh ref={r1} rotation={[Math.PI / 2.3, 0.15, 0]}>
         <torusGeometry args={[ORBIT_RADIUS + 0.1, 0.006, 8, 100]} />
-        <meshBasicMaterial color="#8855cc" transparent opacity={0.1} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial color="#B87333" transparent opacity={0.08} blending={THREE.AdditiveBlending} />
       </mesh>
       <mesh ref={r2} rotation={[Math.PI / 2.8, -0.3, 0.5]}>
         <torusGeometry args={[ORBIT_RADIUS + 0.3, 0.004, 8, 100]} />
-        <meshBasicMaterial color="#5588cc" transparent opacity={0.06} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial color="#D4956A" transparent opacity={0.05} blending={THREE.AdditiveBlending} />
       </mesh>
     </group>
   );
@@ -369,17 +393,25 @@ function KingdomScene({ kingdoms, uploadedFlagUrl, onFlagClick }) {
 
   return (
     <>
-      <color attach="background" args={['#030112']} />
-      <fog attach="fog" args={['#030112', 8, 22]} />
+      {/* Warm charcoal background — matching website's --bg-deepest */}
+      <color attach="background" args={['#0a0806']} />
 
-      {/* Cinematic Lighting */}
-      <ambientLight intensity={0.12} color="#4455aa" />
-      <pointLight position={[0, 4, 0]} intensity={2} color="#ffd700" distance={8} decay={2} />
-      <pointLight position={[4, 2, 3]} intensity={0.6} color="#7744cc" distance={10} decay={2} />
-      <pointLight position={[-3, 1, -4]} intensity={0.4} color="#2255dd" distance={10} decay={2} />
-      <spotLight position={[0, 8, 3]} angle={0.3} penumbra={0.8} intensity={0.6} color="#ffffff" castShadow />
+      {/* === FULLY-LIT BALANCED LIGHTING === */}
+      {/* Strong warm ambient — fills everything evenly */}
+      <ambientLight intensity={0.75} color="#FFF5E6" />
+      {/* Hemisphere for even sky/ground fill */}
+      <hemisphereLight args={['#D4956A', '#3a2010', 0.5]} />
 
-      <Stars radius={100} depth={80} count={2500} factor={4} saturation={0.15} fade speed={0.4} />
+      {/* Key copper light — overhead warmth */}
+      <pointLight position={[0, 5, 0]} intensity={2.5} color="#D4956A" distance={12} decay={2} />
+      {/* Warm fill lights from multiple angles to eliminate shadows */}
+      <pointLight position={[5, 3, 4]} intensity={0.8} color="#B87333" distance={14} decay={2} />
+      <pointLight position={[-5, 2, -4]} intensity={0.6} color="#D4956A" distance={14} decay={2} />
+      <pointLight position={[0, 1, 6]} intensity={0.4} color="#DBA472" distance={10} decay={2} />
+      {/* Subtle spotlight for flag pole highlight */}
+      <spotLight position={[0, 8, 3]} angle={0.35} penumbra={0.9} intensity={0.5} color="#FFF5E6" castShadow />
+
+      <Stars radius={120} depth={80} count={1500} factor={3} saturation={0.3} fade speed={0.3} />
       <SceneParticles />
       <SceneOrbitRings />
       <GlowingTerrain />
@@ -415,7 +447,7 @@ function KingdomScene({ kingdoms, uploadedFlagUrl, onFlagClick }) {
       />
 
       <EffectComposer>
-        <Bloom luminanceThreshold={0.3} luminanceSmoothing={0.85} intensity={0.6} mipmapBlur />
+        <Bloom luminanceThreshold={0.4} luminanceSmoothing={0.9} intensity={0.3} mipmapBlur />
       </EffectComposer>
     </>
   );
