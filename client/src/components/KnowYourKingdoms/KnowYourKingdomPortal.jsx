@@ -34,43 +34,40 @@ function getFibonacciPosition(index, total, radius) {
   );
 }
 
-function createDefaultFlagTexture() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 360;
-  const ctx = canvas.getContext('2d');
-  // Warm royal copper gradient
-  const grad = ctx.createLinearGradient(0, 0, 512, 360);
-  grad.addColorStop(0, '#1a0e04');
-  grad.addColorStop(0.5, '#2a1808');
-  grad.addColorStop(1, '#0d0804');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 512, 360);
-  // Copper border
-  ctx.strokeStyle = '#D4956A';
-  ctx.lineWidth = 6;
-  ctx.strokeRect(8, 8, 496, 344);
-  // Inner border for richness
-  ctx.strokeStyle = 'rgba(184, 115, 51, 0.3)';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(18, 18, 476, 324);
-  // Royal "Q" monogram
-  ctx.fillStyle = '#D4956A';
-  ctx.font = 'bold 110px serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText('Q', 256, 140);
-  // Subtitle
-  ctx.font = 'bold 32px sans-serif';
-  ctx.fillStyle = '#B87333';
-  ctx.fillText('QUANTUM 26', 256, 250);
-  // Decorative line
-  ctx.strokeStyle = 'rgba(212, 149, 106, 0.35)';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(140, 290); ctx.lineTo(372, 290); ctx.stroke();
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.needsUpdate = true;
-  return tex;
+function createDefaultFlagTexture(onLoaded) {
+  // Load astronaut.png as the main flag texture
+  const loader = new THREE.TextureLoader();
+  loader.load('/astronaut.png', (tex) => {
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.needsUpdate = true;
+    if (onLoaded) onLoaded(tex);
+  }, undefined, () => {
+    // Fallback if astronaut.png fails to load
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 360;
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 512, 360);
+    grad.addColorStop(0, '#1a0e04');
+    grad.addColorStop(0.5, '#2a1808');
+    grad.addColorStop(1, '#0d0804');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 360);
+    ctx.strokeStyle = '#D4956A';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(8, 8, 496, 344);
+    ctx.fillStyle = '#D4956A';
+    ctx.font = 'bold 110px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Q', 256, 140);
+    ctx.font = 'bold 32px sans-serif';
+    ctx.fillStyle = '#B87333';
+    ctx.fillText('QUANTUM 26', 256, 250);
+    const fallback = new THREE.CanvasTexture(canvas);
+    fallback.needsUpdate = true;
+    if (onLoaded) onLoaded(fallback);
+  });
 }
 
 function createFallbackFlagTexture(letter, color) {
@@ -133,9 +130,8 @@ function CSSParticleField() {
 // ============================================================
 // WAVING FLAG — Cloth physics via vertex displacement
 // ============================================================
-function WavingFlag({ textureUrl, defaultTexture }) {
+function WavingFlag({ texture }) {
   const meshRef = useRef();
-  const [texture, setTexture] = useState(null);
 
   const { geometry, originalPositions } = useMemo(() => {
     const geo = new THREE.PlaneGeometry(FLAG_WIDTH, FLAG_HEIGHT, FLAG_SEGMENTS_X, FLAG_SEGMENTS_Y);
@@ -147,17 +143,6 @@ function WavingFlag({ textureUrl, defaultTexture }) {
     geo.computeVertexNormals();
     return { geometry: geo, originalPositions: pos.array.slice() };
   }, []);
-
-  useEffect(() => {
-    if (!textureUrl) { setTexture(null); return; }
-    let disposed = false;
-    new THREE.TextureLoader().load(textureUrl, (tex) => {
-      if (disposed) { tex.dispose(); return; }
-      tex.colorSpace = THREE.SRGBColorSpace;
-      setTexture((prev) => { if (prev && prev !== defaultTexture) prev.dispose(); return tex; });
-    });
-    return () => { disposed = true; };
-  }, [textureUrl, defaultTexture]);
 
   useFrame(({ clock }) => {
     if (!meshRef.current) return;
@@ -178,12 +163,10 @@ function WavingFlag({ textureUrl, defaultTexture }) {
     meshRef.current.geometry.computeVertexNormals();
   });
 
-  const activeTex = texture || defaultTexture;
-
   return (
     <mesh ref={meshRef} geometry={geometry} castShadow>
       <meshStandardMaterial
-        map={activeTex}
+        map={texture}
         side={THREE.DoubleSide}
         roughness={0.75}
         metalness={0.08}
@@ -196,7 +179,7 @@ function WavingFlag({ textureUrl, defaultTexture }) {
 // ============================================================
 // FLAG POLE — Royal bronze pole with golden ornament
 // ============================================================
-function FlagPoleModel({ poleHeight = 3.2, flagTextureUrl, defaultTexture }) {
+function FlagPoleModel({ poleHeight = 3.2, defaultTexture }) {
   const flagY = poleHeight - 0.2;
 
   return (
@@ -228,7 +211,7 @@ function FlagPoleModel({ poleHeight = 3.2, flagTextureUrl, defaultTexture }) {
       </mesh>
       {/* Waving flag at top */}
       <group position={[0, flagY, 0]}>
-        <WavingFlag textureUrl={flagTextureUrl} defaultTexture={defaultTexture} />
+        <WavingFlag texture={defaultTexture} />
       </group>
     </group>
   );
@@ -257,7 +240,7 @@ function FloatingKingdomFlag({ position, texture, color, delay, onFlagClick }) {
     <group ref={groupRef} position={position}>
       {/* Copper glow ring behind flag */}
       <mesh position={[0, 0, -0.015]}>
-        <ringGeometry args={[0.35, 0.42, 32]} />
+        <ringGeometry args={[0.48, 0.56, 32]} />
         <meshBasicMaterial color={threeColor} transparent opacity={hovered ? 0.45 : 0.1} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
       </mesh>
       {/* Flag card */}
@@ -266,8 +249,8 @@ function FloatingKingdomFlag({ position, texture, color, delay, onFlagClick }) {
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = ''; }}
       >
-        <planeGeometry args={[0.65, 0.46]} />
-        <meshStandardMaterial map={texture} side={THREE.DoubleSide} emissive={threeColor} emissiveIntensity={hovered ? 0.18 : 0.04} roughness={0.55} metalness={0.18} />
+        <planeGeometry args={[0.9, 0.64]} />
+        <meshStandardMaterial map={texture} side={THREE.DoubleSide} emissive={threeColor} emissiveIntensity={hovered ? 0.2 : 0.06} roughness={0.5} metalness={0.15} />
       </mesh>
     </group>
   );
@@ -353,8 +336,12 @@ function SceneOrbitRings() {
 // ============================================================
 // KINGDOM SCENE — Complete 3D scene graph
 // ============================================================
-function KingdomScene({ kingdoms, uploadedFlagUrl, onFlagClick }) {
-  const defaultTexture = useMemo(() => createDefaultFlagTexture(), []);
+function KingdomScene({ kingdoms, onFlagClick }) {
+  // Load astronaut.png as the main pole flag
+  const [defaultTexture, setDefaultTexture] = useState(null);
+  useEffect(() => {
+    createDefaultFlagTexture((tex) => setDefaultTexture(tex));
+  }, []);
 
   // Load kingdom flag textures
   const fallbackTextures = useMemo(() => {
@@ -416,8 +403,8 @@ function KingdomScene({ kingdoms, uploadedFlagUrl, onFlagClick }) {
       <SceneOrbitRings />
       <GlowingTerrain />
 
-      {/* Central Flag Pole with waving flag */}
-      <FlagPoleModel flagTextureUrl={uploadedFlagUrl} defaultTexture={defaultTexture} />
+      {/* Central Flag Pole with astronaut flag */}
+      {defaultTexture && <FlagPoleModel defaultTexture={defaultTexture} />}
 
       {/* Floating Kingdom Flags */}
       <group ref={floatingGroupRef}>
@@ -459,8 +446,6 @@ function KingdomScene({ kingdoms, uploadedFlagUrl, onFlagClick }) {
 export default function KnowYourKingdomPortal() {
   const { kingdoms } = useApp();
   const [phase, setPhase] = useState('idle'); // 'idle' | 'activating' | 'active'
-  const [uploadedFlagUrl, setUploadedFlagUrl] = useState(null);
-  const [uploadedFileName, setUploadedFileName] = useState('');
   const [selectedKingdom, setSelectedKingdom] = useState(null);
 
   const handleReveal = useCallback(() => {
@@ -470,23 +455,7 @@ export default function KnowYourKingdomPortal() {
 
   const handleClose = useCallback(() => {
     setPhase('idle');
-    if (uploadedFlagUrl && uploadedFlagUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(uploadedFlagUrl);
-    }
-    setUploadedFlagUrl(null);
-    setUploadedFileName('');
-  }, [uploadedFlagUrl]);
-
-  const handleUpload = useCallback((e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (uploadedFlagUrl && uploadedFlagUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(uploadedFlagUrl);
-    }
-    const url = URL.createObjectURL(file);
-    setUploadedFlagUrl(url);
-    setUploadedFileName(file.name);
-  }, [uploadedFlagUrl]);
+  }, []);
 
   const handleFlagClick = useCallback((kingdom) => {
     setSelectedKingdom(kingdom);
@@ -526,7 +495,6 @@ export default function KnowYourKingdomPortal() {
               <Suspense fallback={null}>
                 <KingdomScene
                   kingdoms={kingdoms}
-                  uploadedFlagUrl={uploadedFlagUrl}
                   onFlagClick={handleFlagClick}
                 />
               </Suspense>
@@ -540,17 +508,10 @@ export default function KnowYourKingdomPortal() {
               </div>
             )}
 
-            {/* Glassmorphism Control Panel */}
+            {/* Navigation Panel */}
             {phase === 'active' && (
               <div className="kyk-glass-panel">
-                <span className="kyk-glass-title">FLAG CONTROL</span>
-                <label className="kyk-upload-label">
-                  <input type="file" accept="image/*" onChange={handleUpload} />
-                  🏴 UPLOAD YOUR FLAG
-                </label>
-                {uploadedFileName && (
-                  <span className="kyk-upload-status">✓ {uploadedFileName}</span>
-                )}
+                <span className="kyk-glass-title">KINGDOM PORTAL</span>
                 <button className="kyk-back-btn" onClick={handleClose}>← BACK</button>
               </div>
             )}
