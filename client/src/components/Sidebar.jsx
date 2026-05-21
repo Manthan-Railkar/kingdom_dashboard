@@ -15,7 +15,6 @@ const NAV = [
   { id: 'news',       icon: Newspaper, label: 'NEWS & UPDATES', adminOnly: false, settingKey: 'showNews' },
   { id: 'teams',      icon: Users, label: 'TEAMS', adminOnly: false, settingKey: 'showTeams' },
   { id: 'events',     icon: Calendar, label: 'EVENTS', adminOnly: false, settingKey: 'showEvents' },
-  { id: 'know_kingdoms', icon: Sparkles, label: 'KNOW YOUR KINGDOM', adminOnly: false, settingKey: null },
   { id: 'gallery',    icon: ImageIcon, label: 'MEDIA & GALLERY', adminOnly: false, settingKey: 'showGallery' },
   { id: 'manage_news', icon: Newspaper, label: 'MANAGE NEWS', superAdminOnly: true },
   { id: 'manage_gallery', icon: ImageIcon, label: 'MANAGE GALLERY', superAdminOnly: true },

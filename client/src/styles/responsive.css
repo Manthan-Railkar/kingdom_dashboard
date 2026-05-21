@@ -169,10 +169,10 @@
     align-items: center;
     justify-content: space-around;
     border-right: none;
-    border-top: 1px solid rgba(184,115,51,0.2);
+    border-top: 1px solid var(--gold-border);
     z-index: 200;
     overflow: hidden;
-    background: linear-gradient(180deg, #0e0b08 0%, #120e0a 100%);
+    background: linear-gradient(180deg, var(--bg-sidebar) 0%, var(--bg-deepest) 100%);
     padding: 0 6px;
   }
 
@@ -190,7 +190,7 @@
     padding: 0 4px;
     overflow-x: auto;
     overflow-y: hidden;
-    gap: 2px;
+    gap: 4px;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE */
     justify-content: flex-start;
@@ -199,6 +199,18 @@
   /* Hide webkit scrollbar on the nav */
   .sb-nav::-webkit-scrollbar { display: none; }
 
+  /* Make nav sections horizontal on mobile so they don't break the bottom nav row */
+  .sb-nav-section {
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
+    margin-top: 0 !important;
+  }
+
+  .sb-nav-section-title {
+    display: none;
+  }
+
   .sb-nav-item {
     flex-direction: column;
     padding: 6px 8px 4px;
@@ -206,6 +218,7 @@
     border-radius: 8px;
     flex: 0 0 auto; /* Never shrink — all items stay full size */
     min-width: 44px;
+    width: auto; /* Override 100% width from desktop */
     align-items: center;
     justify-content: center;
   }
@@ -225,7 +238,7 @@
   }
 
   .sb-nav-item--logout {
-    margin-top: 0;
+    margin-top: 0 !important;
     border-top: none;
     padding-top: 6px; /* Match others */
   }

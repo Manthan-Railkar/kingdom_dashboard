@@ -3,36 +3,36 @@
    ============================================ */
 :root {
   /* === Core Dark Palette (Deep Charcoal with warm undertones) === */
-  --bg-deepest: #120e09;
-  --bg-dark: #16120e;
-  --bg-sidebar: #1a1510;
-  --bg-sidebar-hover: rgba(204,138,74,0.1);
-  --bg-panel: rgba(22, 18, 14, 0.92);
-  --bg-panel-border: rgba(204,138,74,0.25);
-  --bg-card-1: linear-gradient(180deg, #261608 0%, #160e06 50%, #0d0905 100%);
-  --bg-card-2: linear-gradient(180deg, #151824 0%, #0d101a 50%, #080b0e 100%);
-  --bg-card-3: linear-gradient(180deg, #260a08 0%, #1a080d 50%, #0d060a 100%);
+  --bg-deepest: #1a1510;
+  --bg-dark: #201a14;
+  --bg-sidebar: #261f18;
+  --bg-sidebar-hover: rgba(222, 155, 91, 0.15);
+  --bg-panel: rgba(36, 28, 22, 0.92);
+  --bg-panel-border: rgba(222, 155, 91, 0.35);
+  --bg-card-1: linear-gradient(180deg, #362210 0%, #20150a 50%, #161008 100%);
+  --bg-card-2: linear-gradient(180deg, #202534 0%, #141826 50%, #0e1218 100%);
+  --bg-card-3: linear-gradient(180deg, #361412 0%, #241216 50%, #160c10 100%);
 
   /* === Copper System === */
-  --gold-primary: #cc8a4a;
-  --gold-bright:  #e8a97d;
-  --gold-dim:     #8c5a38;
-  --gold-glow:    rgba(204,138,74,0.55);
-  --gold-text:    #efc59e;
-  --gold-border:  rgba(204,138,74,0.45);
+  --gold-primary: #de9b5b;
+  --gold-bright:  #f8be90;
+  --gold-dim:     #a66f48;
+  --gold-glow:    rgba(222, 155, 91, 0.65);
+  --gold-text:    #ffdfbc;
+  --gold-border:  rgba(222, 155, 91, 0.55);
 
   /* === Status === */
-  --live-green:   #00e676;
-  --live-red:     #ff4444;
-  --positive:     #44dd88;
-  --positive-dim: rgba(68,221,136,0.25);
-  --negative:     #ff4444;
-  --negative-dim: rgba(255,68,68,0.25);
+  --live-green:   #00ff88;
+  --live-red:     #ff5555;
+  --positive:     #55ff99;
+  --positive-dim: rgba(85, 255, 153, 0.25);
+  --negative:     #ff5555;
+  --negative-dim: rgba(255, 85, 85, 0.25);
 
   /* === Text === */
-  --text-primary:   #f0dac0;
-  --text-secondary: #af8d6c;
-  --text-muted:     #7a5a46;
+  --text-primary:   #ffeacc;
+  --text-secondary: #cba889;
+  --text-muted:     #9a765d;
   --text-white:     #ffffff;
 
   /* === Kingdom Colors === */

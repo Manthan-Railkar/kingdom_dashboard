@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { ToastProvider } from '../context/ToastContext';
 import Sidebar from '../components/Sidebar';
 import TopNavbar from '../components/TopNavbar';
@@ -31,10 +31,16 @@ const KnowYourKingdomPortal = React.lazy(() => import('../components/KnowYourKin
 
 export default function Dashboard() {
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const { isAdmin, isSuperAdmin, isKingdomAdmin } = useAdmin();
+  const { isAdmin, isSuperAdmin, isKingdomAdmin, isInitializing } = useAdmin();
   const { settings } = useSettings();
   const isNormalUser = !isSuperAdmin && !isKingdomAdmin;
   const [active, setActive] = useState(isNormalUser ? 'know_kingdoms' : 'overview');
+
+  useEffect(() => {
+    if (!isNormalUser && active === 'know_kingdoms') {
+      setActive('overview');
+    }
+  }, [isNormalUser, active]);
 
   const handleTabChange = (newTab) => {
     if (newTab === active) return;
@@ -203,19 +209,25 @@ export default function Dashboard() {
       <NewsPopup />
       <PageTransition isVisible={isTransitioning} />
 
-      <div className={`app-root ${isNormalUser ? 'app-root--top-nav' : ''}`}>
-        {isNormalUser ? (
-          <TopNavbar active={active} onSelect={handleTabChange} />
-        ) : (
-          <Sidebar active={active} onSelect={handleTabChange} />
-        )}
+      {isInitializing ? (
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'rgba(150,110,60,0.4)', fontFamily: 'var(--font-mono)', fontSize: '0.9rem', letterSpacing: '0.1em' }}>
+          LOADING REALM...
+        </div>
+      ) : (
+        <div className={`app-root ${isNormalUser ? 'app-root--top-nav' : ''}`}>
+          {isNormalUser ? (
+            <TopNavbar active={active} onSelect={handleTabChange} />
+          ) : (
+            <Sidebar active={active} onSelect={handleTabChange} />
+          )}
 
-        <main className={`main-area ${isNormalUser ? 'main-area--top-nav' : ''}`}>
-          <div className={['leaderboard', 'news', 'gallery', 'trends', 'teams', 'events', 'know_kingdoms'].includes(active) ? "content-area content-area--full" : "content-area"}>
-            {renderContent()}
-          </div>
-        </main>
-      </div>
+          <main className={`main-area ${isNormalUser ? 'main-area--top-nav' : ''}`}>
+            <div className={['leaderboard', 'news', 'gallery', 'trends', 'teams', 'events', 'know_kingdoms'].includes(active) ? "content-area content-area--full" : "content-area"}>
+              {renderContent()}
+            </div>
+          </main>
+        </div>
+      )}
     </ToastProvider>
   );
 }

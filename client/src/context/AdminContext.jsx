@@ -7,6 +7,7 @@ export function AdminProvider({ children }) {
   const [admin, setAdmin] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('q26_token'));
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(!!token);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginError, setLoginError] = useState('');
 
@@ -18,8 +19,17 @@ export function AdminProvider({ children }) {
   useEffect(() => {
     if (token) {
       getMe(token)
-        .then(setAdmin)
-        .catch(() => { localStorage.removeItem('q26_token'); setToken(null); });
+        .then((data) => {
+          setAdmin(data);
+          setIsInitializing(false);
+        })
+        .catch(() => { 
+          localStorage.removeItem('q26_token'); 
+          setToken(null);
+          setIsInitializing(false);
+        });
+    } else {
+      setIsInitializing(false);
     }
   }, [token]);
 
@@ -78,7 +88,7 @@ export function AdminProvider({ children }) {
 
   return (
     <AdminContext.Provider value={{
-      admin, token, isAdmin, isSuperAdmin, isKingdomAdmin, isLoading,
+      admin, token, isAdmin, isSuperAdmin, isKingdomAdmin, isLoading, isInitializing,
       showLoginModal, setShowLoginModal,
       loginError, setLoginError,
       login, logout,
