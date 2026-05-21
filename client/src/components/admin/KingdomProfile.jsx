@@ -80,7 +80,7 @@ export default function KingdomProfile() {
     formData.append('field', field);
 
     try {
-      const res = await uploadKingdomAsset(kingdom._id, formData);
+      const res = await uploadKingdomAsset(kingdom._id, field, formData);
       setKingdom(res);
       addToast(`${field} uploaded successfully`, 'success');
     } catch (err) {

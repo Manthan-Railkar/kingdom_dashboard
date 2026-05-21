@@ -149,7 +149,7 @@ export default function Sidebar({ active, onSelect }) {
 
       {/* Copyright */}
       <div className="sb-copyright">
-        <div style={{ marginBottom: '4px' }}>© Quantum 26 | All Rights Reserved</div>
+        <div style={{ marginBottom: '4px' }}>© Quantum 26</div>
         <div className="sb-powered-by">Powered by Vaidnyanic</div>
       </div>
     </aside>

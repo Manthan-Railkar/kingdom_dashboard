@@ -8,16 +8,33 @@ const path = require('path');
 // Multer Config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const isMemberUpload = req.path.includes('/upload-member');
-    const folderType = isMemberUpload ? 'rosters' : 'kingdoms';
-    const kingdomId = req.params.id || 'general';
-    const dir = path.join(__dirname, `../uploads/${folderType}/`, kingdomId);
+    let folderType = 'kingdoms';
+    let includeKingdomId = false;
+
+    if (req.path.includes('/upload-member')) {
+      folderType = 'rosters';
+      includeKingdomId = true;
+    } else if (req.path.includes('/upload-asset')) {
+      const field = req.query.field;
+      if (field) {
+        folderType = field.endsWith('s') ? field : field + 's';
+      }
+    }
+    
+    let dir = path.join(__dirname, `../uploads/${folderType}/`);
+    if (includeKingdomId) {
+      const kingdomId = req.params.id || 'general';
+      dir = path.join(dir, kingdomId);
+    }
+
     const fs = require('fs');
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);
   },
   filename: function (req, file, cb) {
-    const prefix = req.path.includes('/upload-member') ? 'roster-' : 'kingdom-';
+    const isMember = req.path.includes('/upload-member');
+    const field = req.query.field || 'kingdom';
+    const prefix = isMember ? 'roster-' : `${field}-`;
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, prefix + uniqueSuffix + path.extname(file.originalname));
   }
@@ -165,7 +182,8 @@ router.post('/:id/upload-asset', requireAdmin, upload.single('image'), async (re
     const kingdom = await Kingdom.findById(req.params.id);
     if (!kingdom) return res.status(404).json({ message: 'Kingdom not found' });
 
-    const fileUrl = `/uploads/kingdoms/${req.params.id}/${req.file.filename}`;
+    const folderType = field.endsWith('s') ? field : field + 's';
+    const fileUrl = `/uploads/${folderType}/${req.file.filename}`;
 
     if (field === 'designs') {
       kingdom.designs.push(fileUrl);
