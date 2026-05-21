@@ -34,40 +34,43 @@ function getFibonacciPosition(index, total, radius) {
   );
 }
 
-function createDefaultFlagTexture(onLoaded) {
-  // Load astronaut.png as the main flag texture
-  const loader = new THREE.TextureLoader();
-  loader.load('/astronaut.png', (tex) => {
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.needsUpdate = true;
-    if (onLoaded) onLoaded(tex);
-  }, undefined, () => {
-    // Fallback if astronaut.png fails to load
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 360;
-    const ctx = canvas.getContext('2d');
-    const grad = ctx.createLinearGradient(0, 0, 512, 360);
-    grad.addColorStop(0, '#1a0e04');
-    grad.addColorStop(0.5, '#2a1808');
-    grad.addColorStop(1, '#0d0804');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 512, 360);
-    ctx.strokeStyle = '#D4956A';
-    ctx.lineWidth = 6;
-    ctx.strokeRect(8, 8, 496, 344);
-    ctx.fillStyle = '#D4956A';
-    ctx.font = 'bold 110px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Q', 256, 140);
-    ctx.font = 'bold 32px sans-serif';
-    ctx.fillStyle = '#B87333';
-    ctx.fillText('QUANTUM 26', 256, 250);
-    const fallback = new THREE.CanvasTexture(canvas);
-    fallback.needsUpdate = true;
-    if (onLoaded) onLoaded(fallback);
-  });
+function createDefaultFlagTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 360;
+  const ctx = canvas.getContext('2d');
+  // Royal copper gradient background
+  const grad = ctx.createLinearGradient(0, 0, 512, 360);
+  grad.addColorStop(0, '#1a0e04');
+  grad.addColorStop(0.5, '#2a1808');
+  grad.addColorStop(1, '#0d0804');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 360);
+  // Copper border
+  ctx.strokeStyle = '#D4956A';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(8, 8, 496, 344);
+  // Inner border for richness
+  ctx.strokeStyle = 'rgba(184, 115, 51, 0.3)';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(18, 18, 476, 324);
+  // Royal "Q" monogram
+  ctx.fillStyle = '#D4956A';
+  ctx.font = 'bold 110px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Q', 256, 140);
+  // Subtitle
+  ctx.font = 'bold 32px sans-serif';
+  ctx.fillStyle = '#B87333';
+  ctx.fillText('QUANTUM 26', 256, 250);
+  // Decorative line
+  ctx.strokeStyle = 'rgba(212, 149, 106, 0.35)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(140, 290); ctx.lineTo(372, 290); ctx.stroke();
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
 }
 
 function createFallbackFlagTexture(letter, color) {
@@ -337,11 +340,7 @@ function SceneOrbitRings() {
 // KINGDOM SCENE — Complete 3D scene graph
 // ============================================================
 function KingdomScene({ kingdoms, onFlagClick }) {
-  // Load astronaut.png as the main pole flag
-  const [defaultTexture, setDefaultTexture] = useState(null);
-  useEffect(() => {
-    createDefaultFlagTexture((tex) => setDefaultTexture(tex));
-  }, []);
+  const defaultTexture = useMemo(() => createDefaultFlagTexture(), []);
 
   // Load kingdom flag textures
   const fallbackTextures = useMemo(() => {
@@ -383,28 +382,28 @@ function KingdomScene({ kingdoms, onFlagClick }) {
       {/* Warm charcoal background — matching website's --bg-deepest */}
       <color attach="background" args={['#0a0806']} />
 
-      {/* === FULLY-LIT BALANCED LIGHTING === */}
-      {/* Strong warm ambient — fills everything evenly */}
-      <ambientLight intensity={0.75} color="#FFF5E6" />
-      {/* Hemisphere for even sky/ground fill */}
-      <hemisphereLight args={['#D4956A', '#3a2010', 0.5]} />
+      {/* === NEUTRAL BALANCED LIGHTING — preserves true flag colors === */}
+      {/* Strong neutral ambient — no color tinting */}
+      <ambientLight intensity={0.9} color="#ffffff" />
+      {/* Hemisphere: neutral white sky, subtle warm ground */}
+      <hemisphereLight args={['#ffffff', '#2a1a10', 0.4]} />
 
-      {/* Key copper light — overhead warmth */}
-      <pointLight position={[0, 5, 0]} intensity={2.5} color="#D4956A" distance={12} decay={2} />
-      {/* Warm fill lights from multiple angles to eliminate shadows */}
-      <pointLight position={[5, 3, 4]} intensity={0.8} color="#B87333" distance={14} decay={2} />
-      <pointLight position={[-5, 2, -4]} intensity={0.6} color="#D4956A" distance={14} decay={2} />
-      <pointLight position={[0, 1, 6]} intensity={0.4} color="#DBA472" distance={10} decay={2} />
-      {/* Subtle spotlight for flag pole highlight */}
-      <spotLight position={[0, 8, 3]} angle={0.35} penumbra={0.9} intensity={0.5} color="#FFF5E6" castShadow />
+      {/* Key light — neutral white overhead */}
+      <pointLight position={[0, 5, 0]} intensity={2.0} color="#ffffff" distance={14} decay={2} />
+      {/* Fill lights — neutral white from multiple angles */}
+      <pointLight position={[5, 3, 4]} intensity={0.7} color="#ffffff" distance={14} decay={2} />
+      <pointLight position={[-5, 2, -4]} intensity={0.5} color="#ffffff" distance={14} decay={2} />
+      <pointLight position={[0, 1, 6]} intensity={0.4} color="#ffffff" distance={12} decay={2} />
+      {/* Subtle warm accent on the pole only */}
+      <spotLight position={[0, 8, 3]} angle={0.25} penumbra={0.9} intensity={0.4} color="#FFF0E0" castShadow />
 
       <Stars radius={120} depth={80} count={1500} factor={3} saturation={0.3} fade speed={0.3} />
       <SceneParticles />
       <SceneOrbitRings />
       <GlowingTerrain />
 
-      {/* Central Flag Pole with astronaut flag */}
-      {defaultTexture && <FlagPoleModel defaultTexture={defaultTexture} />}
+      {/* Central Flag Pole with Quantum flag */}
+      <FlagPoleModel defaultTexture={defaultTexture} />
 
       {/* Floating Kingdom Flags */}
       <group ref={floatingGroupRef}>
