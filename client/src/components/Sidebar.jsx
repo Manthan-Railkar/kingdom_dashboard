@@ -59,8 +59,8 @@ export default function Sidebar({ active, onSelect }) {
       <div className="sb-logo">
         <div className="sb-emblem">
           <span className="sb-crown-top"></span>
-          <div className="sb-shield">
-            <span className="sb-q">Q</span>
+          <div className="sb-shield" style={{ overflow: 'hidden' }}>
+            <img src="/quantum_logo.png" alt="Quantum 26 Logo" style={{ width: '110%', height: '110%', objectFit: 'cover' }} />
           </div>
         </div>
         <div className="sb-brand">
