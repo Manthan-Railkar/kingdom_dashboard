@@ -1,0 +1,151 @@
+.top-navbar {
+  display: flex;
+  align-items: center;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--gold-border);
+  padding: 0 20px;
+  height: 60px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  gap: 16px;
+}
+
+/* Brand section - fixed width, don't shrink */
+.tn-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.tn-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.tn-title {
+  font-family: var(--font-title);
+  color: var(--gold-primary);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 10px var(--gold-glow);
+  line-height: 1;
+}
+
+.tn-tagline {
+  font-family: var(--font-heading);
+  color: var(--text-muted);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* Tab links section - takes remaining space, centered */
+.tn-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.tn-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: all var(--t-fast);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tn-item:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--gold-text);
+}
+
+.tn-item.active {
+  background: var(--sidebar-active-bg);
+  border: 1px solid var(--sidebar-active-border);
+  color: var(--gold-text);
+  box-shadow: inset 0 0 15px rgba(184, 115, 51, 0.1);
+}
+
+.tn-icon {
+  display: flex;
+  align-items: center;
+  color: var(--gold-primary);
+}
+
+.tn-item:hover .tn-icon,
+.tn-item.active .tn-icon {
+  color: var(--gold-bright);
+}
+
+.tn-label {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Admin Login - sits on the right, distinct blue */
+.tn-login-btn {
+  background: rgba(74, 130, 201, 0.12);
+  border: 1px solid rgba(74, 130, 201, 0.35);
+  color: #8ab4f8;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.tn-login-btn:hover {
+  background: rgba(74, 130, 201, 0.22);
+  color: #fff;
+  border-color: rgba(74, 130, 201, 0.6);
+}
+
+.tn-login-btn .tn-icon {
+  color: #8ab4f8;
+}
+
+.tn-login-btn:hover .tn-icon {
+  color: #fff;
+}
+
+/* ===== Responsive ===== */
+
+/* Hide labels on medium screens, keep icons */
+@media (max-width: 1300px) {
+  .tn-label {
+    display: none;
+  }
+  .tn-item {
+    padding: 8px 10px;
+  }
+  .tn-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Stack brand text on small screens */
+@media (max-width: 768px) {
+  .top-navbar {
+    padding: 0 10px;
+    gap: 8px;
+  }
+  .tn-title-wrap {
+    display: none;
+  }
+  .tn-item {
+    padding: 8px;
+  }
+}

@@ -3,23 +3,23 @@
    ============================================ */
 :root {
   /* === Core Dark Palette (Deep Charcoal with warm undertones) === */
-  --bg-deepest: #080604;
-  --bg-dark: #0c0a07;
-  --bg-sidebar: #0e0b09;
-  --bg-sidebar-hover: rgba(184,115,51,0.07);
-  --bg-panel: rgba(12, 9, 6, 0.92);
-  --bg-panel-border: rgba(184,115,51,0.18);
-  --bg-card-1: linear-gradient(180deg, #1a0e04 0%, #0d0804 50%, #070504 100%);
-  --bg-card-2: linear-gradient(180deg, #0e1018 0%, #080a10 50%, #040608 100%);
-  --bg-card-3: linear-gradient(180deg, #1a0604 0%, #100408 50%, #060407 100%);
+  --bg-deepest: #120e09;
+  --bg-dark: #16120e;
+  --bg-sidebar: #1a1510;
+  --bg-sidebar-hover: rgba(204,138,74,0.1);
+  --bg-panel: rgba(22, 18, 14, 0.92);
+  --bg-panel-border: rgba(204,138,74,0.25);
+  --bg-card-1: linear-gradient(180deg, #261608 0%, #160e06 50%, #0d0905 100%);
+  --bg-card-2: linear-gradient(180deg, #151824 0%, #0d101a 50%, #080b0e 100%);
+  --bg-card-3: linear-gradient(180deg, #260a08 0%, #1a080d 50%, #0d060a 100%);
 
   /* === Copper System === */
-  --gold-primary: #B87333;
-  --gold-bright:  #D4956A;
-  --gold-dim:     #6B4226;
-  --gold-glow:    rgba(184,115,51,0.45);
-  --gold-text:    #DBA472;
-  --gold-border:  rgba(184,115,51,0.35);
+  --gold-primary: #cc8a4a;
+  --gold-bright:  #e8a97d;
+  --gold-dim:     #8c5a38;
+  --gold-glow:    rgba(204,138,74,0.55);
+  --gold-text:    #efc59e;
+  --gold-border:  rgba(204,138,74,0.45);
 
   /* === Status === */
   --live-green:   #00e676;
@@ -30,9 +30,9 @@
   --negative-dim: rgba(255,68,68,0.25);
 
   /* === Text === */
-  --text-primary:   #dcc4a0;
-  --text-secondary: #9a7550;
-  --text-muted:     #5a4030;
+  --text-primary:   #f0dac0;
+  --text-secondary: #af8d6c;
+  --text-muted:     #7a5a46;
   --text-white:     #ffffff;
 
   /* === Kingdom Colors === */

@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import { ToastProvider } from '../context/ToastContext';
 import Sidebar from '../components/Sidebar';
+import TopNavbar from '../components/TopNavbar';
 import Leaderboard from '../components/Leaderboard/Leaderboard';
 import LeaderboardPage from '../components/Leaderboard/LeaderboardPage';
 import TrendsPage from '../components/Trends/TrendsPage';
@@ -29,10 +30,11 @@ import { useSettings } from '../context/SettingsContext';
 const KnowYourKingdomPortal = React.lazy(() => import('../components/KnowYourKingdoms/KnowYourKingdomPortal'));
 
 export default function Dashboard() {
-  const [active, setActive] = useState('overview');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { isAdmin, isSuperAdmin, isKingdomAdmin } = useAdmin();
   const { settings } = useSettings();
+  const isNormalUser = !isSuperAdmin && !isKingdomAdmin;
+  const [active, setActive] = useState(isNormalUser ? 'know_kingdoms' : 'overview');
 
   const handleTabChange = (newTab) => {
     if (newTab === active) return;
@@ -201,10 +203,14 @@ export default function Dashboard() {
       <NewsPopup />
       <PageTransition isVisible={isTransitioning} />
 
-      <div className="app-root">
-        <Sidebar active={active} onSelect={handleTabChange} />
+      <div className={`app-root ${isNormalUser ? 'app-root--top-nav' : ''}`}>
+        {isNormalUser ? (
+          <TopNavbar active={active} onSelect={handleTabChange} />
+        ) : (
+          <Sidebar active={active} onSelect={handleTabChange} />
+        )}
 
-        <main className="main-area">
+        <main className={`main-area ${isNormalUser ? 'main-area--top-nav' : ''}`}>
           <div className={['leaderboard', 'news', 'gallery', 'trends', 'teams', 'events', 'know_kingdoms'].includes(active) ? "content-area content-area--full" : "content-area"}>
             {renderContent()}
           </div>
