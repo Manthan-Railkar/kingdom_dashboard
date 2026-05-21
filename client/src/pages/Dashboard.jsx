@@ -183,11 +183,13 @@ export default function Dashboard() {
         </div>
 
         {/* Right — 3 stacked panels */}
-        <div className="right-col">
-          <LiveTrends />
-          <KingdomNews />
-          <UpcomingEvents />
-        </div>
+        {!isNormalUser && (
+          <div className="right-col">
+            <LiveTrends />
+            <KingdomNews />
+            <UpcomingEvents />
+          </div>
+        )}
       </>
     );
   };
