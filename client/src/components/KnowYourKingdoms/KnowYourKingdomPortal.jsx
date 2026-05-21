@@ -273,6 +273,35 @@ function FlagPoleModel({ poleHeight = 3.2, defaultTexture }) {
 }
 
 // ============================================================
+// CAMERA INTRO — Cinematic fly-in animation
+// ============================================================
+function CameraIntro({ isMobile }) {
+  const { camera } = useThree();
+  const startPos = useMemo(() => new THREE.Vector3(0, isMobile ? 18 : 12, isMobile ? 24 : 18), [isMobile]);
+  const endPos = useMemo(() => new THREE.Vector3(0, isMobile ? 3 : 2, isMobile ? 11 : 6), [isMobile]);
+  const startLook = useMemo(() => new THREE.Vector3(0, 3, 0), []);
+  const endLook = useMemo(() => new THREE.Vector3(0, 1, 0), []);
+  const progress = useRef(0);
+  const lookTarget = useRef(new THREE.Vector3());
+
+  useEffect(() => {
+    camera.position.copy(startPos);
+    camera.lookAt(startLook);
+  }, []);
+
+  useFrame((_, delta) => {
+    if (progress.current >= 1) return;
+    progress.current = Math.min(progress.current + delta * 0.35, 1);
+    const t = 1 - Math.pow(1 - progress.current, 3);
+    camera.position.lerpVectors(startPos, endPos, t);
+    lookTarget.current.lerpVectors(startLook, endLook, t);
+    camera.lookAt(lookTarget.current);
+  });
+
+  return null;
+}
+
+// ============================================================
 // FLOATING KINGDOM FLAG — Orbiting mini flag cards
 // ============================================================
 function FloatingKingdomFlag({ position, texture, color, delay, onFlagClick }) {
@@ -303,7 +332,7 @@ function FloatingKingdomFlag({ position, texture, color, delay, onFlagClick }) {
         <ringGeometry args={[0.52, 0.58, 32]} />
         <meshBasicMaterial color={threeColor} transparent opacity={hovered ? 0.3 : 0.06} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} />
       </mesh>
-      {/* Flag card — larger */}
+      {/* Flag card */}
       <mesh
         onClick={(e) => { e.stopPropagation(); onFlagClick(); }}
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); document.body.style.cursor = 'pointer'; }}
@@ -396,7 +425,7 @@ function SceneOrbitRings() {
 // ============================================================
 // KINGDOM SCENE — Complete 3D scene graph
 // ============================================================
-function KingdomScene({ kingdoms, onFlagClick }) {
+function KingdomScene({ kingdoms, onFlagClick, isMobile }) {
   const [, setFlagReady] = useState(false);
   const defaultTexture = useMemo(() => createDefaultFlagTexture(() => setFlagReady(true)), []);
 
@@ -437,22 +466,19 @@ function KingdomScene({ kingdoms, onFlagClick }) {
 
   return (
     <>
-      {/* Warm charcoal background — matching website's --bg-deepest */}
+      {/* Warm charcoal background */}
       <color attach="background" args={['#0a0806']} />
 
-      {/* === NEUTRAL BALANCED LIGHTING — preserves true flag colors === */}
-      {/* Strong neutral ambient — no color tinting */}
-      <ambientLight intensity={0.9} color="#ffffff" />
-      {/* Hemisphere: neutral white sky, subtle warm ground */}
-      <hemisphereLight args={['#ffffff', '#2a1a10', 0.4]} />
+      {/* Cinematic camera fly-in */}
+      <CameraIntro isMobile={isMobile} />
 
-      {/* Key light — neutral white overhead */}
+      {/* === NEUTRAL BALANCED LIGHTING === */}
+      <ambientLight intensity={0.9} color="#ffffff" />
+      <hemisphereLight args={['#ffffff', '#2a1a10', 0.4]} />
       <pointLight position={[0, 5, 0]} intensity={2.0} color="#ffffff" distance={14} decay={2} />
-      {/* Fill lights — neutral white from multiple angles */}
       <pointLight position={[5, 3, 4]} intensity={0.7} color="#ffffff" distance={14} decay={2} />
       <pointLight position={[-5, 2, -4]} intensity={0.5} color="#ffffff" distance={14} decay={2} />
       <pointLight position={[0, 1, 6]} intensity={0.4} color="#ffffff" distance={12} decay={2} />
-      {/* Subtle warm accent on the pole only */}
       <spotLight position={[0, 8, 3]} angle={0.25} penumbra={0.9} intensity={0.4} color="#FFF0E0" castShadow />
 
       <Stars radius={120} depth={80} count={1500} factor={3} saturation={0.3} fade speed={0.3} />
@@ -482,7 +508,7 @@ function KingdomScene({ kingdoms, onFlagClick }) {
         autoRotateSpeed={0.25}
         enableZoom
         minDistance={3}
-        maxDistance={12}
+        maxDistance={isMobile ? 18 : 12}
         minPolarAngle={Math.PI / 6}
         maxPolarAngle={Math.PI / 2.1}
         enablePan={false}
@@ -504,6 +530,16 @@ export default function KnowYourKingdomPortal() {
   const { kingdoms } = useApp();
   const [phase, setPhase] = useState('active');
   const [selectedKingdom, setSelectedKingdom] = useState(null);
+  
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleClose = useCallback(() => {
     setPhase('active');
@@ -521,7 +557,7 @@ export default function KnowYourKingdomPortal() {
         {/* ===== 3D SCENE (loads directly) ===== */}
         <div className="kyk-scene-wrap" style={{ opacity: 1 }}>
           <Canvas
-            camera={{ position: [0, 2, 6], fov: 50 }}
+            camera={{ position: [0, isMobile ? 3 : 2, isMobile ? 11 : 6], fov: isMobile ? 65 : 50 }}
             dpr={[1, 2]}
             shadows
             gl={{ antialias: true, alpha: false, powerPreference: 'high-performance', stencil: false }}
@@ -530,6 +566,7 @@ export default function KnowYourKingdomPortal() {
               <KingdomScene
                 kingdoms={kingdoms}
                 onFlagClick={handleFlagClick}
+                isMobile={isMobile}
               />
             </Suspense>
           </Canvas>

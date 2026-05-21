@@ -120,8 +120,6 @@
   color: #fff;
 }
 
-/* ===== Responsive ===== */
-
 /* Hide labels on medium screens, keep icons */
 @media (max-width: 1300px) {
   .tn-label {
@@ -136,16 +134,38 @@
   }
 }
 
-/* Stack brand text on small screens */
+/* Stack brand text on small screens, allow horizontal scrolling of tabs */
 @media (max-width: 768px) {
   .top-navbar {
-    padding: 0 10px;
+    padding: 0 8px;
     gap: 8px;
   }
   .tn-title-wrap {
     display: none;
   }
+  .tn-brand {
+    gap: 4px;
+  }
+  .tn-links {
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 4px;
+    gap: 4px;
+  }
+  .tn-links::-webkit-scrollbar {
+    display: none;
+  }
   .tn-item {
-    padding: 8px;
+    padding: 8px 12px;
+    flex-shrink: 0;
+  }
+  .tn-login-btn {
+    padding: 8px 10px;
+  }
+  .tn-login-btn .tn-label {
+    display: none;
   }
 }

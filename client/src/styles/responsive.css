@@ -224,6 +224,12 @@
     white-space: nowrap;
   }
 
+  .sb-nav-item--logout {
+    margin-top: 0;
+    border-top: none;
+    padding-top: 6px; /* Match others */
+  }
+
   .sb-active-bar {
     display: none; /* replaced by bg colour */
   }
@@ -236,6 +242,11 @@
   .main-area {
     margin-left: 0;
     padding-bottom: 60px; /* space for bottom nav */
+  }
+
+  /* Don't add bottom padding for normal users with top navbar */
+  .main-area--top-nav {
+    padding-bottom: 0;
   }
 
   /* ---- Content Area — Single Column ---- */
