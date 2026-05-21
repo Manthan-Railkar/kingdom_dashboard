@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useAdmin } from '../context/AdminContext';
 import { useSettings } from '../context/SettingsContext';
+const KnowYourKingdoms = React.lazy(() => import('./KnowYourKingdoms/KnowYourKingdoms'));
 import { 
   Home, Trophy, TrendingUp, Newspaper, Users, Calendar, 
   Target, SlidersHorizontal, Image as ImageIcon, Settings, 
@@ -129,6 +130,11 @@ export default function Sidebar({ active, onSelect }) {
           </div>
         )}
       </nav>
+
+      {/* Know Your Kingdoms Widget */}
+      <Suspense fallback={<div className="kyk-loading" style={{ height: '210px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '12px 8px', color: 'rgba(130,160,220,0.3)', fontSize: '0.5rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>LOADING COSMOS...</div>}>
+        <KnowYourKingdoms />
+      </Suspense>
 
       {/* Admin Status */}
       {isAdmin && (
