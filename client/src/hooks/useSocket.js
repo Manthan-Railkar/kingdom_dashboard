@@ -8,7 +8,8 @@ export function useSocket() {
 
   useEffect(() => {
     if (!socketInstance) {
-      socketInstance = io(window.location.origin, {
+      const API_URL = import.meta.env.VITE_API_URL || window.location.origin;
+      socketInstance = io(API_URL, {
         withCredentials: true,
         transports: ['websocket', 'polling'],
       });

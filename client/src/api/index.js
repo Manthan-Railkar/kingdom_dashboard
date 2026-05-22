@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: '/api' });
+const API_URL = import.meta.env.VITE_API_URL || '';
+const api = axios.create({ baseURL: `${API_URL}/api` });
 
 // Attach token
 api.interceptors.request.use((config) => {
@@ -41,6 +42,6 @@ export const deleteGalleryImage = (id) => api.delete(`/gallery/${id}`).then((r) 
 // Auth
 export const loginAdmin = (username, accessKey) => api.post('/auth/login', { username, accessKey }).then((r) => r.data);
 export const getMe = (token) =>
-  axios.get('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.data);
+  axios.get(`${API_URL}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.data);
 
 export default api;

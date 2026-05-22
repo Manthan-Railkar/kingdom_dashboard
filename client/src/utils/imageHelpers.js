@@ -13,5 +13,7 @@ export const isImagePath = (val) =>
 export const resolveImageUrl = (val) => {
   if (!val) return '';
   if (val.startsWith('http')) return val;
-  return val; // Relative paths like /uploads/... are handled by Vite proxy
+  const API_URL = import.meta.env.VITE_API_URL || '';
+  if (val.startsWith('/uploads/')) return `${API_URL}${val}`;
+  return val;
 };

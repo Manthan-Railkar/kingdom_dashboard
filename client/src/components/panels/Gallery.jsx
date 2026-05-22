@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { useToast } from '../../context/ToastContext';
 import { getGallery, uploadGalleryImage, deleteGalleryImage } from '../../api';
+import { resolveImageUrl } from '../../utils/imageHelpers';
 import './Gallery.css';
 
 export default function Gallery() {
@@ -101,7 +102,7 @@ export default function Gallery() {
             const canDelete = isSuperAdmin || (isKingdomAdmin && admin.kingdomId && img.uploadedByKingdom === admin.kingdomId._id);
             return (
               <div key={img._id} className="gallery-item">
-                <img src={`/uploads/${img.filename}`} alt={img.caption || 'Gallery Image'} loading="lazy" />
+                <img src={resolveImageUrl(`/uploads/${img.filename}`)} alt={img.caption || 'Gallery Image'} loading="lazy" />
                 <div className="gallery-overlay" style={{ flexDirection: 'column', gap: '10px' }}>
                   <span className="gallery-view-btn">VIEW</span>
                   {img.caption && <span style={{ color: '#fff', fontSize: '0.75rem', textAlign: 'center', padding: '0 10px' }}>{img.caption}</span>}
